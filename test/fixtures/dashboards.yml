@@ -1,0 +1,73 @@
+system_default_welcome:
+  name: Global default dashboard
+  dashboard_type: <%= DashboardContentWelcome::TYPE_NAME %>
+  system_default: true
+  enable_sidebar: false
+  author_id: 1
+  visibility: 2
+  options: |
+    ---
+    :layout:
+      top:
+      - issuequery
+      - my_spent_time
+      left:
+      - text
+      - text_async
+      - legacy_left
+      right:
+      - text__1
+      - legacy_right
+    :layout_settings:
+      issuequery:
+        :query_id: '1'
+      text:
+        :title: Welcome left
+        :text: Some example text in left text block
+      text_async:
+        :title: Async loaded
+        :text: Use it for better performance
+      text__1:
+        :title: Welcome right
+        :text: Some example text in right text block
+
+private_welcome:
+  name: Only for user 1
+  dashboard_type: <%= DashboardContentWelcome::TYPE_NAME %>
+  enable_sidebar: true
+  author_id: 1
+  visibility: 0
+  options: |
+    ---
+    :layout:
+      left:
+      - legacy_left
+      right:
+      - legacy_right
+    :layout_settings: {}
+
+private_welcome2:
+  name: Only for user 2
+  dashboard_type: <%= DashboardContentWelcome::TYPE_NAME %>
+  author_id: 2
+  visibility: 0
+  options: |
+    ---
+    :layout:
+      left:
+      - legacy_left
+      right:
+      - legacy_right
+    :layout_settings: {}
+
+public_welcome:
+  name: Public welcome
+  dashboard_type: <%= DashboardContentWelcome::TYPE_NAME %>
+  author_id: 1
+  visibility: 2
+
+welcome_for_roles:
+  name: Welcome for roles
+  dashboard_type: <%= DashboardContentWelcome::TYPE_NAME %>
+  author_id: 1
+  visibility: 1
