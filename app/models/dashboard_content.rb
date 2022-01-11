@@ -91,9 +91,9 @@ class DashboardContent
     return @available_blocks if defined? @available_blocks
 
     available_blocks = block_definitions.reject do |_block_name, block_specs|
-      block_specs.key?(:permission) && !user.allowed_to?(block_specs[:permission], project, global: true) ||
-        block_specs.key?(:admin_only) && block_specs[:admin_only] && !user.admin? ||
-        block_specs.key?(:if) && !block_specs[:if].call(project)
+      (block_specs.key?(:permission) && !user.allowed_to?(block_specs[:permission], project, global: true)) ||
+        (block_specs.key?(:admin_only) && block_specs[:admin_only] && !user.admin?) ||
+        (block_specs.key?(:if) && !block_specs[:if].call(project))
     end
 
     @available_blocks = available_blocks.sort_by { |_k, v| v[:label] }.to_h
@@ -102,9 +102,7 @@ class DashboardContent
   def block_options(blocks_in_use = [])
     options = []
     available_blocks.each do |block, block_options|
-      indexes = blocks_in_use.map do |n|
-        Regexp.last_match(2).to_i if n =~ /\A#{block}(__(\d+))?\z/
-      end
+      indexes = block_indexes(blocks_in_use, block)
       indexes.compact!
 
       occurs = indexes.size
@@ -115,6 +113,12 @@ class DashboardContent
       options << [block_options[:label], block_id]
     end
     options
+  end
+
+  def block_indexes(blocks_in_use, block)
+    blocks_in_use.map do |item|
+      Regexp.last_match(2).to_i if item =~ /\A#{block}(__(\d+))?\z/
+    end
   end
 
   def valid_block?(block, blocks_in_use = [])

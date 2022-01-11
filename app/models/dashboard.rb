@@ -24,7 +24,7 @@
 class Dashboard < ActiveRecord::Base
   include Redmine::I18n
   include Redmine::SafeAttributes
-  #include Additionals::EntityMethods
+  # include Additionals::EntityMethods
 
   class SystemDefaultChangeException < StandardError; end
 
@@ -127,7 +127,8 @@ class Dashboard < ActiveRecord::Base
 
     def visible(user = User.current, **options)
       scope = left_outer_joins :project
-      scope = scope.where(projects: { id: nil }).or(scope.where(Project.allowed_to_condition(user, :view_project, options)))
+      scope = scope.where(projects: { id: nil }).or(scope.where(Project.allowed_to_condition(user, :view_project,
+                                                                                             options)))
 
       if user.admin?
         scope.where.not(visibility: VISIBILITY_PRIVATE).or(scope.where(author_id: user.id))
@@ -185,7 +186,9 @@ class Dashboard < ActiveRecord::Base
   # Returns true if the dashboard is visible to +user+ or the current user.
   def visible?(user = User.current)
     return true if user.admin?
+
     return false unless project.nil? || user.allowed_to?(:view_project, project)
+
     return true if user == author
 
     case visibility
