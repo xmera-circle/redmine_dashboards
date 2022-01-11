@@ -27,7 +27,7 @@ class CreateDashboardDefaults < ActiveRecord::Migration[5.2]
 
     return if Dashboard.exists? dashboard_type: DashboardContentWelcome::TYPE_NAME
 
-    puts 'Creating welcome default dashboard'
+    Rails.logger.debug 'Creating welcome default dashboard'
     Dashboard.create! name: 'Welcome dashboard',
                       dashboard_type: DashboardContentWelcome::TYPE_NAME,
                       system_default: true,
