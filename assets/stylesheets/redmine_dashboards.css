@@ -1,0 +1,17 @@
+p.role-visibility input {
+  margin-left: 2rem;
+}
+
+.icon.icon-dashboard.disabled {
+  color: #b9b9b9;
+}
+.mypage-box .contextual {
+  transition: opacity 50ms;
+  opacity: 0;
+}
+.mypage-box:hover .contextual {
+  opacity: 1;
+}
+.mypage-box h3 {
+  font-weight: bold;
+}

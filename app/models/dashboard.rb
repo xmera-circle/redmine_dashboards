@@ -5,7 +5,7 @@
 # Copyright (C) 2020 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
 # See <https://github.com/AlphaNodes/additionals>.
 #
-# Copyright (C) 2021 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -327,7 +327,7 @@ class Dashboard < ActiveRecord::Base
     config = { dashboard_id: id,
                block: block }
 
-    if RedminePluginKit.false? options[:skip_user_id]
+    if RedmineDashboards.false? options[:skip_user_id]
       settings[:user_id] = User.current.id
       settings[:user_is_admin] = User.current.admin?
     end

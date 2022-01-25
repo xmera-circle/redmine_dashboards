@@ -18,19 +18,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require_dependency 'redmine_dashboards'
+Rails.application.routes.draw do
+  resource :dashboard_async_blocks, only: %i[show create]
 
-Redmine::Plugin.register :redmine_dashboards do
-  name 'Redmine Dashboards'
-  author 'Liane Hampe, xmera'
-  description 'Flexible dashboards for Redmine welcome page'
-  version '0.1.0'
-  url 'https://circle.xmera.de/projects/redmine-dashboards'
-  author_url 'http://xmera.de'
-
-  requires_redmine version_or_higher: '4.2.0'
-end
-
-Rails.configuration.to_prepare do
-  RedmineDashboards.setup
+  resources :dashboards do
+    member do
+      post :update_layout_setting
+      post :add_block
+      post :remove_block
+      post :order_blocks
+    end
+  end
 end

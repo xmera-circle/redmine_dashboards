@@ -1,0 +1,46 @@
+<% with_async = dashboard_async_required_settings? settings, async %>
+
+<% unless with_async %>
+  <%= tag.h3 settings[:title].presence || block_definition[:label] %>
+<% end %>
+
+<% if @can_edit && \
+     block_definition[:no_settings].blank? && \
+     (!block_definition.key?(:with_settings_if) || block_definition[:with_settings_if].call(@project)) %>
+
+  <%= tag.div id: "#{block}-settings", style: "#{'display: none;' if with_async}" do %>
+    <%= form_tag(update_layout_setting_dashboard_path(dashboard), remote: true) do %>
+      <%= render  partial: block_definition[:settings_partial].presence || "#{async[:partial]}_settings",
+                  locals: build_dashboard_partial_locals(block,
+                                                        block_definition,
+                                                        settings,
+                                                        dashboard).merge(with_async: with_async) %>
+
+      <%= tag.p do%>
+        <%= submit_tag l(:button_save) %>
+        <%= link_to_function l(:button_cancel), "$('##{block}-settings').toggle();" %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% if with_async %>
+  <%= render_async_cache dashboard_async_blocks_path(dashboard.async_params(block, async, settings)) do %>
+    <%= tag.div class: 'clear-both' %>
+    <%= tag.p do %>
+      <%= tag.i class: 'fas fa-sync fa-spin' %>
+      <%= tag.br %>
+      <%= l :label_loading %>
+    <% end %>
+  <% end %>
+
+  <%= content_for :render_async %>
+
+  <%= javascript_tag do %>
+      $(function() {
+        $('#ajax-indicator').hide();
+      })
+  <% end %>  
+<% else %>
+  <%= tag.p l(:label_no_data), class: 'nodata' %>
+<% end %>

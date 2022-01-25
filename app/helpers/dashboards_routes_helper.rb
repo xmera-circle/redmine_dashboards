@@ -2,6 +2,9 @@
 
 # This file is part of the Plugin Redmine Dashboards.
 #
+# Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
+# See <https://github.com/AlphaNodes/RedmineDashboards>.
+#
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
 # This plugin program is free software; you can redistribute it and/or
@@ -18,19 +21,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require_dependency 'redmine_dashboards'
+module DashboardsRoutesHelper
+  def dashboard_link_path(dashboard, **options)
+    options[:dashboard_id] = dashboard.id
+    type = dashboard.dashboard_type
 
-Redmine::Plugin.register :redmine_dashboards do
-  name 'Redmine Dashboards'
-  author 'Liane Hampe, xmera'
-  description 'Flexible dashboards for Redmine welcome page'
-  version '0.1.0'
-  url 'https://circle.xmera.de/projects/redmine-dashboards'
-  author_url 'http://xmera.de'
+    return home_path(**options) if type == DashboardContentWelcome::TYPE_NAME
 
-  requires_redmine version_or_higher: '4.2.0'
-end
-
-Rails.configuration.to_prepare do
-  RedmineDashboards.setup
+    dashboard_type_name = type[0..-10]
+    route_helper = "DashboardContent#{dashboard_type_name}::ROUTE_HELPER".constantize
+    send route_helper, **options
+  end
 end
