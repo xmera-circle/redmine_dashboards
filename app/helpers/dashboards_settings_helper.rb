@@ -23,7 +23,7 @@
 
 module DashboardsSettingsHelper
   def dashboards_settings_checkbox(name, **options)
-    active_value = options.delete(:active_value).presence || @settings.present? && @settings[name]
+    active_value = options.delete(:active_value).presence || (@settings.present? && @settings[name])
     tag_name = options.delete(:tag_name).presence || "settings[#{name}]"
 
     label_title = options.delete(:label).presence || l("label_#{name}")

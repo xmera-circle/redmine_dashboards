@@ -38,7 +38,7 @@ module RedmineDashboards
     #   query.block_columns.each do |column|
     #     next unless (text = column_content column, entry) || text.blank?
 
-    #     content << tag.tr(class: tr_classes) do # rubocop: disable Style/MethodCallWithArgsParentheses
+    #     content << tag.tr(class: tr_classes) do
     #       tag.td colspan: td_colspan, class: "#{column.css_classes} block_column" do
     #         td_content = []
     #         td_content << tag.span(column.caption) if query.block_columns.count > 1

@@ -24,7 +24,6 @@
 module RedmineDashboards
   module Extensions
     module UserPreferencePatch
-
       def self.included(base)
         base.include(InstanceMethods)
         base.class_eval do
@@ -37,7 +36,7 @@ module RedmineDashboards
           self[:recently_used_dashboards]
         end
 
-        def recently_used_dashboard(dashboard_type, project = nil)
+        def recently_used_dashboard(dashboard_type, _project = nil)
           r = self[:recently_used_dashboards] ||= {}
           r = {} unless r.is_a? Hash
 
@@ -53,7 +52,6 @@ module RedmineDashboards
     end
   end
 end
-
 
 # Apply patch
 Rails.configuration.to_prepare do

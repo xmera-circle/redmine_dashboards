@@ -43,7 +43,7 @@ module DashboardsHelper
 
   def welcome_overview_name(dashboard = nil)
     name = [l(:label_home)]
-    name << dashboard.name if dashboard&.always_expose? || dashboard.present? && !dashboard.system_default?
+    name << dashboard.name if dashboard&.always_expose? || (dashboard.present? && !dashboard.system_default?)
 
     safe_join name, RedmineDashboards::LIST_SEPARATOR
   end
@@ -95,7 +95,12 @@ module DashboardsHelper
     dashboards = sidebar_dashboards dashboard, project
     out = [dashboard_links(l(:label_my_dashboard_plural),
                            dashboard,
-                           User.current.allowed_to?(:save_dashboards, project, global: true) ? dashboards.select(&:private?) : [],
+                           if User.current.allowed_to?(:save_dashboards, project,
+                                                       global: true)
+                             dashboards.select(&:private?)
+                           else
+                             []
+                           end,
                            project),
            dashboard_links(l(:label_shared_dashboard_plural),
                            dashboard,
@@ -126,11 +131,11 @@ module DashboardsHelper
     end
   end
 
-  def dashboard_links(title, active_dashboard, dashboards, project)
+  def dashboard_links(title, active_dashboard, dashboards, _project)
     return '' unless dashboards.any?
 
     tag.h3(title, class: 'dashboards') +
-      tag.ul(class: 'dashboards') do # rubocop: disable Style/MethodCallWithArgsParentheses
+      tag.ul(class: 'dashboards') do
         dashboards.each do |dashboard|
           selected = dashboard.id == if params[:dashboard_id].present?
                                        params[:dashboard_id].to_i
@@ -162,7 +167,7 @@ module DashboardsHelper
     link_to name, dashboard_link_path(dashboard), options
   end
 
-  def sidebar_action_toggle(enabled, dashboard, project = nil)
+  def sidebar_action_toggle(enabled, dashboard, _project = nil)
     return if dashboard.nil?
 
     if enabled

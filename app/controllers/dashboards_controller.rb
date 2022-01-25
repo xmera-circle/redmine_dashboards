@@ -38,7 +38,7 @@ class DashboardsController < ApplicationController
   helper :watchers
   helper :dashboards
   helper :dashboards_routes
-  #helper :additionals_issues
+  # helper :additionals_issues
   helper :dashboards_queries
   helper :dashboards_settings
 
@@ -98,7 +98,9 @@ class DashboardsController < ApplicationController
 
       respond_to do |format|
         format.html { redirect_to dashboard_link_path(@dashboard) }
-        format.api  { render action: 'show', status: :created, location: dashboard_url(@dashboard, project_id: @project) }
+        format.api  do
+          render action: 'show', status: :created, location: dashboard_url(@dashboard, project_id: @project)
+        end
       end
     else
       respond_to do |format|
@@ -111,7 +113,7 @@ class DashboardsController < ApplicationController
   def edit
     return render_403 unless @dashboard.editable_by? User.current
 
-    #@allowed_projects = @dashboard.allowed_target_projects
+    # @allowed_projects = @dashboard.allowed_target_projects
 
     respond_to do |format|
       format.html

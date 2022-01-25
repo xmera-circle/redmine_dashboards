@@ -41,7 +41,7 @@ module RedmineDashboards
       end
 
       module InstanceMethods
-       private
+        private
 
         def find_dashboard
           if params[:dashboard_id].present?
