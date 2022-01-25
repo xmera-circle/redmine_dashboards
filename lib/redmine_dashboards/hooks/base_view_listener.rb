@@ -18,31 +18,16 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require_dependency 'redmine_dashboards'
+module RedmineDashboards
+  module Hooks
+    include Redmine::Hook
 
-Redmine::Plugin.register :redmine_dashboards do
-  name 'Redmine Dashboards'
-  author 'Liane Hampe, xmera'
-  description 'Flexible dashboards for Redmine welcome page'
-  version '0.1.0'
-  url 'https://circle.xmera.de/projects/redmine-dashboards'
-  author_url 'http://xmera.de'
+    class BaseViewListener < Redmine::Hook::ViewListener
+      def view_layouts_base_html_head(context = {})
+        return unless /^(Dashboards|Welcome)/.match?(context[:controller].class.name)
 
-  requires_redmine version_or_higher: '4.2.0'
-
-  permission :set_system_dashboards,
-             {},
-             require: :loggedin,
-             read: true
-  permission :save_dashboards,
-             { dashboards: %i[index new create edit update destroy] },
-             require: :loggedin,
-             read: true
-
-  default_settings = RedmineDashboards.load_settings
-  settings default: default_settings, partial: 'redmine_dashboards/settings/additionals'
-end
-
-Rails.configuration.to_prepare do
-  RedmineDashboards.setup
+        "\n".html_safe + stylesheet_link_tag('redmine_dashboards', plugin: :redmine_dashboards)
+      end
+    end
+  end
 end

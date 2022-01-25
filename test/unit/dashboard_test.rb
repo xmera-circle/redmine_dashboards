@@ -5,6 +5,8 @@
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
 # See <https://github.com/AlphaNodes/RedmineDashboards>.
 #
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+#
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2

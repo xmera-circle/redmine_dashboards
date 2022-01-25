@@ -5,7 +5,7 @@
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
 # See <https://github.com/AlphaNodes/RedmineDashboards>.
 #
-# Copyright (C) 2021 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -31,7 +31,7 @@ end
 
 require File.expand_path "#{File.dirname __FILE__}/../../../test/test_helper"
 require File.expand_path "#{File.dirname __FILE__}/global_test_helper"
-# require File.expand_path "#{File.dirname __FILE__}/crud_controller_base"
+require File.expand_path "#{File.dirname __FILE__}/crud_controller_base"
 
 module RedmineDashboards
   module TestHelper

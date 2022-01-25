@@ -5,7 +5,7 @@
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
 # See <https://github.com/AlphaNodes/RedmineDashboards>.
 #
-# Copyright (C) 2021 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -33,27 +33,27 @@ module RedmineDashboards
       assert_select "td.#{c}"
     end
 
-    def with_additionals_settings(settings, &_block)
-      change_additionals_settings settings
+    def with_dashboard_settings(settings, &_block)
+      change_dashboard_settings settings
       yield
     ensure
-      restore_additionals_settings
+      restore_dashboard_settings
     end
 
-    def change_additionals_settings(settings)
-      @saved_settings = Setting.plugin_additionals.dup
-      new_settings = Setting.plugin_additionals.dup
+    def change_dashboard_settings(settings)
+      @saved_settings = Setting.plugin_redmine_dashboards.dup
+      new_settings = Setting.plugin_redmine_dashboards.dup
       settings.each do |key, value|
         new_settings[key] = value
       end
-      Setting.plugin_additionals = new_settings
+      Setting.plugin_redmine_dashboards = new_settings
     end
 
-    def restore_additionals_settings
+    def restore_dashboard_settings
       if @saved_settings
-        Setting.plugin_additionals = @saved_settings
+        Setting.plugin_redmine_dashboards = @saved_settings
       else
-        Rails.logger.warn 'warning: restore_additionals_settings could not restore settings'
+        Rails.logger.warn 'warning: restore_dashboard_settings could not restore settings'
       end
     end
 
