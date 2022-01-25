@@ -34,10 +34,6 @@ Redmine::Plugin.register :redmine_dashboards do
              {},
              require: :loggedin,
              read: true
-  permission :share_dashboards,
-             { dashboards: %i[index new create edit update destroy] },
-             require: :member,
-             read: true
   permission :save_dashboards,
              { dashboards: %i[index new create edit update destroy] },
              require: :loggedin,

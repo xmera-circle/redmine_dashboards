@@ -48,8 +48,8 @@
       <%= link_to l(:label_new_dashboard),
                   new_dashboard_path,
                   class: 'icon icon-add new-additionals-dashboard' %>
+      <%= delete_dashboard_link dashboard_path(@dashboard) if @dashboard&.destroyable? %>
     <% end %>
-    <%= delete_dashboard_link dashboard_path(@dashboard) if @dashboard&.destroyable? %>
     <%= sidebar_action_toggle @dashboard_sidebar, @dashboard %>
     <%= render_dashboard_actionlist @dashboard unless @dashboard_sidebar %>
 

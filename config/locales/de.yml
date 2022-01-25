@@ -6,12 +6,15 @@ de:
   label_dashboard: Dashboard
   label_edit_dashboard: Dashboard bearbeiten
   label_add_dashboard_block: Block hinzufügen
-  label_shared_dashboard_plural: Geteilte Dashboards
+  label_my_dashboard_plural: Meine Dashboards
+  label_shared_dashboard_plural: Gemeinsame Dashboards
+  label_active_dashboard: Aktives Dashboard
   label_change_to_dashboard: Zu Dashboard wechseln
   label_enable_sidebar: Seitenleiste anzeigen
   label_disable_sidebar: Seitenleiste verstecken
   label_new_dashboard: Neues Dashboard
   label_max_entries: Maximale Einträge
+  label_dashboard_author: "Autor: %{name}"
   label_only_my_activities: Zeige nur meine Einträge
   label_my_activity: Meine Aktivitäten
   label_dashboard_feed: Feed
@@ -30,3 +33,6 @@ de:
   field_always_expose: Dashboard immer offenlegen
   field_enable_sidebar: Seitenleiste aktivieren
   field_system_default: Als Systemstandard festlegen
+
+  permission_save_dashboards: Dashboards anlegen
+  permission_set_system_dashboards: System Dashboards festlegen
