@@ -14,7 +14,7 @@ en:
   label_max_entries: Maximum entries
   label_only_my_activities: Only my activities
   label_my_activity: My activities
-  label_additionals_feed: Feed
+  label_dashboard_feed: Feed
   label_invalid_feed_data: Invalid feed data
   label_dashboard_legacy_left: Default content left
   label_dashboard_legacy_right: Default content right

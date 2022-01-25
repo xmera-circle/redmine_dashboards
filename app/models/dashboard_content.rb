@@ -75,7 +75,7 @@ class DashboardContent
                        permission: :view_documents },
       'my_spent_time' => { label: l(:label_my_spent_time),
                            permission: :log_time },
-      'feed' => { label: l(:label_additionals_feed),
+      'feed' => { label: l(:label_dashboard_feed),
                   max_occurs: DashboardContent::MAX_MULTIPLE_OCCURS,
                   async: { required_settings: %i[url],
                            cache_expires_in: 600,

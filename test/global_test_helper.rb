@@ -33,27 +33,27 @@ module RedmineDashboards
       assert_select "td.#{c}"
     end
 
-    def with_additionals_settings(settings, &_block)
-      change_additionals_settings settings
+    def with_dashboard_settings(settings, &_block)
+      change_dashboard_settings settings
       yield
     ensure
-      restore_additionals_settings
+      restore_dashboard_settings
     end
 
-    def change_additionals_settings(settings)
-      @saved_settings = Setting.plugin_additionals.dup
-      new_settings = Setting.plugin_additionals.dup
+    def change_dashboard_settings(settings)
+      @saved_settings = Setting.plugin_redmine_dashboards.dup
+      new_settings = Setting.plugin_redmine_dashboards.dup
       settings.each do |key, value|
         new_settings[key] = value
       end
-      Setting.plugin_additionals = new_settings
+      Setting.plugin_redmine_dashboards = new_settings
     end
 
-    def restore_additionals_settings
+    def restore_dashboard_settings
       if @saved_settings
-        Setting.plugin_additionals = @saved_settings
+        Setting.plugin_redmine_dashboards = @saved_settings
       else
-        Rails.logger.warn 'warning: restore_additionals_settings could not restore settings'
+        Rails.logger.warn 'warning: restore_dashboard_settings could not restore settings'
       end
     end
 

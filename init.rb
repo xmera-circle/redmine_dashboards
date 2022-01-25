@@ -29,6 +29,22 @@ Redmine::Plugin.register :redmine_dashboards do
   author_url 'http://xmera.de'
 
   requires_redmine version_or_higher: '4.2.0'
+
+  permission :set_system_dashboards,
+             {},
+             require: :loggedin,
+             read: true
+  permission :share_dashboards,
+             { dashboards: %i[index new create edit update destroy] },
+             require: :member,
+             read: true
+  permission :save_dashboards,
+             { dashboards: %i[index new create edit update destroy] },
+             require: :loggedin,
+             read: true
+
+  default_settings = RedmineDashboards.load_settings
+  settings default: default_settings, partial: 'redmine_dashboards/settings/additionals'
 end
 
 Rails.configuration.to_prepare do

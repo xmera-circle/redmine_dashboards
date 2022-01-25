@@ -43,5 +43,24 @@ module RedmineDashboards
     def false?(value)
       !true?(value)
     end
+
+    def load_settings(plugin_id = 'redmine_dashboards')
+      cached_settings_name = "@load_settings_#{plugin_id}"
+      cached_settings = instance_variable_get cached_settings_name
+      if cached_settings.nil?
+        data = YAML.safe_load(ERB.new(IO.read(File.join(plugin_dir(plugin_id), '/config/settings.yml'))).result) || {}
+        instance_variable_set cached_settings_name, data.symbolize_keys
+      else
+        cached_settings
+      end
+    end
+
+    def plugin_dir(plugin_id = 'redmine_dashboards')
+      if Gem.loaded_specs[plugin_id].nil?
+        File.join Redmine::Plugin.directory, plugin_id
+      else
+        Gem.loaded_specs[plugin_id].full_gem_path
+      end
+    end
   end
 end
