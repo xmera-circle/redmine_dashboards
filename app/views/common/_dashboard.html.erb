@@ -1,7 +1,8 @@
 <%= call_hook :view_dashboard_top, dashboard: dashboard, project: @project %>
-<%=tag.div id: 'my-page splitcontent', class: "#{dashboard_css_classes dashboard}" do %>
+<%=tag.div id: 'my-page', class: "splitcontent #{dashboard_css_classes dashboard}" do %>
   <% dashboard.available_groups.each do |group| %>
-    <%= tag.div id: "list-#{group}", class: "block-receiver splitcontent#{group}" do %>
+    <% box = dashboard.layout[group].present? ?  'box' : nil %>
+    <%= tag.div id: "list-#{group}", class: "block-receiver splitcontent#{group} #{box}" do %>
       <%= render_dashboard_blocks dashboard.layout[group], dashboard %>
     <% end %>
   <% end %>
