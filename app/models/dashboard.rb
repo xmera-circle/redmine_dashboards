@@ -24,7 +24,6 @@
 class Dashboard < ActiveRecord::Base
   include Redmine::I18n
   include Redmine::SafeAttributes
-  # include Additionals::EntityMethods
 
   class SystemDefaultChangeException < StandardError; end
 
