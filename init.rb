@@ -22,11 +22,10 @@ require_dependency 'redmine_dashboards'
 
 Redmine::Plugin.register :redmine_dashboards do
   name 'Redmine Dashboards'
-  author 'Liane Hampe, xmera'
+  author 'Liane Hampe, Alexander Meindl'
   description 'Flexible dashboards for Redmine welcome page'
   version '0.1.0'
-  url 'https://circle.xmera.de/projects/redmine-dashboards'
-  author_url 'http://xmera.de'
+  author_url 'https://circle.xmera.de/projects/redmine-dashboards'
 
   requires_redmine version_or_higher: '4.2.0'
 
@@ -38,9 +37,6 @@ Redmine::Plugin.register :redmine_dashboards do
              { dashboards: %i[index new create edit update destroy] },
              require: :loggedin,
              read: true
-
-  default_settings = RedmineDashboards.load_settings
-  settings default: default_settings, partial: 'redmine_dashboards/settings/additionals'
 end
 
 Rails.configuration.to_prepare do
