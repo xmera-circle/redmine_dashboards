@@ -103,20 +103,6 @@ module DashboardsQueriesHelper
     "#{object_type}_query_data_#{session.id}_#{project_id}"
   end
 
-  # def dashboards_select2_search_users(all_visible: false, where_filter: nil, where_params: nil)
-  #   q = params[:q].to_s.strip
-  #   exclude_id = params[:user_id].to_i
-  #   scope = User.active.where type: 'User'
-  #   scope = scope.visible unless all_visible
-  #   scope = scope.where.not id: exclude_id if exclude_id.positive?
-  #   scope = scope.where where_filter, where_params if where_filter
-  #   q.split.map { |search_string| scope = scope.like search_string } if q.present?
-  #   scope = scope.order(last_login_on: :desc)
-  #                .limit(Dashboards::SELECT2_INIT_ENTRIES)
-  #   @users = scope.to_a.sort! { |x, y| x.name <=> y.name }
-  #   render layout: false, partial: 'auto_completes/dashboards_users'
-  # end
-
   # Returns the query definition as hidden field tags
   # columns in ignored_column_names are skipped (names as symbols)
   # TODO: this is a temporary fix and should be removed

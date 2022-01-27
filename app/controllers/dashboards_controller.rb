@@ -38,7 +38,6 @@ class DashboardsController < ApplicationController
   helper :watchers
   helper :dashboards
   helper :dashboards_routes
-  # helper :additionals_issues
   helper :dashboards_queries
   helper :dashboards_settings
 
@@ -113,8 +112,6 @@ class DashboardsController < ApplicationController
   def edit
     return render_403 unless @dashboard.editable_by? User.current
 
-    # @allowed_projects = @dashboard.allowed_target_projects
-
     respond_to do |format|
       format.html
       format.api
@@ -126,9 +123,6 @@ class DashboardsController < ApplicationController
 
     @dashboard.safe_attributes = params[:dashboard]
     @dashboard.role_ids = params[:dashboard][:role_ids] if params[:dashboard].present?
-
-    # @project = @dashboard.project if @project && @dashboard.project_id.present? && @dashboard.project != @project
-    # @allowed_projects = @dashboard.allowed_target_projects
 
     if @dashboard.save
       flash[:notice] = l :notice_successful_update
@@ -151,7 +145,7 @@ class DashboardsController < ApplicationController
       @dashboard.destroy
       flash[:notice] = l :notice_successful_delete
       respond_to do |format|
-        format.html { redirect_to @project.nil? ? home_path : project_path(@project) }
+        format.html { redirect_to home_path }
         format.api  { head :ok }
       end
     rescue ActiveRecord::RecordNotDestroyed
