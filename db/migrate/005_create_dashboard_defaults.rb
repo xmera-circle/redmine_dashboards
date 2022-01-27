@@ -5,7 +5,7 @@
 # Copyright (C) 2020 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
 # See <https://github.com/AlphaNodes/additionals>.
 #
-# Copyright (C) 2021 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@ class CreateDashboardDefaults < ActiveRecord::Migration[5.2]
 
     return if Dashboard.exists? dashboard_type: DashboardContentWelcome::TYPE_NAME
 
-    puts 'Creating welcome default dashboard'
+    Rails.logger.debug 'Creating welcome default dashboard'
     Dashboard.create! name: 'Welcome dashboard',
                       dashboard_type: DashboardContentWelcome::TYPE_NAME,
                       system_default: true,

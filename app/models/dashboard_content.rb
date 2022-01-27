@@ -70,14 +70,12 @@ class DashboardContent
                         async: { required_settings: %i[text],
                                  partial: 'dashboards/blocks/text_async' } },
       'news' => { label: l(:label_news_latest),
-                  permission: :view_news,
-                  if: proc { Redmine::AccessControl.active_module?(:news) } },
+                  permission: :view_news },
       'documents' => { label: l(:label_document_plural),
-                       permission: :view_documents,
-                       if: proc { Redmine::AccessControl.active_module?(:documents) } },
+                       permission: :view_documents },
       'my_spent_time' => { label: l(:label_my_spent_time),
                            permission: :log_time },
-      'feed' => { label: l(:label_additionals_feed),
+      'feed' => { label: l(:label_dashboard_feed),
                   max_occurs: DashboardContent::MAX_MULTIPLE_OCCURS,
                   async: { required_settings: %i[url],
                            cache_expires_in: 600,
@@ -91,9 +89,9 @@ class DashboardContent
     return @available_blocks if defined? @available_blocks
 
     available_blocks = block_definitions.reject do |_block_name, block_specs|
-      block_specs.key?(:permission) && !user.allowed_to?(block_specs[:permission], project, global: true) ||
-        block_specs.key?(:admin_only) && block_specs[:admin_only] && !user.admin? ||
-        block_specs.key?(:if) && !block_specs[:if].call(project)
+      (block_specs.key?(:permission) && !user.allowed_to?(block_specs[:permission], project, global: true)) ||
+        (block_specs.key?(:admin_only) && block_specs[:admin_only] && !user.admin?) ||
+        (block_specs.key?(:if) && !block_specs[:if].call(project))
     end
 
     @available_blocks = available_blocks.sort_by { |_k, v| v[:label] }.to_h
@@ -102,9 +100,7 @@ class DashboardContent
   def block_options(blocks_in_use = [])
     options = []
     available_blocks.each do |block, block_options|
-      indexes = blocks_in_use.map do |n|
-        Regexp.last_match(2).to_i if n =~ /\A#{block}(__(\d+))?\z/
-      end
+      indexes = block_indexes(blocks_in_use, block)
       indexes.compact!
 
       occurs = indexes.size
@@ -115,6 +111,12 @@ class DashboardContent
       options << [block_options[:label], block_id]
     end
     options
+  end
+
+  def block_indexes(blocks_in_use, block)
+    blocks_in_use.map do |item|
+      Regexp.last_match(2).to_i if item =~ /\A#{block}(__(\d+))?\z/
+    end
   end
 
   def valid_block?(block, blocks_in_use = [])

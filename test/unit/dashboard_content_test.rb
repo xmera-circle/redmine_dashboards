@@ -2,6 +2,9 @@
 
 # This file is part of the Plugin Redmine Dashboards.
 #
+# Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
+# See <https://github.com/AlphaNodes/RedmineDashboards>.
+#
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
 # This plugin program is free software; you can redistribute it and/or
@@ -18,27 +21,20 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require_dependency 'redmine_dashboards'
+require File.expand_path '../../test_helper', __FILE__
 
-Redmine::Plugin.register :redmine_dashboards do
-  name 'Redmine Dashboards'
-  author 'Liane Hampe, Alexander Meindl'
-  description 'Flexible dashboards for Redmine welcome page'
-  version '0.1.0'
-  author_url 'https://circle.xmera.de/projects/redmine-dashboards'
+class DashboardContentTest < RedmineDashboards::TestCase
+  fixtures :projects, :users, :members, :member_roles, :roles,
+           :trackers, :projects_trackers,
+           :enabled_modules,
+           :enumerations,
+           :dashboards, :dashboard_roles
 
-  requires_redmine version_or_higher: '4.2.0'
+  def setup
+    prepare_tests
+  end
 
-  permission :set_system_dashboards,
-             {},
-             require: :loggedin,
-             read: true
-  permission :save_dashboards,
-             { dashboards: %i[index new create edit update destroy] },
-             require: :loggedin,
-             read: true
-end
-
-Rails.configuration.to_prepare do
-  RedmineDashboards.setup
+  def test_types
+    assert DashboardContent.types.include?(DashboardContentWelcome::TYPE_NAME)
+  end
 end

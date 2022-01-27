@@ -2,6 +2,9 @@
 
 # This file is part of the Plugin Redmine Dashboards.
 #
+# Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
+# See <https://github.com/AlphaNodes/RedmineDashboards>.
+#
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
 # This plugin program is free software; you can redistribute it and/or
@@ -18,27 +21,20 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require_dependency 'redmine_dashboards'
+module RedmineDashboards
+  module Helpers
+    def link_to_external(name, link, **options)
+      options[:class] ||= 'external'
+      options[:class] = "#{options[:class]} external" if options[:class].exclude? 'external'
 
-Redmine::Plugin.register :redmine_dashboards do
-  name 'Redmine Dashboards'
-  author 'Liane Hampe, Alexander Meindl'
-  description 'Flexible dashboards for Redmine welcome page'
-  version '0.1.0'
-  author_url 'https://circle.xmera.de/projects/redmine-dashboards'
+      options[:rel] ||= 'noopener'
+      options[:target] ||= '_blank'
 
-  requires_redmine version_or_higher: '4.2.0'
+      link_to name, link, options
+    end
 
-  permission :set_system_dashboards,
-             {},
-             require: :loggedin,
-             read: true
-  permission :save_dashboards,
-             { dashboards: %i[index new create edit update destroy] },
-             require: :loggedin,
-             read: true
-end
-
-Rails.configuration.to_prepare do
-  RedmineDashboards.setup
+    def dashboards_textarea_cols(text, min: 8, max: 20)
+      [[min, text.to_s.length / 50].max, max].min
+    end
+  end
 end
