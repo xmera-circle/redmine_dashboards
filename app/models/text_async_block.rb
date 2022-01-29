@@ -19,6 +19,26 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class TextAsyncBlock < DashboardBlock
+  def register_name
+    'text'
+  end
+
+  def register_label
+    -> { l(:label_text_async) }
+  end
+
+  def register_specs
+    { max_occours: MAX_MULTIPLE_OCCURS,
+      async: { required_settings: %i[text],
+               partial: 'dashboards/blocks/text_async' } }
+  end
+
+  def register_settings
+    { title: { label: l(:field_title),
+               value: '' },
+      text: '' }
+  end
+
   def validate
     true
   end

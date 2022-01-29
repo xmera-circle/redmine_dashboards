@@ -19,6 +19,25 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class TextBlock < DashboardBlock
+  def register_name
+    'text'
+  end
+
+  def register_label
+    -> { l(:label_text_sync) }
+  end
+
+  def register_specs
+    { max_occours: MAX_MULTIPLE_OCCURS,
+      partial: 'dashboards/blocks/text' }
+  end
+
+  def register_settings
+    { title: { label: l(:field_title),
+               value: '' },
+      text: '' }
+  end
+
   def validate
     true
   end

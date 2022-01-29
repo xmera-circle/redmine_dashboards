@@ -19,6 +19,31 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class IssueQueryBlock < DashboardBlock
+  def register_name
+    'issue_query'
+  end
+
+  def register_label
+    -> { l(:label_query_with_name, l(:label_issue_plural)) }
+  end
+
+  def register_specs
+    { permission: :view_issues,
+      query_block: { label: -> { l(:label_issue_plural) },
+                     list_partial: 'issues/list',
+                     class: IssueQuery,
+                     link_helper: '_project_issues_path',
+                     count_method: 'issue_count',
+                     entries_method: 'issues',
+                     entities_var: :issues,
+                     with_project: true },
+      max_occours: MAX_MULTIPLE_OCCURS }
+  end
+
+  def register_settings
+    { max_entries: '' }
+  end
+
   def validate
     true
   end

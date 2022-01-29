@@ -53,7 +53,7 @@ class DashboardAsyncBlocksControllerTest < RedmineDashboards::ControllerTest
 
   def test_query_blocks
     assert_dashboard_query_blocks [
-      { dashboard_id: @welcome_dashboard.id, block: 'issuequery', entities_class: 'issues' }
+      { dashboard_id: @welcome_dashboard.id, block: 'issue_query', entities_class: 'issues' }
     ]
   end
 end

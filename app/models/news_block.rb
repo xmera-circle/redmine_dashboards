@@ -19,6 +19,22 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class NewsBlock < DashboardBlock
+  def register_name
+    'news'
+  end
+
+  def register_label
+    -> { l(:label_news_latest) }
+  end
+
+  def register_specs
+    { permission: :view_news }
+  end
+
+  def register_settings
+    { max_entries: '' }
+  end
+
   def validate
     true
   end

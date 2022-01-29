@@ -30,6 +30,14 @@ module RedmineDashboards
       RenderAsync.configuration.jquery = true
       # Global helpers
       ActionView::Base.include RedmineDashboards::Helpers
+      # Instanciate Blocks
+      DocumentsBlock.instance
+      FeedBlock.instance
+      IssueQueryBlock.instance
+      MySpentTimeBlock.instance
+      NewsBlock.instance
+      TextAsyncBlock.instance
+      TextBlock.instance
     end
 
     def true?(value)

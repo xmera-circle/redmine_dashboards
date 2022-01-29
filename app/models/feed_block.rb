@@ -19,6 +19,30 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class FeedBlock < DashboardBlock
+  def register_name
+    'feed'
+  end
+
+  def register_label
+    -> { l(:label_feed) }
+  end
+
+  def register_specs
+    { max_occurs: MAX_MULTIPLE_OCCURS,
+      async: { required_settings: %i[url],
+               cache_expires_in: 600,
+               skip_user_id: true,
+               partial: 'dashboards/blocks/feed' } }
+  end
+
+  def register_settings
+    { title: { label: l(:field_title),
+               value: '' },
+      url: { label: l(:field_url),
+             value: '' },
+      max_entries: '' }
+  end
+
   def validate
     true
   end

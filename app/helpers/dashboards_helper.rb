@@ -268,7 +268,6 @@ module DashboardsHelper
     elsif block_definition[:async]
       partial_locals[:async] = block_definition[:async]
     end
-
     partial_locals
   end
 
@@ -286,7 +285,7 @@ module DashboardsHelper
   def dashboard_query_list_block_title(query, query_block, project)
     title = []
     title << query.project if project.nil? && query.project
-    title << query_block[:label]
+    title << query_block[:label].call
 
     title << if query_block[:with_project]
                link_to query.name, send(query_block[:link_helper], project, query.as_params)

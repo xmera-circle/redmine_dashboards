@@ -24,7 +24,6 @@ class DashboardContent
 
   attr_accessor :user, :project
 
-  MAX_MULTIPLE_OCCURS = 8
   DEFAULT_MAX_ENTRIES = 10
   RENDER_ASYNC_CACHE_EXPIRES_IN = 30
 
@@ -43,50 +42,22 @@ class DashboardContent
   def available_blocks
     return @available_blocks if defined? @available_blocks
 
-    available_blocks = block_definitions.reject do |_block_name, block_specs|
-      (block_specs.key?(:permission) && !user.allowed_to?(block_specs[:permission], project, global: true)) ||
-        (block_specs.key?(:admin_only) && block_specs[:admin_only] && !user.admin?) ||
-        (block_specs.key?(:if) && !block_specs[:if].call(project))
+    available_blocks = registered_blocks.reject do |_name, attrs|
+      specs = attrs[:specs]
+      (specs.key?(:permission) && !user.allowed_to?(specs[:permission], project, global: true)) ||
+        (specs.key?(:admin_only) && specs[:admin_only] && !user.admin?) ||
+        (specs.key(:if) && !specs[:if].call(project))
     end
 
-    @available_blocks = available_blocks.sort_by { |_k, v| v[:label] }.to_h
+    @available_blocks = available_blocks.sort_by { |_name, attrs| attrs[:label] }.to_h
   end
 
-  def block_definitions
-    {
-      'issuequery' => { label: l(:label_query_with_name, l(:label_issue_plural)),
-                        permission: :view_issues,
-                        query_block: {
-                          label: l(:label_issue_plural),
-                          list_partial: 'issues/list',
-                          class: IssueQuery,
-                          link_helper: '_project_issues_path',
-                          count_method: 'issue_count',
-                          entries_method: 'issues',
-                          entities_var: :issues,
-                          with_project: true
-                        },
-                        max_occurs: DashboardContent::MAX_MULTIPLE_OCCURS },
-      'text' => { label: l(:label_text_sync),
-                  max_occurs: MAX_MULTIPLE_OCCURS,
-                  partial: 'dashboards/blocks/text' },
-      'text_async' => { label: l(:label_text_async),
-                        max_occurs: MAX_MULTIPLE_OCCURS,
-                        async: { required_settings: %i[text],
-                                 partial: 'dashboards/blocks/text_async' } },
-      'news' => { label: l(:label_news_latest),
-                  permission: :view_news },
-      'documents' => { label: l(:label_document_plural),
-                       permission: :view_documents },
-      'my_spent_time' => { label: l(:label_my_spent_time),
-                           permission: :log_time },
-      'feed' => { label: l(:label_dashboard_feed),
-                  max_occurs: DashboardContent::MAX_MULTIPLE_OCCURS,
-                  async: { required_settings: %i[url],
-                           cache_expires_in: 600,
-                           skip_user_id: true,
-                           partial: 'dashboards/blocks/feed' } }
-    }
+  def registered_blocks
+    DashboardBlock.all.each_with_object({}) do |object, hash|
+      block = object.instance
+      attrs = block.attributes
+      hash[attrs[:name]] = attrs
+    end
   end
 
   def groups
@@ -117,7 +88,7 @@ class DashboardContent
 
       occurs = indexes.size
       block_id = indexes.any? ? "#{block}__#{indexes.max + 1}" : block
-      disabled = (occurs >= (available_blocks[block][:max_occurs] || 1))
+      disabled = (occurs >= (available_blocks[block][:specs][:max_occurs] || 1))
       block_id = nil if disabled
 
       options << [block_options[:label], block_id]
@@ -128,7 +99,12 @@ class DashboardContent
   def find_block(block)
     block.to_s =~ /\A(.*?)(__\d+)?\z/
     name = Regexp.last_match 1
-    available_blocks.key?(name) ? available_blocks[name].merge(name: name) : nil
+    block_instance = available_blocks.key?(name) ? DashboardBlock.find(name) : nil
+  rescue StandardError => e
+    logger.error e.full_message
+    block_instance = nil
+  ensure
+    block_instance
   end
 
   private
@@ -137,5 +113,9 @@ class DashboardContent
     blocks_in_use.map do |item|
       Regexp.last_match(2).to_i if item =~ /\A#{block}(__(\d+))?\z/
     end
+  end
+
+  def logger
+    Rails.logger
   end
 end

@@ -19,6 +19,23 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class MySpentTimeBlock < DashboardBlock
+  def register_name
+    'my_spent_time'
+  end
+
+  def register_label
+    -> { l(:label_my_spent_time) }
+  end
+
+  def register_specs
+    { permission: :log_time }
+  end
+
+  def register_settings
+    { day: { label: l(:button_show),
+             value: '' } }
+  end
+
   def validate
     true
   end

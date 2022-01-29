@@ -19,6 +19,22 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class DocumentsBlock < DashboardBlock
+  def register_name
+    'documents'
+  end
+
+  def register_label
+    -> { l(:label_document_plural) }
+  end
+
+  def register_specs
+    { permission: :view_documents }
+  end
+
+  def register_settings
+    { max_entries: '' }
+  end
+
   def validate
     true
   end
