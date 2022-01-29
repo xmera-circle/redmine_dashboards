@@ -36,7 +36,7 @@ Metrics/MethodLength:
   Exclude:
     - 'test/**/*'
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
 
 Style/Documentation:
