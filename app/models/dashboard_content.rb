@@ -34,17 +34,22 @@ class DashboardContent
     end
   end
 
-  def with_chartjs?
-    false
-  end
-
   def initialize(attr = {})
     self.user = attr[:user].presence || User.current
     self.project = attr[:project].presence
   end
 
-  def groups
-    %w[top left right bottom]
+  # Returns the available blocks
+  def available_blocks
+    return @available_blocks if defined? @available_blocks
+
+    available_blocks = block_definitions.reject do |_block_name, block_specs|
+      (block_specs.key?(:permission) && !user.allowed_to?(block_specs[:permission], project, global: true)) ||
+        (block_specs.key?(:admin_only) && block_specs[:admin_only] && !user.admin?) ||
+        (block_specs.key?(:if) && !block_specs[:if].call(project))
+    end
+
+    @available_blocks = available_blocks.sort_by { |_k, v| v[:label] }.to_h
   end
 
   def block_definitions
@@ -84,17 +89,24 @@ class DashboardContent
     }
   end
 
-  # Returns the available blocks
-  def available_blocks
-    return @available_blocks if defined? @available_blocks
+  def groups
+    %w[top left right bottom]
+  end
 
-    available_blocks = block_definitions.reject do |_block_name, block_specs|
-      (block_specs.key?(:permission) && !user.allowed_to?(block_specs[:permission], project, global: true)) ||
-        (block_specs.key?(:admin_only) && block_specs[:admin_only] && !user.admin?) ||
-        (block_specs.key?(:if) && !block_specs[:if].call(project))
-    end
+  # Returns the default layout for a new dashboard
+  def default_layout
+    {
+      'left' => ['legacy_left'],
+      'right' => ['legacy_right']
+    }
+  end
 
-    @available_blocks = available_blocks.sort_by { |_k, v| v[:label] }.to_h
+  def with_chartjs?
+    false
+  end
+
+  def valid_block?(block, blocks_in_use = [])
+    block.present? && block_options(blocks_in_use).map(&:last).include?(block)
   end
 
   def block_options(blocks_in_use = [])
@@ -113,27 +125,17 @@ class DashboardContent
     options
   end
 
-  def block_indexes(blocks_in_use, block)
-    blocks_in_use.map do |item|
-      Regexp.last_match(2).to_i if item =~ /\A#{block}(__(\d+))?\z/
-    end
-  end
-
-  def valid_block?(block, blocks_in_use = [])
-    block.present? && block_options(blocks_in_use).map(&:last).include?(block)
-  end
-
   def find_block(block)
-    block.to_s =~  /\A(.*?)(__\d+)?\z/
+    block.to_s =~ /\A(.*?)(__\d+)?\z/
     name = Regexp.last_match 1
     available_blocks.key?(name) ? available_blocks[name].merge(name: name) : nil
   end
 
-  # Returns the default layout for a new dashboard
-  def default_layout
-    {
-      'left' => ['legacy_left'],
-      'right' => ['legacy_right']
-    }
+  private
+
+  def block_indexes(blocks_in_use, block)
+    blocks_in_use.map do |item|
+      Regexp.last_match(2).to_i if item =~ /\A#{block}(__(\d+))?\z/
+    end
   end
 end
