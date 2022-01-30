@@ -20,26 +20,80 @@
 
 require File.expand_path '../test_helper', __dir__
 
+class TestTextBlock < DashboardBlock
+  def register_name
+    'test_text'
+  end
+
+  def register_label
+    -> { 'Test Text Block' }
+  end
+
+  def register_specs
+    {}
+  end
+
+  def register_settings
+    {}
+  end
+end
+
+class TestNewsBlock < DashboardBlock
+  def register_name
+    'test_news'
+  end
+
+  def register_label
+    -> { 'Test News Block' }
+  end
+
+  def register_specs
+    {}
+  end
+
+  def register_settings
+    {}
+  end
+end
+
 class DashboardBlockTest < RedmineDashboards::TestCase
   def setup
-    @dashboard_block = DashboardBlock.new(label: 'Test Block')
+    @text_block = TestTextBlock.instance
+    @news_block = TestNewsBlock.instance
   end
 
-  def test_label
-    expected = 'Test Block'
-    actual = @dashboard_block.label
-    assert_equal expected, actual
+  def test_all
+    actual = DashboardBlock.all
+    block_classes.map do |block_class|
+      assert actual.include? block_class
+    end
   end
 
-  def test_attrs
-    expected = {}
-    actual = @dashboard_block.attrs
+  def test_singleton
+    assert_raises TypeError, "can't clone instance of singleton TextBlock" do
+      @text_block.clone
+    end
+  end
+
+  def test_name
+    expected = 'test_text'
+    actual = @text_block.name
     assert_equal expected, actual
   end
 
   def test_not_implemented
     assert_raises DashboardBlock::NotImplementedError do
-      @dashboard_block.validate
+      @text_block.validate
     end
+  end
+
+  private
+
+  def block_classes
+    names.map { |name| Object.const_get name }
+  end
+
+  def names
+    %w[TestTextBlock TestNewsBlock]
   end
 end

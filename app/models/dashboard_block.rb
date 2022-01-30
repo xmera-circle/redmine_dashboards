@@ -19,23 +19,90 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class DashboardBlock
+  # include ActiveModel::AttributeMethods
+  # include ActiveModel::Validations
+  include ActiveModel::Model
+  include Redmine::I18n
+  include Singleton
   # Throws an error if a required method is not implemented
   class NotImplementedError < NoMethodError; end
 
-  attr_reader :label, :attrs
+  MAX_MULTIPLE_OCCURS = 8
 
-  def initialize(label:, **attrs)
-    @label = label
-    @attrs = attrs
+  attr_accessor :name, :label, :specs, :settings
+
+  ##
+  # Collects all child classes of DashboardBlock
+  #
+  # @return [Array] An array of DashboardBlock child classes
+  #
+  def self.all
+    descendants
+  end
+
+  def self.find(name)
+    "#{name.camelize}Block".constantize.instance
+  end
+
+  ##
+  # Initializes a block
+  # @param name [String] The name of the block to be used as key.
+  # @param label [String] The label of the block to be used in the view.
+  # @param specs [Hash] Some static specifications of the block such that :permission, :partial, :max_occurs, :async.
+  # @param settings [Hash] Available settings for the block to be defined by the user.
+  def initialize
+    super
+    @name = register_name
+    @label = register_label
+    @specs = register_specs
+    @settings = register_settings
+  end
+
+  def register_name
+    not_implemented(__method__) # or ''
+  end
+
+  def register_label
+    not_implemented(__method__) # or ''
+  end
+
+  def register_specs
+    not_implemented(__method__) # or {}
+  end
+
+  def register_settings
+    not_implemented(__method__) # or {}
+  end
+
+  def [](attr_name)
+    attr = attr_name.to_sym
+    if key?(attr)
+      attributes[attr]
+    else
+      attributes.dig(:specs, attr)
+    end
+  end
+
+  def key?(attr_name)
+    attributes.key?(attr_name)
+  end
+
+  def attributes
+    { name: name,
+      label: label.call,
+      specs: specs,
+      settings: settings }
   end
 
   def validate
-    not_implemented
+    # require label to be given?
+    not_implemented(__method__)
   end
 
   private
 
-  def not_implemented
-    raise NotImplementedError, "#{__method__} needs to be implemented"
+  def not_implemented(method_name)
+    klass = self.class.name
+    raise NotImplementedError, "#{klass}##{method_name} needs to be implemented"
   end
 end

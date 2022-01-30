@@ -19,7 +19,7 @@ system_default_welcome:
       - text__1
       - legacy_right
     :layout_settings:
-      issuequery:
+      issue_query:
         :query_id: '1'
       text:
         :title: Welcome left
