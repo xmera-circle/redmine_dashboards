@@ -86,6 +86,7 @@ class Dashboard < ActiveRecord::Base
   validate :validate_name
   validate :validate_system_default
   validate :validate_project_system_default
+  validate :validate_layout_settings
 
   class << self
     def system_default(dashboard_type)
@@ -447,5 +448,9 @@ class Dashboard < ActiveRecord::Base
 
     scope = scope.where.not id: id unless new_record?
     errors.add :name, :name_not_unique if scope.count.positive?
+  end
+
+  def validate_layout_settings
+    errors.add(:dashboard_layout_settings, "There is something wrong!") if false
   end
 end

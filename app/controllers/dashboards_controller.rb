@@ -166,8 +166,14 @@ class DashboardsController < ApplicationController
     block_settings.each do |block, settings|
       @dashboard.update_block_settings block, settings.to_unsafe_hash
     end
-    @dashboard.save
-    @updated_blocks = block_settings.keys
+    respond_to do |format|
+      if @dashboard.save
+        @updated_blocks = block_settings.keys
+        format.js
+      else
+        format.js { redirect_to dashboard_link_path(@dashboard) }
+      end
+    end
   end
 
   # The block is added on top of the page

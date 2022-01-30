@@ -31,6 +31,8 @@ class DashboardBlock
 
   attr_accessor :name, :label, :specs, :settings
 
+  delegate :key?, to: :attributes
+
   ##
   # Collects all child classes of DashboardBlock
   #
@@ -81,10 +83,6 @@ class DashboardBlock
     else
       attributes.dig(:specs, attr)
     end
-  end
-
-  def key?(attr_name)
-    attributes.key?(attr_name)
   end
 
   def attributes
