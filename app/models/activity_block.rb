@@ -18,25 +18,22 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-class TextAsyncBlock < DashboardBlock
+class ActivityBlock < DashboardBlock
   def register_name
-    'text_async'
+    'activity'
   end
 
   def register_label
-    -> { l(:label_text_async) }
+    -> { l(:label_activity) }
   end
 
   def register_specs
-    { max_occours: MAX_MULTIPLE_OCCURS,
-      async: { required_settings: %i[text],
-               partial: 'dashboards/blocks/text_async' } }
+    { async: { data_method: 'activity_dashboard_data',
+               partial: 'dashboards/blocks/activity' } }
   end
 
   def register_settings
-    { title: { label: l(:field_title),
-               value: '' },
-      text: '' }
+    {}
   end
 
   def validate

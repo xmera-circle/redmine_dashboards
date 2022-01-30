@@ -31,13 +31,17 @@ module RedmineDashboards
       # Global helpers
       ActionView::Base.include RedmineDashboards::Helpers
       # Instanciate Blocks
+      ActivityBlock.instance
       DocumentsBlock.instance
       FeedBlock.instance
       IssueQueryBlock.instance
+      LegacyLeftBlock.instance
+      LegacyRightBlock.instance
       MySpentTimeBlock.instance
       NewsBlock.instance
       TextAsyncBlock.instance
       TextBlock.instance
+      WelcomeBlock.instance
     end
 
     def true?(value)
