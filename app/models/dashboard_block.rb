@@ -119,7 +119,7 @@ class DashboardBlock
   end
 
   def register_settings
-    # not_implemented(__method__) # or {}
+    not_implemented(__method__) # or {}
   end
 
   def validate_settings(settings, dashboard)

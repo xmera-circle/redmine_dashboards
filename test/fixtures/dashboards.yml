@@ -21,6 +21,7 @@ system_default_welcome:
     :layout_settings:
       issue_query:
         :query_id: '1'
+        :max_entries: '5'
       text:
         :title: Welcome left
         :text: Some example text in left text block

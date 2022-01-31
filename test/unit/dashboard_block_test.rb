@@ -81,12 +81,6 @@ class DashboardBlockTest < RedmineDashboards::TestCase
     assert_equal expected, actual
   end
 
-  def test_not_implemented
-    assert_raises DashboardBlock::NotImplementedError do
-      @text_block.validate
-    end
-  end
-
   private
 
   def block_classes
