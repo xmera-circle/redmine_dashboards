@@ -34,8 +34,4 @@ class LegacyLeftBlock < DashboardBlock
   def register_settings
     {}
   end
-
-  def validate
-    true
-  end
 end

@@ -26,23 +26,23 @@ class Dashboard < ActiveRecord::Base
   include Redmine::SafeAttributes
 
   class SystemDefaultChangeException < StandardError; end
-
   class ProjectSystemDefaultChangeException < StandardError; end
 
   belongs_to :project
   belongs_to :author, class_name: 'User'
+  has_many :dashboard_roles, dependent: :destroy
+  has_many :roles, through: :dashboard_roles
 
   # current active project (belongs_to :project can be nil, because this is system default)
   attr_accessor :content_project
-
   serialize :options
-
-  has_many :dashboard_roles, dependent: :destroy
-  has_many :roles, through: :dashboard_roles
 
   VISIBILITY_PRIVATE = 0
   VISIBILITY_ROLES   = 1
   VISIBILITY_PUBLIC  = 2
+
+  delegate :groups, to: :content, prefix: :available
+  delegate :find_block, :blocks_by, to: 'DashboardBlock'
 
   scope :by_project, (->(project_id) { where project_id: project_id if project_id.present? })
   scope :sorted, (-> { order "#{Dashboard.table_name}.name" })
@@ -220,12 +220,10 @@ class Dashboard < ActiveRecord::Base
   end
 
   def layout_settings(block = nil)
-    s = self[:layout_settings] ||= {}
-    if block
-      s[block] ||= {}
-    else
-      s
-    end
+    settings = self[:layout_settings] ||= {}
+    return settings unless block
+
+    settings[block] ||= {}
   end
 
   def layout_settings=(arg)
@@ -451,6 +449,11 @@ class Dashboard < ActiveRecord::Base
   end
 
   def validate_layout_settings
-    errors.add(:dashboard_layout_settings, "There is something wrong!") if false
+    return if layout_settings.empty?
+
+    names = layout_settings&.keys
+    blocks_by(names).each do |block|
+      block.validate_settings(layout_settings[block.name], self)
+    end
   end
 end
