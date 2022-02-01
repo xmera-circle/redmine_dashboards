@@ -19,6 +19,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class MySpentTimeBlock < DashboardBlock
+  attr_accessor :days
+  validates :days, presence: true, numericality: true, inclusion: { in: (1..100).map(&:to_s) }
+
   def register_name
     'my_spent_time'
   end
@@ -32,11 +35,6 @@ class MySpentTimeBlock < DashboardBlock
   end
 
   def register_settings
-    { day: { label: l(:button_show),
-             value: '' } }
-  end
-
-  def validate
-    true
+    { days: nil }
   end
 end

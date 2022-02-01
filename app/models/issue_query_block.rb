@@ -19,6 +19,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class IssueQueryBlock < DashboardBlock
+  attr_accessor :max_entries, :query_id, :columns
+  validates :max_entries, presence: true, numericality: true, inclusion: { in: (1..100).map(&:to_s) }
+
   def register_name
     'issue_query'
   end
@@ -41,10 +44,6 @@ class IssueQueryBlock < DashboardBlock
   end
 
   def register_settings
-    { max_entries: '' }
-  end
-
-  def validate
-    true
+    { max_entries: nil }
   end
 end

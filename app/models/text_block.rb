@@ -19,6 +19,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class TextBlock < DashboardBlock
+  attr_accessor :title, :text
+
+  validates :text, presence: true
+
   def register_name
     'text'
   end
@@ -33,12 +37,7 @@ class TextBlock < DashboardBlock
   end
 
   def register_settings
-    { title: { label: l(:field_title),
-               value: '' },
-      text: '' }
-  end
-
-  def validate
-    true
+    { title: nil,
+      text: nil }
   end
 end

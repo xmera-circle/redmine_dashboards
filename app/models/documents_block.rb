@@ -19,6 +19,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class DocumentsBlock < DashboardBlock
+  attr_accessor :max_entries
+
+  validates :max_entries, presence: true, numericality: true, inclusion: { in: (1..100).map(&:to_s) }
+
   def register_name
     'documents'
   end
@@ -33,9 +37,5 @@ class DocumentsBlock < DashboardBlock
 
   def register_settings
     { max_entries: '' }
-  end
-
-  def validate
-    true
   end
 end

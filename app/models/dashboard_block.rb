@@ -19,17 +19,22 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class DashboardBlock
-  # include ActiveModel::AttributeMethods
-  # include ActiveModel::Validations
   include ActiveModel::Model
-  include Redmine::I18n
   include Singleton
+  include Redmine::I18n
   # Throws an error if a required method is not implemented
   class NotImplementedError < NoMethodError; end
 
   MAX_MULTIPLE_OCCURS = 8
 
-  attr_accessor :name, :label, :specs, :settings
+  attr_reader :name, :specs, :settings
+
+  delegate :key?, to: :attributes
+  delegate :logger, to: :class
+
+  def self.logger
+    Rails.logger
+  end
 
   ##
   # Collects all child classes of DashboardBlock
@@ -40,8 +45,31 @@ class DashboardBlock
     descendants
   end
 
-  def self.find(name)
-    "#{name.camelize}Block".constantize.instance
+  ##
+  # Finds a registered block
+  #
+  # @params name [String|Symbol] The name of the block.
+  # @return [Object] A DashboardBlock subclass or nil.
+  #
+  def self.find_block(name)
+    klass = "#{name.camelize}Block".constantize
+    block = klass.instance if registered? klass
+  rescue NameError => e
+    logger.error e.full_message
+  ensure
+    block
+  end
+
+  def self.blocks_by(names)
+    blocks = names&.map { |name| find_block(name) }
+    # When an error is thrown the return value is true instead of nil.
+    # Currently, I do not know what's the reason behind. Therefore, I make
+    # sure, the true value is excluded.
+    blocks.without(true)
+  end
+
+  def self.registered?(block_klass)
+    all.include? block_klass
   end
 
   ##
@@ -56,6 +84,26 @@ class DashboardBlock
     @label = register_label
     @specs = register_specs
     @settings = register_settings
+  end
+
+  def [](attr_name)
+    attr = attr_name.to_sym
+    if key?(attr)
+      attributes[attr]
+    else
+      attributes.dig(:specs, attr)
+    end
+  end
+
+  def attributes
+    { name: name,
+      label: label,
+      specs: specs,
+      settings: settings }
+  end
+
+  def label
+    @label.is_a?(Proc) ? @label.call : @label
   end
 
   def register_name
@@ -74,29 +122,14 @@ class DashboardBlock
     not_implemented(__method__) # or {}
   end
 
-  def [](attr_name)
-    attr = attr_name.to_sym
-    if key?(attr)
-      attributes[attr]
-    else
-      attributes.dig(:specs, attr)
-    end
-  end
+  def validate_settings(settings, dashboard)
+    update_settings(settings)
+    return dashboard if valid?
 
-  def key?(attr_name)
-    attributes.key?(attr_name)
-  end
-
-  def attributes
-    { name: name,
-      label: label.call,
-      specs: specs,
-      settings: settings }
-  end
-
-  def validate
-    # require label to be given?
-    not_implemented(__method__)
+    dashboard.errors.add("#{label}:", errors.full_messages.join(', '))
+    clear_settings
+    errors.clear
+    dashboard
   end
 
   private
@@ -104,5 +137,17 @@ class DashboardBlock
   def not_implemented(method_name)
     klass = self.class.name
     raise NotImplementedError, "#{klass}##{method_name} needs to be implemented"
+  end
+
+  def update_settings(settings)
+    assign_attributes(settings)
+  end
+
+  def clear_settings
+    settings&.each { |attr| clear_setting(attr) }
+  end
+
+  def clear_setting(attr)
+    send("#{attr[0]}=", nil)
   end
 end

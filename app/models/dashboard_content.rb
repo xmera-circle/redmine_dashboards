@@ -53,7 +53,7 @@ class DashboardContent
   end
 
   def registered_blocks
-    DashboardBlock.all.each_with_object({}) do |object, hash|
+    all_block_instances.each_with_object({}) do |object, hash|
       block = object.instance
       attrs = block.attributes
       hash[attrs[:name]] = attrs
@@ -96,22 +96,25 @@ class DashboardContent
     options
   end
 
-  def find_block(block)
-    block.to_s =~ /\A(.*?)(__\d+)?\z/
+  def find_block(block_name)
+    block_name.to_s =~ /\A(.*?)(__\d+)?\z/
     name = Regexp.last_match 1
-    block_instance = available_blocks.key?(name) ? DashboardBlock.find(name) : nil
-  rescue StandardError => e
-    logger.error e.full_message
-    block_instance = nil
-  ensure
-    block_instance
+    available_blocks.key?(name) ? find_block_instance_by(name) : nil
   end
 
   private
 
-  def block_indexes(blocks_in_use, block)
+  def all_block_instances
+    DashboardBlock.all
+  end
+
+  def find_block_instance_by(name)
+    DashboardBlock.find_block(name)
+  end
+
+  def block_indexes(blocks_in_use, block_name)
     blocks_in_use.map do |item|
-      Regexp.last_match(2).to_i if item =~ /\A#{block}(__(\d+))?\z/
+      Regexp.last_match(2).to_i if item =~ /\A#{block_name}(__(\d+))?\z/
     end
   end
 

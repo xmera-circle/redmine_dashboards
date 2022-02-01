@@ -19,6 +19,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class FeedBlock < DashboardBlock
+  attr_accessor :title, :text, :url, :max_entries
+
+  validate :valid_url
+  validates :url, presence: true
+  validates :max_entries, presence: true, numericality: true, inclusion: { in: (1..100).map(&:to_s) }
+
   def register_name
     'feed'
   end
@@ -43,7 +49,11 @@ class FeedBlock < DashboardBlock
       max_entries: '' }
   end
 
-  def validate
-    true
+  def valid_url
+    parsed = URI.parse(url)
+    check = parsed.is_a?(URI::HTTP) || parsed.is_a?(URI::HTTPS)
+    errors.add(:base, :invalid) unless check
+  rescue StandardError => e
+    logger.error e.full_message
   end
 end
