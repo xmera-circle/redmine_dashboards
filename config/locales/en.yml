@@ -5,6 +5,7 @@ en:
   
   label_dashboard: Dashboard
   label_edit_dashboard: Edit dashboard
+  label_dashboard_block: Dashboard block
   label_add_dashboard_block: Add block
   label_my_dashboard_plural: My Dashboards
   label_shared_dashboard_plural: Shared Dashboards
@@ -26,8 +27,41 @@ en:
   label_text_sync: Text
   label_text_async: Text (asynchronous)
 
-
   error_while_executing_bashboard_block: dashboard block cannot be displayed due to an error. Please report this error to your administrator.
+  activemodel:
+    errors:
+      messages:
+        inclusion: "is not included in the list"
+        exclusion: "is reserved"
+        invalid: "is invalid"
+        confirmation: "doesn't match confirmation"
+        accepted: "must be accepted"
+        empty: "cannot be empty"
+        blank: "cannot be blank"
+        too_long: "is too long (maximum is %{count} characters)"
+        too_short: "is too short (minimum is %{count} characters)"
+        wrong_length: "is the wrong length (should be %{count} characters)"
+        taken: "has already been taken"
+        not_a_number: "is not a number"
+        not_a_date: "is not a valid date"
+        greater_than: "must be greater than %{count}"
+        greater_than_or_equal_to: "must be greater than or equal to %{count}"
+        equal_to: "must be equal to %{count}"
+        less_than: "must be less than %{count}"
+        less_than_or_equal_to: "must be less than or equal to %{count}"
+        odd: "must be odd"
+        even: "must be even"
+        greater_than_start_date: "must be greater than start date"
+        not_same_project: "doesn't belong to the same project"
+        circular_dependency: "This relation would create a circular dependency"
+        cant_link_an_issue_with_a_descendant: "An issue cannot be linked to one of its subtasks"
+        earlier_than_minimum_start_date: "cannot be earlier than %{date} because of preceding issues"
+        not_a_regexp: "is not a valid regular expression"
+        open_issue_with_closed_parent: "An open issue cannot be attached to a closed parent task"
+        must_contain_uppercase: "must contain uppercase letters (A-Z)"
+        must_contain_lowercase: "must contain lowercase letters (a-z)"
+        must_contain_digits: "must contain digits (0-9)"
+        must_contain_special_chars: "must contain special characters (!, $, %, ...)"
 
   text_default_welcome: "Welcome, %{value}!"
 
