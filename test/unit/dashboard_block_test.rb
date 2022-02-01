@@ -39,12 +39,16 @@ class TestTextBlock < DashboardBlock
 end
 
 class TestNewsBlock < DashboardBlock
+  attr_accessor :title, :max_entries
+
+  validates :title, presence: true
+
   def register_name
     'test_news'
   end
 
   def register_label
-    -> { 'Test News Block' }
+    'Test News Block'
   end
 
   def register_specs
@@ -52,11 +56,14 @@ class TestNewsBlock < DashboardBlock
   end
 
   def register_settings
-    {}
+    { title: nil,
+      max_entries: nil }
   end
 end
 
 class DashboardBlockTest < RedmineDashboards::TestCase
+  fixtures :dashboards
+
   def setup
     @text_block = TestTextBlock.instance
     @news_block = TestNewsBlock.instance
@@ -79,6 +86,53 @@ class DashboardBlockTest < RedmineDashboards::TestCase
     expected = 'test_text'
     actual = @text_block.name
     assert_equal expected, actual
+  end
+
+  def test_find_block
+    actual = DashboardBlock.find_block('test_text')
+    expected = @text_block
+    assert_equal expected, actual
+  end
+
+  def test_blocks_by_names
+    actual = DashboardBlock.blocks_by(%w[test_text test_news])
+    expected = [@text_block, @news_block]
+    assert_equal expected, actual
+  end
+
+  def test_registered
+    assert DashboardBlock.registered?(TestNewsBlock)
+  end
+
+  def test_label
+    actual = [@text_block.label, @news_block.label]
+    expected = ['Test Text Block', 'Test News Block']
+    assert_equal expected, actual
+  end
+
+  def test_update_and_clear_settings
+    settings = { title: 'Latest News', max_entries: '2' }
+    @news_block.send :update_settings, settings
+    actual = [@news_block.title, @news_block.max_entries]
+    expected = ['Latest News', '2']
+    assert_equal expected, actual
+    @news_block.send :clear_settings
+    actual = [@news_block.title, @news_block.max_entries]
+    assert actual.compact.empty?
+  end
+
+  def test_valid_settings
+    dashboard = dashboards :system_default_welcome
+    settings = { title: 'Latest News', max_entries: '2' }
+    @news_block.validate_settings(settings, dashboard)
+    assert dashboard.valid?
+  end
+
+  def test_invalid_settings
+    dashboard = dashboards :system_default_welcome
+    settings = { title: nil, max_entries: '2' }
+    dashboard = @news_block.validate_settings(settings, dashboard)
+    assert dashboard.errors.any?
   end
 
   private

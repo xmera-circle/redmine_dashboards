@@ -42,11 +42,9 @@ class FeedBlock < DashboardBlock
   end
 
   def register_settings
-    { title: { label: l(:field_title),
-               value: '' },
-      url: { label: l(:field_url),
-             value: '' },
-      max_entries: '' }
+    { title: nil,
+      url: nil,
+      max_entries: nil }
   end
 
   def valid_url
