@@ -126,7 +126,7 @@ class DashboardBlock
     update_settings(settings)
     return dashboard if valid?
 
-    dashboard.errors.add("#{label}:", errors.full_messages.join(', '))
+    dashboard.errors.add(:base, "#{l(:label_dashboard_block)} » #{label}: #{errors.full_messages.join(', ')}")
     clear_settings
     errors.clear
     dashboard

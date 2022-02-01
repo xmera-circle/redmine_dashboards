@@ -5,6 +5,7 @@ de:
 
   label_dashboard: Dashboard
   label_edit_dashboard: Dashboard bearbeiten
+  label_dashboard_block: Dashboard Block
   label_add_dashboard_block: Block hinzufügen
   label_my_dashboard_plural: Meine Dashboards
   label_shared_dashboard_plural: Gemeinsame Dashboards
@@ -27,6 +28,41 @@ de:
   label_text_async: Text (asynchron)
   
   error_while_executing_bashboard_block: konnte nicht geladen werden, weil ein Fehler aufgetreten ist. Bitte informieren Sie Ihren Administrator.
+  activemodel:
+    errors:
+      messages:
+        inclusion: "ist kein gültiger Wert"
+        exclusion: "ist nicht verfügbar"
+        invalid: "ist nicht gültig"
+        confirmation: "stimmt nicht mit der Bestätigung überein"
+        accepted: "muss akzeptiert werden"
+        empty: "muss ausgefüllt werden"
+        blank: "muss ausgefüllt werden"
+        too_long: "ist zu lang (nicht mehr als %{count} Zeichen)"
+        too_short: "ist zu kurz (nicht weniger als %{count} Zeichen)"
+        wrong_length: "hat die falsche Länge (muss genau %{count} Zeichen haben)"
+        taken: "ist bereits vergeben"
+        not_a_number: "ist keine Zahl"
+        not_a_date: "ist kein gültiges Datum"
+        greater_than: "muss größer als %{count} sein"
+        greater_than_or_equal_to: "muss größer oder gleich %{count} sein"
+        equal_to: "muss genau %{count} sein"
+        less_than: "muss kleiner als %{count} sein"
+        less_than_or_equal_to: "muss kleiner oder gleich %{count} sein"
+        odd: "muss ungerade sein"
+        even: "muss gerade sein"
+        greater_than_start_date: "muss größer als der Beginn sein"
+        not_same_project: "gehört nicht zum selben Projekt"
+        circular_dependency: "Diese Beziehung würde eine zyklische Abhängigkeit erzeugen"
+        cant_link_an_issue_with_a_descendant: "Ein Ticket kann nicht mit einem seiner untergeordneten Tickets verlinkt werden"
+        earlier_than_minimum_start_date: "kann wegen eines Vorgängertickets nicht vor %{date} liegen"
+        not_a_regexp: "ist kein gültiger regulärer Ausdruck"
+        open_issue_with_closed_parent: "Ein offenes Ticket kann nicht an ein geschlossenes übergeordnetes Ticket angehängt werden"
+        must_contain_uppercase: "muss Großbuchstaben (A-Z) enthalten"
+        must_contain_lowercase: "muss Kleinbuchstaben (a-z) enthalten"
+        must_contain_digits: "muss Zahlen (0-9) enthalten"
+        must_contain_special_chars: "muss Sonderzeichen (!, $, %, ...) enthalten"
+
 
   text_default_welcome: "Herzlich willkommen, %{value}!"
 
