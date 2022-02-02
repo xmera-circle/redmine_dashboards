@@ -2,6 +2,8 @@
 de:
   button_dashboard_edit: Dashboard bearbeiten
   button_dashboard_delete: Dashboard löschen
+  button_cancel: Abbrechen
+  button_save: Speichern
 
   label_dashboard: Dashboard
   label_edit_dashboard: Dashboard bearbeiten
@@ -26,6 +28,8 @@ de:
   label_query_with_name: "Abfrage: %{value}"
   label_text_sync: Text
   label_text_async: Text (asynchron)
+  label_button: Button
+  label_button_background_color: Button Hintergrundfarbe
   
   error_while_executing_bashboard_block: konnte nicht geladen werden, weil ein Fehler aufgetreten ist. Bitte informieren Sie Ihren Administrator.
   activemodel:

@@ -42,6 +42,7 @@ module RedmineDashboards
       TextAsyncBlock.instance
       TextBlock.instance
       WelcomeBlock.instance
+      ButtonBlock.instance
     end
 
     def true?(value)

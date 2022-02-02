@@ -33,6 +33,10 @@ p.role-visibility input {
   font-weight: bold;
 }
 
+.inline {
+  display: inline-block;
+}
+
 #my-page.dashboard {
   display:grid;
   grid-template-columns: 48% 48%;
@@ -79,3 +83,20 @@ p.role-visibility input {
     grid-column: 1 / 2;
   }
 }
+/* Button Block */
+  .button {
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+  .button:hover {
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+    color: white;
+  }

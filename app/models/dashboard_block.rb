@@ -106,20 +106,37 @@ class DashboardBlock
     @label.is_a?(Proc) ? @label.call : @label
   end
 
+  ##
+  # CSS style for display attribute. Defaults to false, what is equal to
+  #   display: block;
+  #
+  # @note Do not override this method! Instead provide a key/value pair in
+  #    register_specs method.
+  #
+  # @example
+  #
+  #  def register_specs
+  #   { inline: true }
+  #  end
+  #
+  def inline
+    specs.fetch(:inline, false)
+  end
+
   def register_name
-    not_implemented(__method__) # or ''
+    not_implemented(__method__)
   end
 
   def register_label
-    not_implemented(__method__) # or ''
+    not_implemented(__method__)
   end
 
   def register_specs
-    not_implemented(__method__) # or {}
+    not_implemented(__method__)
   end
 
   def register_settings
-    not_implemented(__method__) # or {}
+    not_implemented(__method__)
   end
 
   def validate_settings(settings, dashboard)

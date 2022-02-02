@@ -1,0 +1,43 @@
+<%
+# frozen_string_literal: true
+
+# This file is part of the Plugin Redmine Dashboards.
+#
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+#
+# This plugin program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+%>
+
+<%= link_to settings.fetch(:link, '#'), class: 'button' do %>
+  <%= settings.fetch(:text, 'Button') %>
+<% end %>
+
+<% if @can_edit %>
+  <%= tag.div id: "#{block}-settings", style: "display: none;" do %>
+    <%= form_tag(update_layout_setting_dashboard_path(@dashboard), remote: true) do %>
+      <%= render partial: 'dashboards/blocks/button_settings', locals: { block: block, settings: settings }%>
+      <%= tag.p do %>
+        <%= submit_tag l(:button_save) %>
+        <%= link_to_function l(:button_cancel), "$('##{block}-settings').toggle();" %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= tag.style do %>
+ #<%= "block-#{block}" %> .button {
+    background-color: <%= settings[:color] || '#a8a7a7' %>;
+  }
+<% end %>
