@@ -31,7 +31,7 @@ class TextAsyncBlock < DashboardBlock
   end
 
   def register_specs
-    { max_occours: MAX_MULTIPLE_OCCURS,
+    { max_occurs: MAX_MULTIPLE_OCCURS,
       async: { required_settings: %i[text],
                partial: 'dashboards/blocks/text_async' } }
   end
