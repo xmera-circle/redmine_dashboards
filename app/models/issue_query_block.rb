@@ -40,7 +40,7 @@ class IssueQueryBlock < DashboardBlock
                      entries_method: 'issues',
                      entities_var: :issues,
                      with_project: true },
-      max_occours: MAX_MULTIPLE_OCCURS }
+      max_occurs: MAX_MULTIPLE_OCCURS }
   end
 
   def register_settings
