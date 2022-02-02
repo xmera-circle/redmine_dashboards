@@ -247,7 +247,7 @@ module DashboardsHelper
       content = tag.div(safe_join(icons), class: 'contextual') + content
     end
 
-    tag.div content, class: 'mypage-box', id: "block-#{block}"
+    tag.div content, class: "mypage-box #{block_definition.inline ? 'inline' : nil}", id: "block-#{block}"
   end
 
   def build_dashboard_partial_locals(block, block_definition, settings, dashboard)
