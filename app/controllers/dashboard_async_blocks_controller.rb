@@ -3,7 +3,7 @@
 # This file is part of the Plugin Redmine Dashboards.
 #
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/RedmineDashboards>.
+# See <https://github.com/AlphaNodes/additionals>.
 #
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
@@ -41,7 +41,7 @@ class DashboardAsyncBlocksController < ApplicationController
 
   def show
     @settings[:sort] = params[:sort] if params[:sort].present?
-    partial_locals = build_dashboard_partial_locals @block, @block_definition, @settings, @dashboard
+    partial_locals = build_dashboard_partial_locals @block_id, @block_object, @settings, @dashboard
 
     respond_to do |format|
       format.js do
@@ -56,7 +56,7 @@ class DashboardAsyncBlocksController < ApplicationController
   def create
     return render_403 if params[:sort].blank?
 
-    partial_locals = build_dashboard_partial_locals @block, @block_definition, @settings, @dashboard
+    partial_locals = build_dashboard_partial_locals @block_id, @block_object, @settings, @dashboard
     partial_locals[:sort_options] = { sort: params[:sort] }
 
     respond_to do |format|
@@ -81,17 +81,17 @@ class DashboardAsyncBlocksController < ApplicationController
   end
 
   def find_block
-    @block = params['block']
-    @block_definition = @dashboard.content.find_block @block
+    @block_id = params['block_id']
+    @block_object = @dashboard.content.find_block @block_id
 
-    render_404 if @block.blank?
-    render_403 if @block_definition.blank?
+    render_404 if @block_id.blank?
+    render_403 if @block_object.blank?
 
-    @settings = @dashboard.layout_settings @block
+    @settings = @dashboard.layout_settings @block_id
   end
 
   def dashboard_with_invalid_block(exception)
-    logger&.error "Invalid dashboard block for #{@block} (#{exception.class.name}): #{exception.message}"
+    logger&.error "Invalid dashboard block for #{@block_id} (#{exception.class.name}): #{exception.message}"
     respond_to do |format|
       format.html do
         render template: 'dashboards/block_error', layout: false

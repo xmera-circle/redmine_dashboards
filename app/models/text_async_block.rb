@@ -22,7 +22,7 @@ class TextAsyncBlock < DashboardBlock
   attr_accessor :title, :text
   validates :text, presence: true
 
-  def register_name
+  def register_type
     'text_async'
   end
 
@@ -31,7 +31,7 @@ class TextAsyncBlock < DashboardBlock
   end
 
   def register_specs
-    { max_occurs: MAX_MULTIPLE_OCCURS,
+    { max_frequency: MAX_MULTIPLE_OCCURS,
       async: { required_settings: %i[text],
                partial: 'dashboards/blocks/text_async' } }
   end

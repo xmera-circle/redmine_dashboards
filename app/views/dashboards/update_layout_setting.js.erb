@@ -1,8 +1,8 @@
 $('#errorExplanation').remove();
 
-<% @updated_blocks.each do |block| %>
+<% @updated_blocks.each do |block_id| %>
   $('#content').prepend('<%= escape_javascript(error_messages_for(@dashboard)) %>');
-  $("#block-<%= block %>").replaceWith("<%= escape_javascript render_dashboard_block(block.to_s, @dashboard) %>");
+  $("#block-<%= block_id %>").replaceWith("<%= escape_javascript render_dashboard_block(block_id.to_s, @dashboard) %>");
 <% end %>
 
 

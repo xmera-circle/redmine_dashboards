@@ -3,7 +3,7 @@
 # This file is part of the Plugin Redmine Dashboards.
 #
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/RedmineDashboards>.
+# See <https://github.com/AlphaNodes/additionals>.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -21,28 +21,6 @@
 
 class DashboardContentWelcome < DashboardContent
   TYPE_NAME = 'WelcomeDashboard'
-
-  # def block_definitions
-  #   blocks = super
-
-  #   # legacy_left or legacy_right should not be moved to DashboardContent,
-  #   # because DashboardContent is used for areas in other plugins
-  #   blocks['legacy_left'] = { label: l(:label_dashboard_legacy_left),
-  #                             no_settings: true }
-
-  #   blocks['legacy_right'] = { label: l(:label_dashboard_legacy_right),
-  #                              no_settings: true }
-
-  #   blocks['welcome'] = { label: l(:setting_welcome_text),
-  #                         no_settings: true,
-  #                         partial: 'dashboards/blocks/welcome' }
-
-  #   blocks['activity'] = { label: l(:label_activity),
-  #                          async: { data_method: 'activity_dashboard_data',
-  #                                   partial: 'dashboards/blocks/activity' } }
-
-  #   blocks
-  # end
 
   # Returns the default layout for a new dashboard
   def default_layout

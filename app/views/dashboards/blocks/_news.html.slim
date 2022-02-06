@@ -1,18 +1,18 @@
 h3.icon.icon-news = l :label_news_latest
 
 - if @can_edit
-  div id="#{block}-settings" style='display: none;'
+  div id="#{block_id}-settings" style='display: none;'
     = form_tag(update_layout_setting_dashboard_path(@dashboard), remote: true) do
       .box.tabular.settings
         p
           = dashboards_settings_numberfield :max_entries,
                                               value: max_entries,
-                                              tag_name: "settings[#{block}][max_entries]",
+                                              tag_name: "settings[#{block_id}][max_entries]",
                                               min: 1, max: 100, required: true
       p
         = submit_tag l(:button_save)
         '
-        = link_to_function l(:button_cancel), "$('##{block}-settings').toggle();"
+        = link_to_function l(:button_cancel), "$('##{block_id}-settings').toggle();"
 
 - if news.any?
   = render partial: 'news/news', collection: news

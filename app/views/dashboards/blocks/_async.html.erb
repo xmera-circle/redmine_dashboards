@@ -1,31 +1,31 @@
 <% with_async = dashboard_async_required_settings? settings, async %>
 
 <% unless with_async %>
-  <%= tag.h3 settings[:title].presence || block_definition[:label] %>
+  <%= tag.h3 settings[:title].presence || block_object[:label] %>
 <% end %>
 
 <% if @can_edit && \
-     block_definition[:no_settings].blank? && \
-     (!block_definition.key?(:with_settings_if) || block_definition[:with_settings_if].call(@project)) %>
+     block_object[:no_settings].blank? && \
+     (!block_object.key?(:with_settings_if) || block_object[:with_settings_if].call(@project)) %>
 
-  <%= tag.div id: "#{block}-settings", style: "#{'display: none;' if with_async}" do %>
+  <%= tag.div id: "#{block_id}-settings", style: "#{'display: none;' if with_async}" do %>
     <%= form_tag(update_layout_setting_dashboard_path(dashboard), remote: true) do %>
-      <%= render  partial: block_definition[:settings_partial].presence || "#{async[:partial]}_settings",
-                  locals: build_dashboard_partial_locals(block,
-                                                        block_definition,
+      <%= render  partial: block_object[:settings_partial].presence || "#{async[:partial]}_settings",
+                  locals: build_dashboard_partial_locals(block_id,
+                                                        block_object,
                                                         settings,
                                                         dashboard).merge(with_async: with_async) %>
 
       <%= tag.p do%>
         <%= submit_tag l(:button_save) %>
-        <%= link_to_function l(:button_cancel), "$('##{block}-settings').toggle();" %>
+        <%= link_to_function l(:button_cancel), "$('##{block_id}-settings').toggle();" %>
       <% end %>
     <% end %>
   <% end %>
 <% end %>
 
 <% if with_async %>
-  <%= render_async_cache dashboard_async_blocks_path(dashboard.async_params(block, async, settings)) do %>
+  <%= render_async_cache dashboard_async_blocks_path(dashboard.async_params(block_id, async, settings)) do %>
     <%= tag.div class: 'clear-both' %>
     <%= tag.p do %>
       <%= tag.i class: 'fas fa-sync fa-spin' %>
@@ -42,5 +42,5 @@
       })
   <% end %>  
 <% else %>
-  <%= tag.p l(:label_no_data), class: 'nodata' %>
+  <%= render partial: 'dashboards/blocks/nodata' %>
 <% end %>

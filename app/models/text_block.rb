@@ -23,7 +23,7 @@ class TextBlock < DashboardBlock
 
   validates :text, presence: true
 
-  def register_name
+  def register_type
     'text'
   end
 
@@ -32,7 +32,7 @@ class TextBlock < DashboardBlock
   end
 
   def register_specs
-    { max_occurs: MAX_MULTIPLE_OCCURS,
+    { max_frequency: MAX_MULTIPLE_OCCURS,
       partial: 'dashboards/blocks/text' }
   end
 

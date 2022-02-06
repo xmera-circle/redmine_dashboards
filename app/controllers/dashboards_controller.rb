@@ -3,7 +3,7 @@
 # This file is part of the Plugin Redmine Dashboards.
 #
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/RedmineDashboards>.
+# See <https://github.com/AlphaNodes/additionals>.
 #
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
@@ -85,7 +85,7 @@ class DashboardsController < ApplicationController
   end
 
   def create
-    @dashboard = Dashboard.new author: User.current
+    @dashboard = Dashboard.new(author: User.current)
     @dashboard.safe_attributes = params[:dashboard]
     @dashboard.dashboard_type = assign_dashboard_type
     @dashboard.role_ids = params[:dashboard][:role_ids] if params[:dashboard].present?
@@ -162,19 +162,18 @@ class DashboardsController < ApplicationController
 
   def update_layout_setting
     block_settings = params[:settings] || {}
-
-    block_settings.each do |block, settings|
-      @dashboard.update_block_settings block, settings.to_unsafe_hash
+    block_settings.each do |block_id, settings|
+      @dashboard.update_block_settings block_id, settings.to_unsafe_hash
     end
     @dashboard.save
     @updated_blocks = block_settings.keys
   end
 
   # The block is added on top of the page
-  # params[:block] : id of the block to add
+  # params[:block_id] : id of the block to add
   def add_block
-    @block = params[:block]
-    if @dashboard.add_block @block
+    @block_id = params[:block_id]
+    if @dashboard.add_block @block_id
       @dashboard.save
       respond_to do |format|
         format.html { redirect_to dashboard_link_path(@dashboard) }
@@ -185,10 +184,10 @@ class DashboardsController < ApplicationController
     end
   end
 
-  # params[:block] : id of the block to remove
+  # params[:block_id] : id of the block to remove
   def remove_block
-    @block = params[:block]
-    @dashboard.remove_block @block
+    @block_id = params[:block_id]
+    @dashboard.remove_block @block_id
     @dashboard.save
     respond_to do |format|
       format.html { redirect_to dashboard_link_path(@dashboard) }
@@ -198,9 +197,9 @@ class DashboardsController < ApplicationController
 
   # Change blocks order
   # params[:group] : group to order (top, left or right)
-  # params[:blocks] : array of block ids of the group
+  # params[:block_ids] : array of block ids of the group
   def order_blocks
-    @dashboard.order_blocks params[:group], params[:blocks]
+    @dashboard.order_blocks params[:group], params[:block_ids]
     @dashboard.save
     head :ok
   end

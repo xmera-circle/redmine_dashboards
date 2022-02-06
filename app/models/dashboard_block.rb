@@ -27,7 +27,7 @@ class DashboardBlock
 
   MAX_MULTIPLE_OCCURS = 8
 
-  attr_reader :name, :specs, :settings
+  attr_reader :type, :specs, :settings
 
   delegate :key?, to: :attributes
   delegate :logger, to: :class
@@ -37,35 +37,38 @@ class DashboardBlock
   end
 
   ##
-  # Collects all child classes of DashboardBlock
+  # Collects all registered types of dashboard blocks
   #
-  # @return [Array] An array of DashboardBlock child classes
+  # @return [Array] An array of DashboardBlock child classes, i.e., all available
+  #   types.
   #
   def self.all
     descendants
   end
 
   ##
-  # Finds a registered block
+  # Finds the registered block representative for a given block_id
   #
-  # @params name [String|Symbol] The name of the block.
-  # @return [Object] A DashboardBlock subclass or nil.
+  # @params block_id [String] The unique identifier of a block item in a dashboard.
+  # @return [Object] A DashboardBlock subclass of the corresponding block type or nil.
   #
-  def self.find_block(name)
-    klass = "#{name.camelize}Block".constantize
-    block = klass.instance if registered? klass
-  rescue NameError => e
-    logger.error e.full_message
-  ensure
-    block
+  def self.find_block(block_id)
+    klass = "#{sanitize_block_id(block_id).camelize}Block".safe_constantize
+    return unless registered? klass
+
+    klass.instance
   end
 
-  def self.blocks_by(names)
-    blocks = names&.map { |name| find_block(name) }
-    # When an error is thrown the return value is true instead of nil.
-    # Currently, I do not know what's the reason behind. Therefore, I make
-    # sure, the true value is excluded.
-    blocks.without(true)
+  ##
+  # Sanitizes a given block id which may contain numbers. This is true for
+  # blocks based on block types allowing :max_frequency > 1.
+  #
+  # @param block_id [String] The unique identifier of a block item in a dashboard.
+  # @return [String] The block type incorporated into the block_id.
+  #
+  def self.sanitize_block_id(block_id)
+    regex = /__\d+/
+    block_id.split(regex)[0]
   end
 
   def self.registered?(block_klass)
@@ -74,13 +77,14 @@ class DashboardBlock
 
   ##
   # Initializes a block
-  # @param name [String] The name of the block to be used as key.
-  # @param label [String] The label of the block to be used in the view.
-  # @param specs [Hash] Some static specifications of the block such that :permission, :partial, :max_occurs, :async.
+  #
+  # @param type [String] The block type, i.e., 'text', 'chart', etc.
+  # @param label [String] The label of the block to be used in views.
+  # @param specs [Hash] Some static specifications of the block such that :permission, :partial, :max_frequency, :async.
   # @param settings [Hash] Available settings for the block to be defined by the user.
   def initialize
     super
-    @name = register_name
+    @type = register_type
     @label = register_label
     @specs = register_specs
     @settings = register_settings
@@ -96,7 +100,7 @@ class DashboardBlock
   end
 
   def attributes
-    { name: name,
+    { type: type,
       label: label,
       specs: specs,
       settings: settings }
@@ -123,7 +127,7 @@ class DashboardBlock
     specs.fetch(:inline, false)
   end
 
-  def register_name
+  def register_type
     not_implemented(__method__)
   end
 
@@ -149,11 +153,27 @@ class DashboardBlock
     dashboard
   end
 
+  def forbidden?(user, project)
+    not_allowed_to?(user, project) || not_admin?(user) || condition_not_met?(project)
+  end
+
   private
 
   def not_implemented(method_name)
     klass = self.class.name
     raise NotImplementedError, "#{klass}##{method_name} needs to be implemented"
+  end
+
+  def not_allowed_to?(user, project)
+    specs.key?(:permission) && !user.allowed_to?(specs[:permission], project, global: true)
+  end
+
+  def not_admin?(user)
+    specs.key?(:admin_only) && specs[:admin_only] && !user.admin?
+  end
+
+  def condition_not_met?(project)
+    specs.key(:if) && !specs[:if].call(project)
   end
 
   def update_settings(settings)

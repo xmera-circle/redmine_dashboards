@@ -42,7 +42,7 @@
             type: 'post',
             data: {
               'group': $(this).attr('id').replace(/^list-/, ''),
-              'blocks': $.map($(this).children(), function(el){return $(el).attr('id').replace(/^block-/, '');})
+              'block_ids': $.map($(this).children(), function(el){return $(el).attr('id').replace(/^block-/, '');})
             }
           });
         }
