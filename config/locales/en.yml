@@ -30,6 +30,13 @@ en:
   label_text_async: Text (asynchronous)
   label_button: Button
   label_button_background_color: Button background color
+  label_chart: Diagram
+  label_chart_type: Diagram type
+  label_filter: Filter
+  label_bar_chart_vertical: Bar chart, vertical
+  label_bar_chart_horizontal: Bar chart, horizontal
+  label_issues_by_tracker: Issues by tracker
+  label_issues_by_status: Issues by status
 
   error_while_executing_bashboard_block: dashboard block cannot be displayed due to an error. Please report this error to your administrator.
   activemodel:
