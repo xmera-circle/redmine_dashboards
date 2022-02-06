@@ -67,7 +67,7 @@ class DashboardContent
   end
 
   def with_chartjs?
-    false
+    available_blocks.any? { |_block_type, attrs| attrs[:specs][:chartjs] }
   end
 
   ##

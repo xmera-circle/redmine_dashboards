@@ -39,7 +39,8 @@ class ChartBlock < DashboardBlock
       partial: 'dashboards/blocks/chart',
       max_frequency: MAX_MULTIPLE_OCCURS,
       filter_list: %w[rows statuses],
-      chart_type_list: %w[bar horizontalBar] }
+      chart_type_list: %w[bar horizontalBar],
+      chartjs: true }
   end
 
   def register_settings
