@@ -5,6 +5,8 @@
 # Copyright (C) 2020 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
 # See <https://github.com/AlphaNodes/additionals>.
 #
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+#
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
@@ -19,52 +21,44 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
+require 'forwardable'
+
+##
+# Provides dashboard content related data with reference to the dashboard
+# layout and its blocks.
+#
 class DashboardContent
   include Redmine::I18n
+  extend Forwardable
 
-  attr_accessor :user, :project
+  def_delegators :block_klass, :all, :find_block
+  attr_reader :user, :project, :block_klass
 
   DEFAULT_MAX_ENTRIES = 10
   RENDER_ASYNC_CACHE_EXPIRES_IN = 30
 
   class << self
     def types
-      descendants.map { |dc| dc::TYPE_NAME }
+      descendants.map { |klass| klass::TYPE_NAME }
     end
   end
 
   def initialize(attr = {})
     self.user = attr[:user].presence || User.current
     self.project = attr[:project].presence
+    self.block_klass = attr[:block_klass].presence
   end
 
-  # Returns the available blocks
-  def available_blocks
-    return @available_blocks if defined? @available_blocks
-
-    available_blocks = registered_blocks.reject do |_name, attrs|
-      specs = attrs[:specs]
-      (specs.key?(:permission) && !user.allowed_to?(specs[:permission], project, global: true)) ||
-        (specs.key?(:admin_only) && specs[:admin_only] && !user.admin?) ||
-        (specs.key(:if) && !specs[:if].call(project))
-    end
-
-    @available_blocks = available_blocks.sort_by { |_name, attrs| attrs[:label] }.to_h
-  end
-
-  def registered_blocks
-    all_block_instances.each_with_object({}) do |object, hash|
-      block = object.instance
-      attrs = block.attributes
-      hash[attrs[:name]] = attrs
-    end
-  end
-
+  ##
+  # Returns the layout groups which determine the drop areas in the layout.
+  #
   def groups
     %w[top left right bottom]
   end
 
-  # Returns the default layout for a new dashboard
+  ##
+  # Returns the default layout for a new dashboard.
+  #
   def default_layout
     {
       'left' => ['legacy_left'],
@@ -76,46 +70,67 @@ class DashboardContent
     false
   end
 
-  def valid_block?(block, blocks_in_use = [])
-    block.present? && block_options(blocks_in_use).map(&:last).include?(block)
+  ##
+  # Checks the validity of a given block id by comparing it with the set
+  # of available block ids.
+  #
+  def valid_block?(block_id, blocks_in_use = [])
+    return false if block_id.blank?
+
+    available_block_ids(blocks_in_use).include?(block_id)
   end
 
+  ##
+  # Prepares the block options for select as provided on top of the dashboard
+  # page.
+  #
   def block_options(blocks_in_use = [])
     options = []
-    available_blocks.each do |block, block_options|
-      indexes = block_indexes(blocks_in_use, block)
-      indexes.compact!
-
-      occurs = indexes.size
-      block_id = indexes.any? ? "#{block}__#{indexes.max + 1}" : block
-      disabled = (occurs >= (available_blocks[block][:specs][:max_occurs] || 1))
-      block_id = nil if disabled
-
-      options << [block_options[:label], block_id]
+    available_blocks.each do |block_type, block_attrs|
+      counter = BlockCounter.new(type: block_type, attrs: block_attrs, active_blocks: blocks_in_use)
+      options << [block_attrs[:label], counter.next_block_id]
     end
     options
   end
 
-  def find_block(block_name)
-    block_name.to_s =~ /\A(.*?)(__\d+)?\z/
-    name = Regexp.last_match 1
-    available_blocks.key?(name) ? find_block_instance_by(name) : nil
-  end
-
   private
 
-  def all_block_instances
-    DashboardBlock.all
+  attr_writer :user, :project, :block_klass
+  attr_accessor :allowed_blocks
+
+  ##
+  # Retrieves an array of block_ids from blocks already in use.
+  #
+  def available_block_ids(blocks_in_use)
+    block_options(blocks_in_use).map(&:last)
   end
 
-  def find_block_instance_by(name)
-    DashboardBlock.find_block(name)
-  end
+  ##
+  # Retrieves all blocks available for a given user and project.
+  #
+  def available_blocks
+    return allowed_blocks if allowed_blocks
 
-  def block_indexes(blocks_in_use, block_name)
-    blocks_in_use.map do |item|
-      Regexp.last_match(2).to_i if item =~ /\A#{block_name}(__(\d+))?\z/
+    blocks = all.each_with_object({}) do |klass, hash|
+      assign_block_if_available(klass, hash)
     end
+
+    self.allowed_blocks = blocks.sort_by { |_block_type, attrs| attrs[:label] }.to_h
+  end
+
+  ##
+  # Adds a block to the hash of available blocks if and only if the user has the
+  # permission to read the block contents.
+  #
+  def assign_block_if_available(klass, hash)
+    instance = block(klass)
+    return if instance.forbidden?(user, project)
+
+    hash[instance.type] = instance.attributes
+  end
+
+  def block(klass)
+    klass.instance
   end
 
   def logger

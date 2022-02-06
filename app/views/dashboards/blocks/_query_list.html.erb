@@ -4,7 +4,7 @@
 # This file is part of the Plugin Redmine Dashboards.
 #
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/RedmineDashboards>.
+# See <https://github.com/AlphaNodes/additionals>.
 #
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
@@ -23,7 +23,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 %>
 
-<% dashboard_async_cache(dashboard, block, async, settings) do %>
+<% dashboard_async_cache(dashboard, block_id, async, settings) do %>
 
   <% query = klass.visible.find_by id: settings[:query_id] %>
   <% if query %>
@@ -36,7 +36,7 @@
     <%= tag.h3 class: 'query-list-block' do %>
       <%= dashboard_query_list_block_title query, query_block, @project %>
       <%= " (#{count})" %>
-      <%= dashboard_query_list_block_alerts dashboard, query, block_definition %>
+      <%= dashboard_query_list_block_alerts dashboard, query, block_object %>
     <% end %>
     <% if query.respond_to?(:description) && query.description.present? %>
       <%=tag.div class: 'query-description' do %>
@@ -56,13 +56,9 @@
                            query_options: { sort_param: 'sort',
                                             sort_link_options: { method: :post, remote: true } } } %>
     <% else %>
-      <%=tag.p class: 'nodata' do %>
-        <%= l :label_no_data %>
-      <% end %>
+      <%= render partial: 'dashboards/blocks/nodata' %>
     <% end %>
   <% else %>
-    <%=tag.p class: 'nodata' do %>
-      <%= l :label_no_data %>
-    <% end %>
+    <%= render partial: 'dashboards/blocks/nodata' %>
   <% end %>
 <% end %>

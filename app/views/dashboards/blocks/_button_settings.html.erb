@@ -4,7 +4,7 @@
 # This file is part of the Plugin Redmine Dashboards.
 #
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/RedmineDashboards>.
+# See <https://github.com/AlphaNodes/additionals>.
 #
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
@@ -26,15 +26,15 @@
 <%= tag.div class: 'box tabular settings' do %>
   <%= tag.p dashboards_settings_urlfield :link,
                                          value: settings[:link],
-                                         tag_name: "settings[#{block}][link]",
+                                         tag_name: "settings[#{block_id}][link]",
                                          required: true %>
   
   <%= tag.p dashboards_settings_textfield :text,
                                           value: settings[:text],
-                                          tag_name: "settings[#{block}][text]" %>
+                                          tag_name: "settings[#{block_id}][text]" %>
 
-  <%=tag.p dashboard_settings_colorfield :color,
+  <%=tag.p dashboards_settings_colorfield :color,
                                          value: settings[:color],
                                          label: l(:label_button_background_color),
-                                         tag_name: "settings[#{block}][color]" %>
+                                         tag_name: "settings[#{block_id}][color]" %>
 <% end %>

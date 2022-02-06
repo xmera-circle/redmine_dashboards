@@ -22,7 +22,7 @@ class IssueQueryBlock < DashboardBlock
   attr_accessor :max_entries, :query_id, :columns
   validates :max_entries, presence: true, numericality: true, inclusion: { in: (1..100).map(&:to_s) }
 
-  def register_name
+  def register_type
     'issue_query'
   end
 
@@ -40,7 +40,7 @@ class IssueQueryBlock < DashboardBlock
                      entries_method: 'issues',
                      entities_var: :issues,
                      with_project: true },
-      max_occurs: MAX_MULTIPLE_OCCURS }
+      max_frequency: MAX_MULTIPLE_OCCURS }
   end
 
   def register_settings

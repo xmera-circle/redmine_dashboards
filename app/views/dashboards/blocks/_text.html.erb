@@ -9,12 +9,12 @@
 
 
 <% if @can_edit %>
-  <%= tag.div id: "#{block}-settings", style: "display: none;" do %>
+  <%= tag.div id: "#{block_id}-settings", style: "display: none;" do %>
     <%= form_tag(update_layout_setting_dashboard_path(@dashboard), remote: true) do %>
-      <%= render partial: 'dashboards/blocks/text_async_settings', locals: { block: block, settings: settings }%>
+      <%= render partial: 'dashboards/blocks/text_async_settings', locals: { block_id: block_id, settings: settings }%>
       <%= tag.p do %>
         <%= submit_tag l(:button_save) %>
-        <%= link_to_function l(:button_cancel), "$('##{block}-settings').toggle();" %>
+        <%= link_to_function l(:button_cancel), "$('##{block_id}-settings').toggle();" %>
       <% end %>
     <% end %>
   <% end %>

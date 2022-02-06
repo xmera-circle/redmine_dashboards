@@ -23,7 +23,7 @@ class ButtonBlock < DashboardBlock
 
   validates :text, :link, presence: true
 
-  def register_name
+  def register_type
     'button'
   end
 
@@ -32,7 +32,7 @@ class ButtonBlock < DashboardBlock
   end
 
   def register_specs
-    { max_occurs: MAX_MULTIPLE_OCCURS,
+    { max_frequency: MAX_MULTIPLE_OCCURS,
       partial: 'dashboards/blocks/button',
       inline: true }
   end

@@ -3,7 +3,7 @@
 # This file is part of the Plugin Redmine Dashboards.
 #
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/RedmineDashboards>.
+# See <https://github.com/AlphaNodes/additionals>.
 #
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
@@ -22,7 +22,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 module DashboardsSettingsHelper
-  def dashboard_settings_colorfield(name, **options)
+  def with_default(arg, default)
+    arg.presence || default
+  end
+
+  def dashboards_settings_colorfield(name, **options)
     dashboards_settings_input_field(:color_field_tag, name, **options)
   end
 

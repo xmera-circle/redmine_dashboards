@@ -3,7 +3,7 @@
 # This file is part of the Plugin Redmine Dashboards.
 #
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/RedmineDashboards>.
+# See <https://github.com/AlphaNodes/additionals>.
 #
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
@@ -22,8 +22,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 module DashboardsHelper
-  def dashboard_async_cache(dashboard, block, async, settings, &content_block)
-    cache render_async_cache_key(dashboard_async_blocks_path(dashboard.async_params(block, async, settings))),
+  def dashboard_async_cache(dashboard, block_id, async, settings, &content_block)
+    cache render_async_cache_key(dashboard_async_blocks_path(dashboard.async_params(block_id, async, settings))),
           expires_in: async[:cache_expires_in] || DashboardContent::RENDER_ASYNC_CACHE_EXPIRES_IN,
           skip_digest: true, &content_block
   end
@@ -45,7 +45,7 @@ module DashboardsHelper
     name = [l(:label_home)]
     name << dashboard.name if dashboard&.always_expose? || (dashboard.present? && !dashboard.system_default?)
 
-    safe_join name, RedmineDashboards::LIST_SEPARATOR
+    safe_join name, RedmineDashboards::SEPARATOR
   end
 
   def dashboard_css_classes(dashboard)
@@ -193,10 +193,10 @@ module DashboardsHelper
   def dashboard_block_select_tag(dashboard)
     blocks_in_use = dashboard.layout.values.flatten
     options = tag.option l(:label_add_dashboard_block), value: ''
-    dashboard.content.block_options(blocks_in_use).each do |label, block|
-      options << tag.option(label, value: block, disabled: block.blank?)
+    dashboard.content.block_options(blocks_in_use).each do |label, block_id|
+      options << tag.option(label, value: block_id, disabled: block_id.blank?)
     end
-    select_tag 'block',
+    select_tag 'block_id',
                options,
                id: 'block-select',
                class: 'dashboard-block-select',
@@ -204,41 +204,41 @@ module DashboardsHelper
   end
 
   # Renders the blocks
-  def render_dashboard_blocks(blocks, dashboard, _options = {})
+  def render_dashboard_blocks(block_ids, dashboard, _options = {})
     s = ''.html_safe
 
-    if blocks.present?
-      blocks.each do |block|
-        s << render_dashboard_block(block, dashboard).to_s
+    if block_ids.present?
+      block_ids.each do |block_id|
+        s << render_dashboard_block(block_id, dashboard).to_s
       end
     end
     s
   end
 
   # Renders a single block
-  def render_dashboard_block(block, dashboard, overwritten_settings = {})
+  def render_dashboard_block(block_id, dashboard, overwritten_settings = {})
     return unless User.current.logged?
 
-    block_definition = dashboard.content.find_block block
-    unless block_definition
-      Rails.logger.info "Unknown block \"#{block}\" found in #{dashboard.name} (id=#{dashboard.id})"
+    block_object = dashboard.content.find_block block_id
+    unless block_object
+      Rails.logger.info "Unknown block \"#{block_id}\" found in #{dashboard.name} (id=#{dashboard.id})"
       return
     end
 
-    content = render_dashboard_block_content block, block_definition, dashboard, overwritten_settings
+    content = render_dashboard_block_content block_id, block_object, dashboard, overwritten_settings
     return if content.blank?
 
     if dashboard.editable?
       icons = []
-      if block_definition[:no_settings].blank? &&
-         (!block_definition.key?(:with_settings_if) || block_definition[:with_settings_if].call(@project))
+      if block_object[:no_settings].blank? &&
+         (!block_object.key?(:with_settings_if) || block_object[:with_settings_if].call(@project))
         icons << link_to_function(l(:label_options),
-                                  "$('##{block}-settings').toggle();",
+                                  "$('##{block_id}-settings').toggle();",
                                   class: 'icon-only icon-settings',
                                   title: l(:label_options))
       end
       icons << tag.span('', class: 'icon-only icon-sort-handle sort-handle', title: l(:button_move))
-      icons << delete_link(remove_block_dashboard_path(dashboard, block: block),
+      icons << delete_link(remove_block_dashboard_path(dashboard, block_id: block_id),
                            method: :post,
                            remote: true,
                            class: 'icon-only icon-close',
@@ -247,26 +247,26 @@ module DashboardsHelper
       content = tag.div(safe_join(icons), class: 'contextual') + content
     end
 
-    tag.div content, class: "mypage-box #{block_definition.inline ? 'inline' : nil}", id: "block-#{block}"
+    tag.div content, class: "mypage-box #{block_object.inline ? 'inline' : nil}", id: "block-#{block_id}"
   end
 
-  def build_dashboard_partial_locals(block, block_definition, settings, dashboard)
+  def build_dashboard_partial_locals(block_id, block_object, settings, dashboard)
     partial_locals = { dashboard: dashboard,
                        settings: settings,
-                       block: block,
-                       block_definition: block_definition,
+                       block_id: block_id,
+                       block_object: block_object,
                        user: User.current }
 
-    if block_definition[:query_block]
-      partial_locals[:query_block] = block_definition[:query_block]
-      partial_locals[:klass] = block_definition[:query_block][:class]
+    if block_object[:query_block]
+      partial_locals[:query_block] = block_object[:query_block]
+      partial_locals[:klass] = block_object[:query_block][:class]
       partial_locals[:async] = { required_settings: %i[query_id],
                                  exposed_params: %i[sort],
                                  partial: 'dashboards/blocks/query_list' }
       partial_locals[:async][:unique_params] = [Redmine::Utils.random_hex(16)] if params[:refresh].present?
-      partial_locals[:async] = partial_locals[:async].merge block_definition[:async] if block_definition[:async]
-    elsif block_definition[:async]
-      partial_locals[:async] = block_definition[:async]
+      partial_locals[:async] = partial_locals[:async].merge block_object[:async] if block_object[:async]
+    elsif block_object[:async]
+      partial_locals[:async] = block_object[:async]
     end
     partial_locals
   end
@@ -293,15 +293,15 @@ module DashboardsHelper
                link_to query.name, send(query_block[:link_helper], query.as_params)
              end
 
-    safe_join title, RedmineDashboards::LIST_SEPARATOR
+    safe_join title, RedmineDashboards::SEPARATOR
   end
 
-  def dashboard_query_list_block_alerts(dashboard, query, block_definition)
+  def dashboard_query_list_block_alerts(dashboard, query, block_object)
     return if dashboard.visibility == Dashboard::VISIBILITY_PRIVATE
 
     title = if query.visibility == Query::VISIBILITY_PRIVATE
               l :alert_only_visible_by_yourself
-            elsif block_definition.key?(:admin_only) && block_definition[:admin_only]
+            elsif block_object.key?(:admin_only) && block_object[:admin_only]
               l :alert_only_visible_by_admins
             end
 
@@ -312,16 +312,16 @@ module DashboardsHelper
                       class: 'dashboard-block-alert')
   end
 
-  def render_legacy_left_block(_block, _block_definition, _settings, _dashboard)
+  def render_legacy_left_block(_block_id, _block_object, _settings, _dashboard)
     call_hook :view_welcome_index_left
   end
 
-  def render_legacy_right_block(_block, _block_definition, _settings, _dashboard)
+  def render_legacy_right_block(_block_id, _block_object, _settings, _dashboard)
     call_hook :view_welcome_index_right
   end
 
   # copied from my_helper
-  def render_documents_block(block, _block_definition, settings, dashboard)
+  def render_documents_block(block_id, _block_object, settings, dashboard)
     max_entries = settings[:max_entries] || DashboardContent::DEFAULT_MAX_ENTRIES
 
     scope = Document.visible
@@ -331,12 +331,12 @@ module DashboardsHelper
                      .limit(max_entries)
                      .to_a
 
-    render partial: 'dashboards/blocks/documents', locals: { block: block,
+    render partial: 'dashboards/blocks/documents', locals: { block_id: block_id,
                                                              max_entries: max_entries,
                                                              documents: documents }
   end
 
-  def render_news_block(block, _block_definition, settings, dashboard)
+  def render_news_block(block_id, _block_object, settings, dashboard)
     max_entries = settings[:max_entries] || DashboardContent::DEFAULT_MAX_ENTRIES
 
     news = if dashboard.content_project.nil?
@@ -350,12 +350,12 @@ module DashboardsHelper
                       .to_a
            end
 
-    render partial: 'dashboards/blocks/news', locals: { block: block,
+    render partial: 'dashboards/blocks/news', locals: { block_id: block_id,
                                                         max_entries: max_entries,
                                                         news: news }
   end
 
-  def render_my_spent_time_block(block, block_definition, settings, dashboard)
+  def render_my_spent_time_block(block_id, block_object, settings, dashboard)
     days = settings[:days].to_i
     days = 7 if days < 1 || days > 365
 
@@ -366,8 +366,8 @@ module DashboardsHelper
     entries_days = scope.where spent_on: User.current.today - (days - 1)..User.current.today
 
     render partial: 'dashboards/blocks/my_spent_time',
-           locals: { block: block,
-                     block_definition: block_definition,
+           locals: { block_id: block_id,
+                     block_object: block_object,
                      entries_today: entries_today,
                      entries_days: entries_days,
                      days: days }
@@ -412,8 +412,8 @@ module DashboardsHelper
     feed
   end
 
-  def dashboard_feed_title(title, block_definition)
-    title.presence || block_definition[:label]
+  def dashboard_feed_title(title, block_object)
+    title.presence || block_object[:label]
   end
 
   def options_for_query_select(klass, project)
@@ -431,26 +431,25 @@ module DashboardsHelper
   private
 
   # Renders a single block content
-  def render_dashboard_block_content(block, block_definition, dashboard, overwritten_settings = {})
-    settings = dashboard.layout_settings block
+  def render_dashboard_block_content(block_id, block_object, dashboard, overwritten_settings = {})
+    settings = dashboard.layout_settings block_id
     settings = settings.merge overwritten_settings if overwritten_settings.present?
+    partial = block_object[:partial]
+    partial_locals = build_dashboard_partial_locals block_id, block_object, settings, dashboard
 
-    partial = block_definition[:partial]
-    partial_locals = build_dashboard_partial_locals block, block_definition, settings, dashboard
-
-    if block_definition[:query_block] || block_definition[:async]
+    if block_object[:query_block] || block_object[:async]
       render partial: 'dashboards/blocks/async', locals: partial_locals
     elsif partial
       begin
         render partial: partial, locals: partial_locals
       rescue ActionView::MissingTemplate
-        Rails.logger.warn "Partial \"#{partial}\" missing for block \"#{block}\" found in #{dashboard.name} (id=#{dashboard.id})"
+        Rails.logger.warn "Partial \"#{partial}\" missing for block \"#{block_id}\" found in #{dashboard.name} (id=#{dashboard.id})"
         nil
       end
     else
-      send "render_#{block_definition[:name]}_block",
-           block,
-           block_definition,
+      send "render_#{block_object[:type]}_block",
+           block_id,
+           block_object,
            settings,
            dashboard
     end
@@ -464,5 +463,24 @@ module DashboardsHelper
 
     user.pref.recently_used_dashboards[dashboard_type] = dashboard.id
     user.pref.save
+  end
+
+  ##
+  # Copied from Redmine ReportsHelper module
+  #
+  def aggregate(data, criteria)
+    a = 0
+    data.each do |row|
+      match = 1
+      criteria.each do |k, v|
+        unless (row[k].to_s == v.to_s) ||
+                 (k == 'closed' &&
+                   (v == 0 ? ['f', false] : ['t', true]).include?(row[k]))
+          match = 0
+        end
+      end unless criteria.nil?
+      a = a + row["total"].to_i if match == 1
+    end unless data.nil?
+    a
   end
 end

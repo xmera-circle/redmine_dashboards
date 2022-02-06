@@ -1,2 +1,2 @@
 
-$("#block-<%= block %>").replaceWith("<%= escape_javascript render_dashboard_block(block.to_s, dashboard, sort_options) %>");
+$("#block-<%= block_id %>").replaceWith("<%= escape_javascript render_dashboard_block(block_id.to_s, dashboard, sort_options) %>");

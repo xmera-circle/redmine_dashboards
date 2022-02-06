@@ -42,7 +42,7 @@ class Dashboard < ActiveRecord::Base
   VISIBILITY_PUBLIC  = 2
 
   delegate :groups, to: :content, prefix: :available
-  delegate :find_block, :blocks_by, to: 'DashboardBlock'
+  delegate :find_block, to: :block_klass
 
   scope :by_project, (->(project_id) { where project_id: project_id if project_id.present? })
   scope :sorted, (-> { order "#{Dashboard.table_name}.name" })
@@ -160,6 +160,10 @@ class Dashboard < ActiveRecord::Base
     set_options_hash
   end
 
+  def block_klass
+    DashboardBlock
+  end
+
   def set_options_hash
     self.options ||= {}
   end
@@ -176,9 +180,9 @@ class Dashboard < ActiveRecord::Base
     if has_attribute? attr_name
       super
     else
-      h = (self[:options] || {}).dup
-      h.update attr_name => value
-      self[:options] = h
+      attrs = (self[:options] || {}).dup
+      attrs.update attr_name => value
+      self[:options] = attrs
       value
     end
   end
@@ -204,7 +208,10 @@ class Dashboard < ActiveRecord::Base
   end
 
   def content
-    @content ||= "DashboardContent#{dashboard_type[0..-10]}".constantize.new(project: content_project.presence || project)
+    @content ||=
+      "DashboardContent#{dashboard_type[0..-10]}".constantize.new(
+        project: content_project.presence || project, block_klass: block_klass
+      )
   end
 
   def available_groups
@@ -219,21 +226,21 @@ class Dashboard < ActiveRecord::Base
     self[:layout] = arg
   end
 
-  def layout_settings(block = nil)
+  def layout_settings(block_id = nil)
     settings = self[:layout_settings] ||= {}
-    return settings unless block
+    return settings unless block_id
 
-    settings[block] ||= {}
+    settings[block_id] ||= {}
   end
 
   def layout_settings=(arg)
     self[:layout_settings] = arg
   end
 
-  def remove_block(block)
-    block = block.to_s.underscore
+  def remove_block(block_id)
+    block_id = block_id.to_s.underscore
     layout.each_key do |group|
-      layout[group].delete block
+      layout[group].delete block_id
     end
     layout
   end
@@ -241,34 +248,33 @@ class Dashboard < ActiveRecord::Base
   # Adds block to the user page layout
   # Returns nil if block is not valid or if it's already
   # present in the user page layout
-  def add_block(block)
-    block = block.to_s.underscore
-    return unless content.valid_block? block, layout.values.flatten
+  def add_block(block_id)
+    block_id = block_id.to_s.underscore
+    return unless content.valid_block? block_id, layout.values.flatten
 
-    remove_block block
-    # add it to the first group
+    remove_block block_id
     # add it to the first group
     group = available_groups.first
     layout[group] ||= []
-    layout[group].unshift block
+    layout[group].unshift block_id
   end
 
   # Sets the block order for the given group.
   # Example:
   #   preferences.order_blocks('left', ['issueswatched', 'news'])
-  def order_blocks(group, blocks)
+  def order_blocks(group, block_ids)
     group = group.to_s
-    return if content.groups.exclude?(group) || blocks.blank?
+    return if content.groups.exclude?(group) || block_ids.blank?
 
-    blocks = blocks.map(&:underscore) & layout.values.flatten
-    blocks.each { |block| remove_block block }
-    layout[group] = blocks
+    block_ids = block_ids.map(&:underscore) & layout.values.flatten
+    block_ids.each { |block_id| remove_block block_id }
+    layout[group] = block_ids
   end
 
-  def update_block_settings(block, settings)
-    block = block.to_s
-    block_settings = layout_settings(block).merge(settings.symbolize_keys)
-    layout_settings[block] = block_settings
+  def update_block_settings(block_id, settings)
+    block_id = block_id.to_s
+    block_settings = layout_settings(block_id).merge(settings.symbolize_keys)
+    layout_settings[block_id] = block_settings
   end
 
   def private?(user = User.current)
@@ -315,15 +321,15 @@ class Dashboard < ActiveRecord::Base
   end
 
   # this is used to get unique cache for blocks
-  def async_params(block, options, settings)
-    if block.blank?
+  def async_params(block_id, options, settings)
+    if block_id.blank?
       msg = 'block is missing for dashboard_async'
       Rails.log.error msg
       raise msg
     end
 
     config = { dashboard_id: id,
-               block: block }
+               block_id: block_id }
 
     if RedmineDashboards.false? options[:skip_user_id]
       settings[:user_id] = User.current.id
@@ -372,8 +378,8 @@ class Dashboard < ActiveRecord::Base
   end
 
   def clear_unused_block_settings
-    blocks = layout.values.flatten
-    layout_settings.keep_if { |block, _settings| blocks.include? block }
+    block_ids = layout.values.flatten
+    layout_settings.keep_if { |block_id, _settings| block_ids.include? block_id }
   end
 
   def remove_unused_role_relations
@@ -451,9 +457,10 @@ class Dashboard < ActiveRecord::Base
   def validate_layout_settings
     return if layout_settings.empty?
 
-    names = layout_settings&.keys
-    blocks_by(names).each do |block|
-      block.validate_settings(layout_settings[block.name], self)
+    block_ids = layout_settings&.keys
+    block_ids.each do |block_id|
+      block = find_block(block_id)
+      block.validate_settings(layout_settings[block_id], self)
     end
   end
 end

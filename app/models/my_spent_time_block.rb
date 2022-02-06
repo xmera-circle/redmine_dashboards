@@ -22,7 +22,7 @@ class MySpentTimeBlock < DashboardBlock
   attr_accessor :days
   validates :days, presence: true, numericality: true, inclusion: { in: (1..100).map(&:to_s) }
 
-  def register_name
+  def register_type
     'my_spent_time'
   end
 

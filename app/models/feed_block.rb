@@ -25,7 +25,7 @@ class FeedBlock < DashboardBlock
   validates :url, presence: true
   validates :max_entries, presence: true, numericality: true, inclusion: { in: (1..100).map(&:to_s) }
 
-  def register_name
+  def register_type
     'feed'
   end
 
@@ -34,7 +34,7 @@ class FeedBlock < DashboardBlock
   end
 
   def register_specs
-    { max_occurs: MAX_MULTIPLE_OCCURS,
+    { max_frequency: MAX_MULTIPLE_OCCURS,
       async: { required_settings: %i[url],
                cache_expires_in: 600,
                skip_user_id: true,

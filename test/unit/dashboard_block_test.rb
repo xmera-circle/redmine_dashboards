@@ -21,7 +21,7 @@
 require File.expand_path '../test_helper', __dir__
 
 class TestTextBlock < DashboardBlock
-  def register_name
+  def register_type
     'test_text'
   end
 
@@ -43,7 +43,7 @@ class TestNewsBlock < DashboardBlock
 
   validates :title, presence: true
 
-  def register_name
+  def register_type
     'test_news'
   end
 

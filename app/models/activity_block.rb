@@ -24,7 +24,7 @@ class ActivityBlock < DashboardBlock
   validates :max_entries, presence: true, numericality: true, inclusion: { in: (1..100).map(&:to_s) }
   validates :me_only, inclusion: { in: %w[0 1] }
 
-  def register_name
+  def register_type
     'activity'
   end
 
