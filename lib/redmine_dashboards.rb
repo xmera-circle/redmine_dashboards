@@ -24,7 +24,7 @@ require 'redmine_dashboards/extensions/welcome_controller_patch'
 require 'redmine_dashboards/hooks/base_view_listener'
 
 module RedmineDashboards
-  LIST_SEPARATOR = ' » '
+  SEPARATOR = ' » '
   class << self
     def setup
       RenderAsync.configuration.jquery = true
@@ -43,6 +43,7 @@ module RedmineDashboards
       TextBlock.instance
       WelcomeBlock.instance
       ButtonBlock.instance
+      ChartBlock.instance
     end
 
     def true?(value)

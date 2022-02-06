@@ -1,0 +1,102 @@
+<%
+# frozen_string_literal: true
+
+# This file is part of the Plugin Redmine Dashboards.
+#
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+#
+# This plugin program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+%>
+<% if @can_edit %>
+  <%= tag.div id: "#{block_id}-settings", style: "display: none;" do %>
+    <%= form_tag(update_layout_setting_dashboard_path(@dashboard), remote: true) do %>
+      <%= render partial: 'dashboards/blocks/chart_settings', locals: { block_id: block_id, settings: settings }%>
+      <%= tag.p do %>
+        <%= submit_tag l(:button_save) %>
+        <%= link_to_function l(:button_cancel), "$('##{block_id}-settings').toggle();" %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% project = Project.find_by(id: settings[:project_id] ) %>
+<%=tag.h3 "#{project&.name} #{RedmineDashboards::SEPARATOR} #{with_default(settings[:title], l(:label_report))}" %>
+<% ordinate = settings.fetch(:filter, 'rows') %>
+<% chart = DashboardBlockData.new(block_id, project, 'tracker_id', ordinate) %>
+
+<% if chart.dataset.any? { |set| set[:data].any?(&:positive?) } %>
+  <%= tag.div class: 'issue-report-graph' do %>
+    <%= tag.canvas id: "#{block_id}_issues_by_#{chart.detail}" %>
+  <% end %>
+
+  <%= javascript_tag do %>
+    function render<%= block_id.camelize %>(canvas_id, title, chartData){
+      var backgroundColors = ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'];
+      var borderColors = [];
+      for (var i = 0; i < chartData.datasets.length; i++) {
+        chartData.datasets[i].backgroundColor = backgroundColors[i % backgroundColors.length];
+        chartData.datasets[i].borderColor = borderColors[i % borderColors.length];
+        chartData.datasets[i].borderWidth = 1;
+      }
+      new Chart($(canvas_id), {
+        type: '<%= settings.fetch(:chart_type, 'bar') %>',
+        data: chartData,
+        options: {
+        plugins: {
+            colorschemes: {
+              scheme: 'tableau.ClassicCyclic13',
+              override: true
+            }
+          },
+          elements: {
+            rectangle: {borderWidth: 2}
+          },
+          responsive: true,
+          legend: {position: 'right'},
+          title: {
+            display: true,
+            text: title
+          },
+          scales: {
+            yAxes: [{ stacked: true }],
+            xAxes: [{ stacked: true }]
+          }
+        }
+      });
+    }
+    $(document).ready(function(){
+      var <%= block_id.camelize %> = {
+        labels: <%= raw chart.labels.to_json %>,
+        datasets: <%= raw chart.dataset.to_json %>
+      };
+      render<%= block_id.camelize %>("#<%= block_id %>_issues_by_<%= chart.detail %>", "<%= l(:label_issues_by, chart.report_title) %>", <%= block_id.camelize %>);
+    });
+  <% end %>
+  <% content_for :header_tags do %>
+    <%= javascript_include_tag "Chart.bundle.min" %>
+    <%= javascript_include_tag "chartjs-plugin-colorschemes.min", plugin: 'redmine_dashboards' %>
+      <style type="text/css">
+      .issue-report-graph {
+        width: auto;
+        margin: 0 auto;
+      }
+      table.list td.name{
+        word-wrap: break-word;
+      }
+    </style>
+  <% end %>
+<% else %>
+  <%= render partial: 'dashboards/blocks/nodata' %>
+<% end %>

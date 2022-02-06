@@ -1,0 +1,44 @@
+<%
+# frozen_string_literal: true
+
+# This file is part of the Plugin Redmine Dashboards.
+#
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+#
+# This plugin program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+%>
+<% project = Project.find_by(id: settings[:project_id]) %>
+
+<%= tag.div class: 'box tabular settings' do %> 
+  <%= tag.p dashboards_settings_textfield :title,
+                                          value: settings[:title],
+                                          tag_name: "settings[#{block_id}][title]" %>
+
+  <%= tag.p dashboards_settings_select :project_id,
+                                       options_for_select(Project.pluck(:name, :id), selected: project&.id),
+                                       label: l(:label_project_plural),
+                                       tag_name: "settings[#{block_id}][project_id]",
+                                       required: true %>
+
+  <%= tag.p dashboards_settings_select :filter,
+                                        options_for_select([[l(:label_issues_by_tracker), 'rows'], [l(:label_issues_by_status), 'statuses']], selected: settings[:filter]),
+                                        label: l(:label_filter),
+                                        tag_name: "settings[#{block_id}][filter]" %>
+
+  <%= tag.p dashboards_settings_select :chart_type,
+                                        options_for_select([[l(:label_bar_chart_vertical), 'bar'], [l(:label_bar_chart_horizontal), 'horizontalBar']], selected: settings[:chart_type]),
+                                        label: l(:label_chart_type),
+                                        tag_name: "settings[#{block_id}][chart_type]" %>
+<% end %>
