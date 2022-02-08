@@ -30,6 +30,9 @@ de:
   label_text_async: Text (asynchron)
   label_button: Button
   label_button_background_color: Button Hintergrundfarbe
+  label_block_positioning: Positionierung
+  label_position_centered: Mittig als einzelnes Element
+  label_position_inline: In Reihe mit weiteren Buttons
   label_chart: Diagramme
   label_chart_type: Diagrammtyp
   label_filter: Filter

@@ -247,7 +247,7 @@ module DashboardsHelper
       content = tag.div(safe_join(icons), class: 'contextual') + content
     end
 
-    tag.div content, class: "mypage-box #{block_object.inline ? 'inline' : nil}", id: "block-#{block_id}"
+    tag.div content, class: "mypage-box #{dashboard.layout_settings[block_id].fetch(:css, '')}", id: "block-#{block_id}"
   end
 
   def build_dashboard_partial_locals(block_id, block_object, settings, dashboard)

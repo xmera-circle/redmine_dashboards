@@ -5,6 +5,17 @@ $('#errorExplanation').remove();
   $("#block-<%= block_id %>").replaceWith("<%= escape_javascript render_dashboard_block(block_id.to_s, @dashboard) %>");
 <% end %>
 
+reloadOnCurrentPosition();
+
+document.addEventListener("DOMContentLoaded", function(event) { 
+            var scrollpos = localStorage.getItem('scrollpos');
+            if (scrollpos) window.scrollTo(0, scrollpos);
+        });
+        
+function reloadOnCurrentPosition() {
+  localStorage.setItem('scrollpos', window.scrollY);
+  location.reload(); 
+}
 
 $('[title]').tooltip({
     show: {

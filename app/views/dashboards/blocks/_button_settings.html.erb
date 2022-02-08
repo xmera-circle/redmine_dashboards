@@ -37,4 +37,10 @@
                                          value: settings[:color],
                                          label: l(:label_button_background_color),
                                          tag_name: "settings[#{block_id}][color]" %>
+
+  <%=tag.p dashboards_settings_select :css,
+                                      options_for_select([[l(:label_position_inline), 'inline'],[l(:label_position_centered), 'centered']], selected: settings[:css]) ,
+                                      label: l(:label_block_positioning),
+                                      tag_name: "settings[#{block_id}][css]" %>
+  
 <% end %>
