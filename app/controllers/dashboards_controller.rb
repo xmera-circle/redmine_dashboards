@@ -201,7 +201,7 @@ class DashboardsController < ApplicationController
   def order_blocks
     @dashboard.order_blocks params[:group], params[:block_ids]
     @dashboard.save
-    head :ok
+    @block_ids = params[:block_ids]
   end
 
   private
