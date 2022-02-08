@@ -53,7 +53,7 @@ class DashboardContent
   # Returns the layout groups which determine the drop areas in the layout.
   #
   def groups
-    %w[top left right bottom]
+    %w[top left-left left-center right-center right-right middle left right bottom]
   end
 
   ##

@@ -30,6 +30,9 @@ en:
   label_text_async: Text (asynchronous)
   label_button: Button
   label_button_background_color: Button background color
+  label_block_positioning: Position
+  label_position_centered: Center
+  label_position_inline: Inline
   label_chart: Diagram
   label_chart_type: Diagram type
   label_filter: Filter

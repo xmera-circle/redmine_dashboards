@@ -19,9 +19,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class ButtonBlock < DashboardBlock
-  attr_accessor :text, :link, :color
+  attr_accessor :text, :link, :color, :css
 
   validates :text, :link, presence: true
+  validates :css, inclusion: { in: %w[inline centered] }
 
   def register_type
     'button'
@@ -33,13 +34,13 @@ class ButtonBlock < DashboardBlock
 
   def register_specs
     { max_frequency: MAX_MULTIPLE_OCCURS,
-      partial: 'dashboards/blocks/button',
-      inline: true }
+      partial: 'dashboards/blocks/button' }
   end
 
   def register_settings
     { text: nil,
       link: nil,
-      color: nil }
+      color: nil,
+      css: nil }
   end
 end
