@@ -23,6 +23,7 @@ class ButtonBlock < DashboardBlock
 
   validates :text, :link, presence: true
   validates :css, inclusion: { in: %w[inline centered] }
+  validates :color, format: { with: /\A#([a-f0-9]{3}){,2}\z/i } # /\A#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\z/i
 
   def register_type
     'button'
