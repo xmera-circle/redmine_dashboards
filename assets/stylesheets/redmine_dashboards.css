@@ -36,11 +36,30 @@ p.role-visibility input {
 
 .inline {
   display: inline-block;
+  width:auto;
 }
 
 .centered {
   display: grid;
   place-content: center;
+  grid-template-columns: 100%;
+}
+
+.centered .tabular.settings p,
+.inline .tabular.settings p {
+  padding-left:0;
+}
+
+.centered .tabular.settings label,
+.inline .tabular.settings label {
+  width: 100%;
+  margin-left:0;
+}
+
+.centered .tabular label,
+.inline .tabular label {
+  text-align: left;
+  float:right;
 }
 
 #my-page.dashboard {
@@ -128,6 +147,11 @@ p.role-visibility input {
     grid-template-columns: 100%;
   }
   .dashboard #list-top,
+  .dashboard #list-left-left,
+  .dashboard #list-left-center,
+  .dashboard #list-right-center,
+  .dashboard #list-right-right,
+  .dashboard #list-middle,
   .dashboard #list-bottom,
   #my-page.dashboard #list-left,
   #my-page.dashboard #list-right { 
