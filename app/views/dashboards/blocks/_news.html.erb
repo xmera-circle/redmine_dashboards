@@ -1,0 +1,32 @@
+<%= tag.h3 l(:label_news_latest), class: 'icon icon-news' %>
+
+<% if @can_edit %>
+  <%= tag.div id: "#{block_id}-settings", style: 'display: none;' do %>
+    <%= form_tag(update_layout_setting_dashboard_path(@dashboard), remote: true) do %>
+      <%= tag.div class: 'box tabular settings' do %>
+        <%= tag.p do %>
+          <%= dashboards_settings_numberfield :max_entries,
+                                              value: max_entries,
+                                              tag_name: "settings[#{block_id}][max_entries]",
+                                              min: 1, max: 100, required: true %>
+        <% end %>
+        <%= tag.p do %>
+          <%= submit_tag l(:button_save) %>
+          <%= link_to_function l(:button_cancel), "$('##{block_id}-settings').toggle();" %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+<% if news.any? %>
+  <%= render partial: 'news/news', collection: news %>
+  <%= tag.p do %>
+    <% if @project %>
+      <%= link_to l(:label_news_view_all), project_news_index_path(@project) %>
+    <% else %>
+      <%= link_to l(:label_news_view_all), news_index_path %>
+    <% end %>
+  <% end %>
+<% else %>
+  <%= render partial: 'dashboards/blocks/nodata', collection: documents %>
+<% end %>
