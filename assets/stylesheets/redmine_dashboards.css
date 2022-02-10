@@ -175,3 +175,16 @@ p.role-visibility input {
     box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
     color: white;
   }
+
+  /* Issue Query Block */
+
+  .attention {
+    border: none;
+    color: #eabe1c;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 50%;
+  }

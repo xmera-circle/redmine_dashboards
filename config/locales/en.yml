@@ -77,6 +77,8 @@ en:
         must_contain_digits: "must contain digits (0-9)"
         must_contain_special_chars: "must contain special characters (!, $, %, ...)"
 
+  alert_only_visible_by_yourself: Only visible by yourself!
+  alert_only_visible_by_admins: Only visible by admins!
   text_default_welcome: "Welcome, %{value}!"
 
   field_always_expose: Always expose dashboard

@@ -307,7 +307,7 @@ module DashboardsHelper
 
     return unless title
 
-    content_tag :div, '', title: title, class: 'icon-only icon-warning circle', style: 'display: inline-block'
+    content_tag :div, '', title: title, class: 'icon-only icon-warning attention', style: 'display: inline-block'
   end
 
   def render_legacy_left_block(_block_id, _block_object, _settings, _dashboard)
