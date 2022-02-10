@@ -56,9 +56,9 @@
                            query_options: { sort_param: 'sort',
                                             sort_link_options: { method: :post, remote: true } } } %>
     <% else %>
-      <%= render partial: 'dashboards/blocks/nodata' %>
+      <%= render partial: 'dashboards/blocks/nodata', locals: { label: nil } %>
     <% end %>
   <% else %>
-    <%= render partial: 'dashboards/blocks/nodata' %>
+    <%= render partial: 'dashboards/blocks/nodata', locals: { label: nil } %>
   <% end %>
 <% end %>

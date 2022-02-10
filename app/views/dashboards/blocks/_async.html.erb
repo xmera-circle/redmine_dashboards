@@ -42,5 +42,5 @@
       })
   <% end %>  
 <% else %>
-  <%= render partial: 'dashboards/blocks/nodata' %>
+  <%= render partial: 'dashboards/blocks/nodata', locals: { label: nil } %>
 <% end %>

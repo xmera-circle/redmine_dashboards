@@ -47,6 +47,12 @@ class FeedBlock < DashboardBlock
       max_entries: nil }
   end
 
+  def default_max_entries
+    10
+  end
+
+  private
+
   def valid_url
     parsed = URI.parse(url)
     check = parsed.is_a?(URI::HTTP) || parsed.is_a?(URI::HTTPS)
