@@ -40,7 +40,7 @@ de:
   label_bar_chart_horizontal: Balkendiagramm, horizontal
   label_issues_by_tracker: Tickets pro Tracker
   label_issues_by_status: Tickets pro Status
-  
+    
   error_while_executing_bashboard_block: konnte nicht geladen werden, weil ein Fehler aufgetreten ist. Bitte informieren Sie Ihren Administrator.
   activemodel:
     errors:
@@ -77,7 +77,8 @@ de:
         must_contain_digits: "muss Zahlen (0-9) enthalten"
         must_contain_special_chars: "muss Sonderzeichen (!, $, %, ...) enthalten"
 
-
+  alert_only_visible_by_yourself: Nur für Sie sichtbar!
+  alert_only_visible_by_admins: Nur für Administratoren sichtbar!
   text_default_welcome: "Herzlich willkommen, %{value}!"
 
   field_always_expose: Dashboard immer offenlegen
