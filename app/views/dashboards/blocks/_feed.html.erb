@@ -11,12 +11,11 @@
           <% end %>
         <% end %>
       <% else %>
-        <%= render partial: 'dashboards/blocks/nodata' %>
+        <%= render partial: 'dashboards/blocks/nodata', locals: { label: nil } %>
       <% end %>
   <% elsif %>
-    <%= render partial: 'dashboards/blocks/nodata' %>
+    <%= render partial: 'dashboards/blocks/nodata', locals: { label: nil } %>
   <% else %>
-    <%= render partial: 'dashboards/blocks/nodata' %>
-    <% #l :label_invalid_feed_data %>
+    <%= render partial: 'dashboards/blocks/nodata', locals: { label: l(:label_invalid_feed_data) } %>
   <% end %>
 <% end %>

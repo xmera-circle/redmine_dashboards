@@ -96,7 +96,7 @@
     </style>
   <% end %>
 <% elsif settings.present? %>
-  <%= render partial: 'dashboards/blocks/nodata' %>
+  <%= render partial: 'dashboards/blocks/nodata', locals: { label: nil } %>
 <% else %>
   <%= form_tag(update_layout_setting_dashboard_path(@dashboard), remote: true) do %>
       <%= render partial: 'dashboards/blocks/chart_settings', locals: { block_id: block_id, settings: settings }%>
