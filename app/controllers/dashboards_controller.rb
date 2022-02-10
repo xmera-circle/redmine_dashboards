@@ -169,22 +169,31 @@ class DashboardsController < ApplicationController
     @updated_blocks = block_settings.keys
   end
 
-  # The block is added on top of the page
-  # params[:block_id] : id of the block to add
+  ##
+  # Adds a new block on top of the page
+  #
+  # @params params[:block_id] Id of the block to add, i.e., button__1
+  #
   def add_block
     @block_id = params[:block_id]
-    if @dashboard.add_block @block_id
-      @dashboard.save
+    added = @dashboard.add_block @block_id
+    saved = @dashboard.save
+    if added && saved
       respond_to do |format|
         format.html { redirect_to dashboard_link_path(@dashboard) }
         format.js
       end
     else
-      render_error status: 422
+      flash[:error] = "#{@dashboard.name}: #{@dashboard.errors.full_messages.join(', ')}"
+      redirect_to dashboard_link_path(@dashboard)
     end
   end
 
-  # params[:block_id] : id of the block to remove
+  ##
+  # Removes the given block from the page
+  #
+  # @params params[:block_id] Id of the block to add, i.e., button__1
+  #
   def remove_block
     @block_id = params[:block_id]
     @dashboard.remove_block @block_id
