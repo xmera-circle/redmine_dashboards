@@ -47,10 +47,6 @@ class FeedBlock < DashboardBlock
       max_entries: nil }
   end
 
-  def default_max_entries
-    10
-  end
-
   private
 
   def valid_url
