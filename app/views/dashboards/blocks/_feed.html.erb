@@ -1,0 +1,22 @@
+<% dashboard_async_cache(dashboard, block_id, async, settings) do %>
+  <% feed = dashboard_feed_catcher settings[:url], settings[:max_entries] %>
+  <%= tag.h3 dashboard_feed_title(settings[:title], block_object) %>
+  <% if feed[:valid] %>
+      <% if feed[:items].count.positive? %>
+        <%= tag.ul class: 'reporting-list feed' do %>
+          <% feed[:items].each do |item| %>
+            <%= tag.li do %>
+              <%= link_to_external item[:title], item[:link] %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% else %>
+        <%= render partial: 'dashboards/blocks/nodata' %>
+      <% end %>
+  <% elsif %>
+    <%= render partial: 'dashboards/blocks/nodata' %>
+  <% else %>
+    <%= render partial: 'dashboards/blocks/nodata' %>
+    <% #l :label_invalid_feed_data %>
+  <% end %>
+<% end %>
