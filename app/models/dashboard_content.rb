@@ -34,7 +34,6 @@ class DashboardContent
   def_delegators :block_klass, :all, :find_block
   attr_reader :user, :project, :block_klass
 
-  DEFAULT_MAX_ENTRIES = 10
   RENDER_ASYNC_CACHE_EXPIRES_IN = 30
 
   class << self

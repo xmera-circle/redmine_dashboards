@@ -305,11 +305,9 @@ module DashboardsHelper
               l :alert_only_visible_by_admins
             end
 
-    return if title.nil?
+    return unless title
 
-    font_awesome_icon('fas_info-circle',
-                      title: title,
-                      class: 'dashboard-block-alert')
+    content_tag :div, '', title: title, class: 'icon-only icon-warning circle', style: 'display: inline-block'
   end
 
   def render_legacy_left_block(_block_id, _block_object, _settings, _dashboard)
@@ -321,8 +319,8 @@ module DashboardsHelper
   end
 
   # copied from my_helper
-  def render_documents_block(block_id, _block_object, settings, dashboard)
-    max_entries = settings[:max_entries] || DashboardContent::DEFAULT_MAX_ENTRIES
+  def render_documents_block(block_id, block_object, settings, dashboard)
+    max_entries = settings.fetch(:max_entries, block_object.default_max_entries)
 
     scope = Document.visible
     scope = scope.where project: dashboard.project if dashboard.project
@@ -331,13 +329,14 @@ module DashboardsHelper
                      .limit(max_entries)
                      .to_a
 
-    render partial: 'dashboards/blocks/documents', locals: { block_id: block_id,
-                                                             max_entries: max_entries,
-                                                             documents: documents }
+    render partial: 'dashboards/blocks/documents',
+           locals: { block_id: block_id,
+                     max_entries: max_entries,
+                     documents: documents }
   end
 
-  def render_news_block(block_id, _block_object, settings, dashboard)
-    max_entries = settings[:max_entries] || DashboardContent::DEFAULT_MAX_ENTRIES
+  def render_news_block(block_id, block_object, settings, dashboard)
+    max_entries = settings.fetch(:max_entries, block_object.default_max_entries)
 
     news = if dashboard.content_project.nil?
              News.latest User.current, max_entries
@@ -373,8 +372,8 @@ module DashboardsHelper
                      days: days }
   end
 
-  def activity_dashboard_data(settings, dashboard)
-    max_entries = (settings[:max_entries] || DashboardContent::DEFAULT_MAX_ENTRIES).to_i
+  def activity_dashboard_data(block_object, settings, dashboard)
+    max_entries = settings.fetch(:max_entries, block_object.default_max_entries).to_i
     user = User.current
     options = {}
     options[:author] = user if RedmineDashboards.true? settings[:me_only]

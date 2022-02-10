@@ -127,6 +127,10 @@ class DashboardBlock
     specs.fetch(:inline, false)
   end
 
+  def default_max_entries
+    10
+  end
+
   def register_type
     not_implemented(__method__)
   end

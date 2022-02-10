@@ -32,7 +32,7 @@
     <%= tag.div class: 'tabular settings' do %>
       <%=tag.p do %>
         <%= dashboards_settings_numberfield :max_entries,
-                                            value: settings[:max_entries].presence || DashboardContent::DEFAULT_MAX_ENTRIES,
+                                            value: settings.fetch(:max_entries, block_object.default_max_entries),
                                             tag_name: "settings[#{block_id}][max_entries]",
                                             min: 1, max: 100, required: true %>
       <% end %>
@@ -49,7 +49,7 @@
     <% end %>
     <%=tag.p do %>
       <%= dashboards_settings_numberfield :max_entries,
-                                          value: settings[:max_entries].presence || DashboardContent::DEFAULT_MAX_ENTRIES,
+                                          value: settings.fetch(:max_entries, block_object.default_max_entries),
                                           tag_name: "settings[#{block_id}][max_entries]",
                                           min: 1, max: 100, required: true %>
     <% end %>

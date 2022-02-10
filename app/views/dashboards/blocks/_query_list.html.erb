@@ -51,7 +51,7 @@
 
       <%= render partial: query_block[:list_partial],
                  locals: { query_block[:entities_var] => query.send(query_block[:entries_method],
-                                                                  limit: settings[:max_entries] || DashboardContent::DEFAULT_MAX_ENTRIES),
+                                                                  limit: settings.fetch(:max_entries, block_object.default_max_entries),
                            query: query,
                            query_options: { sort_param: 'sort',
                                             sort_link_options: { method: :post, remote: true } } } %>
