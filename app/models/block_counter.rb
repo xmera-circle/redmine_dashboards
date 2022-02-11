@@ -53,10 +53,11 @@ class BlockCounter
     indexes = active_blocks.map do |block_id|
       number_of(block_id)
     end
-    self.frequency = indexes.compact!.size
+    values = indexes.flatten.compact
+    self.frequency = values.empty? ? 0 : values.map(&:to_i).max
   end
 
   def number_of(block_id)
-    Regexp.last_match(2).to_i if block_id =~ /\A#{type}(__(\d+))?\z/
+    block_id.scan(Regexp.new(/#{type}__(\d+)/)).flatten
   end
 end
