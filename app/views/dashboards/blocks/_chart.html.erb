@@ -54,17 +54,19 @@
         type: '<%= settings.fetch(:chart_type, 'bar') %>',
         data: chartData,
         options: {
-        plugins: {
-            colorschemes: {
-              scheme: 'tableau.ClassicCyclic13',
-              override: true
-            }
-          },
+          plugins: {
+              colorschemes: {
+                scheme: 'tableau.ClassicCyclic13',
+                override: true
+              }
+            },
           elements: {
             rectangle: {borderWidth: 2}
           },
           responsive: true,
-          legend: {position: 'right'},
+          legend: { 
+            position: 'bottom',
+            display: <%= RedmineDashboards.true? settings.fetch(:legend, true) %> },
           title: {
             display: true,
             text: title
@@ -72,8 +74,7 @@
           scales: {
             yAxes: [{ stacked: true }],
             xAxes: [{ stacked: true }]
-          }
-        }
+          }}
       });
     }
     $(document).ready(function(){

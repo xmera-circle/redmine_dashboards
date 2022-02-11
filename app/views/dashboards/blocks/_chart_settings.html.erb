@@ -41,4 +41,9 @@
                                         options_for_select([[l(:label_bar_chart_vertical), 'bar'], [l(:label_bar_chart_horizontal), 'horizontalBar']], selected: settings[:chart_type]),
                                         label: l(:label_chart_type),
                                         tag_name: "settings[#{block_id}][chart_type]" %>
+
+  <%= tag.p dashboards_settings_checkbox :legend,
+                                          active_value: settings.fetch(:legend,'true'),
+                                          label: l(:label_chart_legend),
+                                          tag_name: "settings[#{block_id}][legend]" %>                     
 <% end %>
