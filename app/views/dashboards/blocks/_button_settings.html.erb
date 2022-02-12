@@ -31,15 +31,16 @@
   
   <%= tag.p dashboards_settings_textfield :text,
                                           value: settings[:text],
+                                          label: l(:label_button_text),
                                           tag_name: "settings[#{block_id}][text]" %>
 
   <%=tag.p dashboards_settings_colorfield :color,
-                                         value: settings[:color],
+                                         value: settings.fetch(:color,'#a8a7a7'),
                                          label: l(:label_button_background_color),
                                          tag_name: "settings[#{block_id}][color]" %>
 
   <%=tag.p dashboards_settings_select :css,
-                                      options_for_select([[l(:label_position_inline), 'inline'],[l(:label_position_centered), 'centered']], selected: settings[:css]) ,
+                                      options_for_select(BlockStyles.position_options_for_select, selected: settings[:css]) ,
                                       label: l(:label_block_positioning),
                                       tag_name: "settings[#{block_id}][css]" %>
   

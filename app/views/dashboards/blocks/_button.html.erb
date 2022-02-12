@@ -38,6 +38,10 @@
 
 <%= tag.style do %>
  #<%= "block-#{block_id}" %> .button {
-    background-color: <%= settings[:color] || '#a8a7a7' %>;
+    background-color: <%= settings.fetch(:color, '#a8a7a7') %>;
   }
+<% end %>
+
+<%= javascript_tag do %>
+  adjustCurserAtCenteredBlockItems('<%= "#block-#{block_id}" %>');
 <% end %>

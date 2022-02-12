@@ -29,12 +29,18 @@ de:
   label_text_sync: Text
   label_text_async: Text (asynchron)
   label_button: Button
+  label_button_text: Linktext
   label_button_background_color: Button Hintergrundfarbe
   label_block_positioning: Positionierung
-  label_position_centered: Mittig als einzelnes Element
-  label_position_inline: In Reihe mit weiteren Buttons
+  label_position_unset: ohne
+  label_position_inline: In Reihe
+  label_position_full_width: Volle Breite
+  label_position_left: Links
+  label_position_right: Rechts 
+  label_position_center: Mitte
   label_chart: Diagramme
   label_chart_type: Diagrammtyp
+  label_chart_legend: Legende anzeigen
   label_filter: Filter
   label_bar_chart_vertical: Balkendiagramm, vertikal
   label_bar_chart_horizontal: Balkendiagramm, horizontal

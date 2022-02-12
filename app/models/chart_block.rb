@@ -19,12 +19,13 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class ChartBlock < DashboardBlock
-  attr_accessor :title, :project_id, :filter, :chart_type
+  attr_accessor :title, :project_id, :filter, :chart_type, :legend
 
   validates :title, length: { maximum: 120 }
   validates :project_id, presence: true
-  validates :filter, inclusion: { in: :filter_list }
-  validates :chart_type, inclusion: { in: :chart_type_list }
+  validates :filter, inclusion: { in: :filter_list }, allow_nil: true
+  validates :chart_type, inclusion: { in: :chart_type_list }, allow_nil: true
+  validates :legend, inclusion: { in: %w[0 1] }, allow_nil: true
 
   def register_type
     'chart'
@@ -47,7 +48,8 @@ class ChartBlock < DashboardBlock
     { title: nil,
       project_id: nil,
       filter: nil,
-      chart_type: nil }
+      chart_type: nil,
+      legend: nil }
   end
 
   private

@@ -1,21 +1,18 @@
 <%= tag.div class: 'box tabular settings' do %>
-  <%= tag.p do %>
-    <%= dashboards_settings_textfield :title,
-                                      label: l(:field_title),
-                                      value: dashboard_feed_title(settings[:title], block_object),
-                                      tag_name: "settings[#{block_id}][title]" %>
-  <% end %>
-  <%= tag.p do %>
-    <%= dashboards_settings_urlfield :url,
-                                      value: settings[:url],
-                                      label: l(:field_url),
-                                      tag_name: "settings[#{block_id}][url]",
-                                      required: true %>
-  <% end %>
-  <%= tag.p do %>
-    <%= dashboards_settings_numberfield :max_entries,
-                                        value: settings.fetch(:max_entries, block_object.default_max_entries),
-                                        tag_name: "settings[#{block_id}][max_entries]",
-                                        min: 1, max: 100, required: true %>
-  <% end %>
+  <%= tag.p dashboards_settings_textfield :title,
+                                          label: l(:field_title),
+                                          value: dashboard_feed_title(settings[:title], block_object),
+                                          tag_name: "settings[#{block_id}][title]" %>
+
+  <%= tag.p dashboards_settings_urlfield :url,
+                                          value: settings[:url],
+                                          label: l(:field_url),
+                                          tag_name: "settings[#{block_id}][url]",
+                                          required: true %>
+
+  <%= tag.p dashboards_settings_numberfield :max_entries,
+                                            value: settings.fetch(:max_entries, block_object.default_max_entries),
+                                            tag_name: "settings[#{block_id}][max_entries]",
+                                            min: 1, max: 100, required: true %>
+
 <% end %>

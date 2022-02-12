@@ -19,9 +19,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class TextBlock < DashboardBlock
-  attr_accessor :title, :text
+  attr_accessor :title, :text, :css, :user_id
 
   validates :text, presence: true
+  validates :css, inclusion: { in: BlockStyles.position_classes }, allow_nil: true
 
   def register_type
     'text'
@@ -38,6 +39,8 @@ class TextBlock < DashboardBlock
 
   def register_settings
     { title: nil,
-      text: nil }
+      text: nil,
+      css: nil,
+      user_id: nil }
   end
 end

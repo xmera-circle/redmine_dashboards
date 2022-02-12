@@ -19,8 +19,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class TextAsyncBlock < DashboardBlock
-  attr_accessor :title, :text
+  attr_accessor :title, :text, :css, :user_id, :user_is_admin
   validates :text, presence: true
+  validates :css, inclusion: { in: BlockStyles.position_classes }, allow_nil: true
 
   def register_type
     'text_async'
@@ -38,6 +39,9 @@ class TextAsyncBlock < DashboardBlock
 
   def register_settings
     { title: nil,
-      text: nil }
+      text: nil,
+      css: nil,
+      user_id: nil,
+      user_is_admin: nil }
   end
 end

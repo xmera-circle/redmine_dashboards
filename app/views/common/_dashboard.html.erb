@@ -28,13 +28,31 @@
 <% end %>
 
 <%= javascript_tag do %>
+<%
+  # Code for preventing vertical scroll jump is taken from 
+  # https://stackoverflow.com/questions/1735372/jquery-sortable-list-scroll-bar-jumps-up-when-sorting#answer-32575012
+%>
   $(function() {
     $('#block-select').val('');
-    $('.block-receiver').sortable({
+    $('.block-receiver').mousedown(function() {
+        // set fixed height to prevent scroll jump
+        // when dragging from bottom
+        $(this).height($(this).height());
+    }).mouseup(function () {
+        // set height back to auto 
+        // when user just clicked on item
+        $(this).height('auto');
+    }).sortable({
       connectWith: '.block-receiver',
       tolerance: 'pointer',
       handle: '.sort-handle',
-      start: function(event, ui){$(this).parent().addClass('dragging');},
+      start: function(event, ui){
+        // dragging is happening
+        // and scroll jump was prevented,
+        // we can set it back to auto
+        $(this).height('auto');
+        $(this).parent().addClass('dragging');
+      },
       stop: function(event, ui){$(this).parent().removeClass('dragging');},
       update: function(event, ui){
         // trigger the call on the list that receives the block only
