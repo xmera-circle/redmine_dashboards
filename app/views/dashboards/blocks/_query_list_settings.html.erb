@@ -30,28 +30,23 @@
   <%= tag.div class: 'box' do %>
     <%= render_query_columns_selection query, name: "settings[#{block_id}][columns]" %>
     <%= tag.div class: 'tabular settings' do %>
-      <%=tag.p do %>
-        <%= dashboards_settings_numberfield :max_entries,
+        <%= tag.p dashboards_settings_numberfield :max_entries,
                                             value: settings.fetch(:max_entries, block_object.default_max_entries),
                                             tag_name: "settings[#{block_id}][max_entries]",
                                             min: 1, max: 100, required: true %>
-      <% end %>
     <% end %>
   <% end %>
 <% else %>
   <%= tag.div class: 'box tabular settings' do %>
-    <%=tag.p do %>
-      <%= dashboards_settings_select :query_id,
+    <%= tag.p dashboards_settings_select :query_id,
                                     options_for_query_select(klass, @project),
                                     label: block_object[:label],
                                     tag_name: "settings[#{block_id}][query_id]",
                                     required: true %>
-    <% end %>
-    <%=tag.p do %>
-      <%= dashboards_settings_numberfield :max_entries,
+
+    <%= tag.p dashboards_settings_numberfield :max_entries,
                                           value: settings.fetch(:max_entries, block_object.default_max_entries),
                                           tag_name: "settings[#{block_id}][max_entries]",
                                           min: 1, max: 100, required: true %>
-    <% end %>
   <% end %>
 <% end %>
