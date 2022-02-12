@@ -19,9 +19,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class ActivityBlock < DashboardBlock
-  attr_accessor :max_entries, :me_only
+  attr_accessor :max_entries, :me_only, :user_id
 
-  validates :max_entries, presence: true, numericality: true, inclusion: { in: (1..100).map(&:to_s) }
+  validates :max_entries, presence: true, numericality: true, inclusion: { in: (1..100).map(&:to_s) }, allow_nil: true
   validates :me_only, inclusion: { in: %w[0 1] }
 
   def register_type
@@ -39,6 +39,7 @@ class ActivityBlock < DashboardBlock
 
   def register_settings
     { max_entries: nil,
-      me_only: nil }
+      me_only: nil,
+      user_id: nil }
   end
 end

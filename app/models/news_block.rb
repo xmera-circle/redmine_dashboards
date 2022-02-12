@@ -20,7 +20,7 @@
 
 class NewsBlock < DashboardBlock
   attr_accessor :max_entries
-  validates :max_entries, presence: true, numericality: true, inclusion: { in: (1..100).map(&:to_s) }
+  validates :max_entries, presence: true, numericality: true, inclusion: { in: (1..100).map(&:to_s) }, allow_nil: true
 
   def register_type
     'news'

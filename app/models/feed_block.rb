@@ -23,7 +23,7 @@ class FeedBlock < DashboardBlock
 
   validate :valid_url
   validates :url, presence: true
-  validates :max_entries, presence: true, numericality: true, inclusion: { in: (1..100).map(&:to_s) }
+  validates :max_entries, presence: true, numericality: true, inclusion: { in: (1..100).map(&:to_s) }, allow_nil: true
 
   def register_type
     'feed'
