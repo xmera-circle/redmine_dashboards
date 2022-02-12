@@ -29,12 +29,17 @@ en:
   label_text_sync: Text
   label_text_async: Text (asynchronous)
   label_button: Button
+  label_button_text: Link text
   label_button_background_color: Button background color
-  label_block_positioning: Position
-  label_position_centered: Center
+  label_position_unset: Unset
   label_position_inline: Inline
+  label_position_full_width: Full width
+  label_position_left: Left
+  label_position_right: Right
+  label_position_center: Center
   label_chart: Diagram
   label_chart_type: Diagram type
+  label_chart_legend: Show legend
   label_filter: Filter
   label_bar_chart_vertical: Bar chart, vertical
   label_bar_chart_horizontal: Bar chart, horizontal

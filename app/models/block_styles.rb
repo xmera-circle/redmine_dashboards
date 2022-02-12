@@ -1,4 +1,3 @@
-<%
 # frozen_string_literal: true
 
 # This file is part of the Plugin Redmine Dashboards.
@@ -18,30 +17,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-%>
 
-<%= link_to settings.fetch(:link, '#'), class: 'button' do %>
-  <%= settings.fetch(:text, 'Button') %>
-<% end %>
+class BlockStyles
+  extend Redmine::I18n
+  class << self
+    def position_options_for_select
+      positions.invert.to_a
+    end
 
-<% if @can_edit %>
-  <%= tag.div id: "#{block_id}-settings", style: "display: none;" do %>
-    <%= form_tag(update_layout_setting_dashboard_path(@dashboard), remote: true) do %>
-      <%= render partial: 'dashboards/blocks/button_settings', locals: { block_id: block_id, settings: settings }%>
-      <%= tag.p do %>
-        <%= submit_tag l(:button_save) %>
-        <%= link_to_function l(:button_cancel), "$('##{block_id}-settings').toggle();" %>
-      <% end %>
-    <% end %>
-  <% end %>
-<% end %>
+    def position_classes
+      positions.keys.map(&:to_s)
+    end
 
-<%= tag.style do %>
- #<%= "block-#{block_id}" %> .button {
-    background-color: <%= settings.fetch(:color, '#a8a7a7') %>;
-  }
-<% end %>
+    private
 
-<%= javascript_tag do %>
-  adjustCurserAtCenteredBlockItems('<%= "#block-#{block_id}" %>');
-<% end %>
+    def positions
+      { unset: l(:label_position_unset),
+        inline: l(:label_position_inline),
+        full_width: l(:label_position_full_width),
+        left: l(:label_position_left),
+        right: l(:label_position_right),
+        center: l(:label_position_center) }
+    end
+  end
+end

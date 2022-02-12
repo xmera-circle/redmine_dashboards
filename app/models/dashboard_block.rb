@@ -110,23 +110,6 @@ class DashboardBlock
     @label.is_a?(Proc) ? @label.call : @label
   end
 
-  ##
-  # CSS style for display attribute. Defaults to false, what is equal to
-  #   display: block;
-  #
-  # @note Do not override this method! Instead provide a key/value pair in
-  #    register_specs method.
-  #
-  # @example
-  #
-  #  def register_specs
-  #   { inline: true }
-  #  end
-  #
-  def inline
-    specs.fetch(:inline, false)
-  end
-
   def default_max_entries
     10
   end

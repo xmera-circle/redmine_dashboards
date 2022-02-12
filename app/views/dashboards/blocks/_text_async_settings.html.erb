@@ -23,21 +23,24 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 %>
 
-<%= tag.div class: 'box' do %>
-  <%= tag.div class: 'settings' do %>
-    <%= tag.p do %>
-      <%= dashboards_settings_textfield :title,
-                                        label: l(:field_title),
-                                        value: settings[:title] || l(:label_text_sync),
-                                        tag_name: "settings[#{block_id}][title]" %>
-    <% end %>
-    <%= tag.p do %>
-      <%= text_area_tag "settings[#{block_id}][text]",
-                        settings[:text],
-                        rows: dashboards_textarea_cols(settings[:text]),
-                        class: 'wiki-edit',
-                        required: true %>
-      <%= wikitoolbar_for "settings_#{block_id}_text" %>
-    <% end %>
+<%= tag.div class: 'box tabular settings' do %>
+  <%= tag.p do %>
+    <%= dashboards_settings_textfield :title,
+                                      label: l(:field_title),
+                                      value: settings[:title] || l(:label_text_sync),
+                                      tag_name: "settings[#{block_id}][title]" %>
   <% end %>
+  <%= tag.p do %>
+    <%= text_area_tag "settings[#{block_id}][text]",
+                      settings[:text],
+                      rows: dashboards_textarea_cols(settings[:text]),
+                      class: 'wiki-edit',
+                      required: true %>
+    <%= wikitoolbar_for "settings_#{block_id}_text" %>
+  <% end %>
+
+  <%=tag.p dashboards_settings_select :css,
+                                      options_for_select(BlockStyles.position_options_for_select, selected: settings[:css]),
+                                      label: l(:label_block_positioning),
+                                      tag_name: "settings[#{block_id}][css]" %>
 <% end %>

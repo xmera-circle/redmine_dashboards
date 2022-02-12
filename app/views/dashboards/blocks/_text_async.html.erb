@@ -24,10 +24,15 @@
 %>
 
 <% dashboard_async_cache dashboard, block_id, async, settings do %>
-  <% if settings[:title].present? %>
-    <%= tag.h3 settings[:title] %>
+<%= tag.div class: 'text-async' do %>
+    <% if settings[:title].present? %>
+      <%= tag.h3 settings[:title] %>
+    <% end %>
+    <%= tag.div class: 'wiki' do %>
+      <%= textilizable settings[:text] %>
+    <% end %>
   <% end %>
-  <%= tag.div class: 'wiki' do %>
-    <%= textilizable settings[:text] %>
-  <% end %>
+<% end %>
+<%= javascript_tag do %>
+  adjustCurserAtCenteredBlockItems('<%= "#block-#{block_id}" %>');
 <% end %>

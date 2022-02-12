@@ -22,7 +22,7 @@ class ButtonBlock < DashboardBlock
   attr_accessor :text, :link, :color, :css
 
   validates :text, :link, presence: true
-  validates :css, inclusion: { in: %w[inline centered] }
+  validates :css, inclusion: { in: BlockStyles.position_classes }, allow_nil: true
   validates :color, format: { with: /\A#([a-f0-9]{3}){,2}\z/i } # /\A#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\z/i
 
   def register_type
