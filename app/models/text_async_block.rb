@@ -20,6 +20,7 @@
 
 class TextAsyncBlock < DashboardBlock
   attr_accessor :title, :text, :css, :user_id, :user_is_admin
+
   validates :text, presence: true
   validates :css, inclusion: { in: BlockStyles.position_classes }, allow_nil: true
 
