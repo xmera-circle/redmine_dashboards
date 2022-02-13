@@ -35,6 +35,7 @@ class Dashboard < ActiveRecord::Base
 
   # current active project (belongs_to :project can be nil, because this is system default)
   attr_accessor :content_project
+
   serialize :options
 
   VISIBILITY_PRIVATE = 0

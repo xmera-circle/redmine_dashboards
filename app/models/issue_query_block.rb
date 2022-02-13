@@ -20,6 +20,7 @@
 
 class IssueQueryBlock < DashboardBlock
   attr_accessor :max_entries, :query_id, :columns, :user_id, :user_is_admin
+
   validates :max_entries, presence: true, numericality: true, inclusion: { in: (1..100).map(&:to_s) }, allow_nil: true
 
   def register_type
