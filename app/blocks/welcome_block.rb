@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Dashboards.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,27 +18,21 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require_dependency 'redmine_dashboards'
+class WelcomeBlock < DashboardBlock
+  def register_type
+    'welcome'
+  end
 
-Redmine::Plugin.register :redmine_dashboards do
-  name 'Redmine Dashboards'
-  author 'Liane Hampe, Alexander Meindl'
-  description 'Flexible dashboards for Redmine welcome page'
-  version '0.1.0'
-  author_url 'https://circle.xmera.de/projects/redmine-dashboards'
+  def register_label
+    -> { l(:setting_welcome_text) }
+  end
 
-  requires_redmine version_or_higher: '4.2.0'
+  def register_specs
+    { no_settings: true,
+      partial: 'dashboards/blocks/welcome' }
+  end
 
-  permission :set_system_dashboards,
-             {},
-             require: :loggedin,
-             read: true
-  permission :save_dashboards,
-             { dashboards: %i[index new create edit update destroy] },
-             require: :loggedin,
-             read: true
+  def register_settings
+    {}
+  end
 end
-
-
-RedmineDashboards.setup
-

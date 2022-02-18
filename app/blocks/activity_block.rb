@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Dashboards.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,27 +18,28 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require_dependency 'redmine_dashboards'
+class ActivityBlock < DashboardBlock
+  attr_accessor :max_entries, :me_only, :user_id
 
-Redmine::Plugin.register :redmine_dashboards do
-  name 'Redmine Dashboards'
-  author 'Liane Hampe, Alexander Meindl'
-  description 'Flexible dashboards for Redmine welcome page'
-  version '0.1.0'
-  author_url 'https://circle.xmera.de/projects/redmine-dashboards'
+  validates :max_entries, presence: true, numericality: true, inclusion: { in: (1..100).map(&:to_s) }, allow_nil: true
+  validates :me_only, inclusion: { in: %w[0 1] }
 
-  requires_redmine version_or_higher: '4.2.0'
+  def register_type
+    'activity'
+  end
 
-  permission :set_system_dashboards,
-             {},
-             require: :loggedin,
-             read: true
-  permission :save_dashboards,
-             { dashboards: %i[index new create edit update destroy] },
-             require: :loggedin,
-             read: true
+  def register_label
+    -> { l(:label_activity) }
+  end
+
+  def register_specs
+    { async: { data_method: 'activity_dashboard_data',
+               partial: 'dashboards/blocks/activity' } }
+  end
+
+  def register_settings
+    { max_entries: nil,
+      me_only: nil,
+      user_id: nil }
+  end
 end
-
-
-RedmineDashboards.setup
-
