@@ -2,9 +2,6 @@
 
 # This file is part of the Plugin Redmine Dashboards.
 #
-# Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/additionals>.
-#
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
 # This plugin program is free software; you can redistribute it and/or
@@ -21,19 +18,24 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require File.expand_path '../test_helper', __dir__
+require File.expand_path '../../test_helper', __dir__
 
-class RoutingTest < Redmine::RoutingTest
-  def test_dashboards
-    should_route 'GET /dashboards.xml' => 'dashboards#index', format: 'xml'
-    should_route 'GET /dashboards.json' => 'dashboards#index', format: 'json'
-
-    should_route 'GET /dashboards/1.xml' => 'dashboards#show', id: '1', format: 'xml'
-    should_route 'GET /dashboards/1.json' => 'dashboards#show', id: '1', format: 'json'
-    should_route 'GET /dashboards/1/edit' => 'dashboards#edit', id: '1'
+class DocumentsBlockValidationTest < RedmineDashboards::TestCase
+  def setup
+    @documents_block = DocumentsBlock.instance
+    @documents_block.max_entries = '5'
   end
 
-  def test_dashboard_async_blocks
-    should_route 'GET /dashboard_async_blocks' => 'dashboard_async_blocks#show'
+  def teardown
+    @documents_block = nil
+  end
+
+  def test_valid_documents
+    assert @documents_block.valid?
+  end
+
+  def test_invalid_max_entries
+    @documents_block.max_entries = '101'
+    assert @documents_block.invalid?
   end
 end
