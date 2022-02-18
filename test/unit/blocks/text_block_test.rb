@@ -2,9 +2,6 @@
 
 # This file is part of the Plugin Redmine Dashboards.
 #
-# Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/additionals>.
-#
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
 # This plugin program is free software; you can redistribute it and/or
@@ -21,20 +18,30 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require File.expand_path '../test_helper', __dir__
+require File.expand_path '../../test_helper', __dir__
 
-class DashboardContentTest < RedmineDashboards::TestCase
-  fixtures :projects, :users, :members, :member_roles, :roles,
-           :trackers, :projects_trackers,
-           :enabled_modules,
-           :enumerations,
-           :dashboards, :dashboard_roles
-
+class TextBlockValidationTest < RedmineDashboards::TestCase
   def setup
-    prepare_tests
+    @text_block = TextBlock.instance
+    @text_block.text = 'Text'
+    @text_block.css = 'inline'
   end
 
-  def test_types
-    assert DashboardContent.types.include?(DashboardContentWelcome::TYPE_NAME)
+  def teardown
+    @text_block = nil
+  end
+
+  def test_valid_text
+    assert @text_block.valid?
+  end
+
+  def test_invalid_text_text
+    @text_block.text = nil
+    assert @text_block.invalid?
+  end
+
+  def test_invalid_css
+    @text_block.css = 'invalid'
+    assert @text_block.invalid?
   end
 end

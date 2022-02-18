@@ -2,10 +2,7 @@
 
 # This file is part of the Plugin Redmine Dashboards.
 #
-# Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/additionals>.
-#
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -21,20 +18,31 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require File.expand_path '../test_helper', __dir__
+class ButtonBlock < DashboardBlock
+  attr_accessor :text, :link, :color, :css
 
-class DashboardContentTest < RedmineDashboards::TestCase
-  fixtures :projects, :users, :members, :member_roles, :roles,
-           :trackers, :projects_trackers,
-           :enabled_modules,
-           :enumerations,
-           :dashboards, :dashboard_roles
+  validates :text, :link, presence: true
+  validates :link, format: URI::DEFAULT_PARSER.make_regexp(%w[http https])
+  validates :css, inclusion: { in: BlockStyles.position_classes }, allow_nil: true
+  validates :color, format: { with: /\A#([a-f0-9]{3}){,2}\z/i }
 
-  def setup
-    prepare_tests
+  def register_type
+    'button'
   end
 
-  def test_types
-    assert DashboardContent.types.include?(DashboardContentWelcome::TYPE_NAME)
+  def register_label
+    -> { l(:label_button) }
+  end
+
+  def register_specs
+    { max_frequency: MAX_MULTIPLE_OCCURS,
+      partial: 'dashboards/blocks/button' }
+  end
+
+  def register_settings
+    { text: nil,
+      link: nil,
+      color: nil,
+      css: nil }
   end
 end

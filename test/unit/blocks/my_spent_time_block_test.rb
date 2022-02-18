@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Dashboards.
 #
-# Copyright (C) 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,30 +18,24 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-class ButtonBlock < DashboardBlock
-  attr_accessor :text, :link, :color, :css
+require File.expand_path '../../test_helper', __dir__
 
-  validates :text, :link, presence: true
-  validates :css, inclusion: { in: BlockStyles.position_classes }, allow_nil: true
-  validates :color, format: { with: /\A#([a-f0-9]{3}){,2}\z/i } # /\A#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\z/i
-
-  def register_type
-    'button'
+class MySpentTimeBlockValidationTest < RedmineDashboards::TestCase
+  def setup
+    @my_spent_time_block = MySpentTimeBlock.instance
+    @my_spent_time_block.days = '5'
   end
 
-  def register_label
-    -> { l(:label_button) }
+  def teardown
+    @my_spent_time_block = nil
   end
 
-  def register_specs
-    { max_frequency: MAX_MULTIPLE_OCCURS,
-      partial: 'dashboards/blocks/button' }
+  def test_valid_my_spent_time
+    assert @my_spent_time_block.valid?
   end
 
-  def register_settings
-    { text: nil,
-      link: nil,
-      color: nil,
-      css: nil }
+  def test_invalid_days
+    @my_spent_time_block.days = '101'
+    assert @my_spent_time_block.invalid?
   end
 end

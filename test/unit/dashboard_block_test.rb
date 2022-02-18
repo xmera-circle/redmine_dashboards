@@ -62,7 +62,7 @@ class TestNewsBlock < DashboardBlock
 end
 
 class DashboardBlockTest < RedmineDashboards::TestCase
-  fixtures :dashboards
+  fixtures :dashboards, :users
 
   def setup
     @text_block = TestTextBlock.instance
@@ -82,21 +82,15 @@ class DashboardBlockTest < RedmineDashboards::TestCase
     end
   end
 
-  def test_name
+  def test_type
     expected = 'test_text'
-    actual = @text_block.name
+    actual = @text_block.type
     assert_equal expected, actual
   end
 
   def test_find_block
     actual = DashboardBlock.find_block('test_text')
     expected = @text_block
-    assert_equal expected, actual
-  end
-
-  def test_blocks_by_names
-    actual = DashboardBlock.blocks_by(%w[test_text test_news])
-    expected = [@text_block, @news_block]
     assert_equal expected, actual
   end
 

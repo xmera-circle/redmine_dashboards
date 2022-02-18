@@ -39,6 +39,4 @@ Redmine::Plugin.register :redmine_dashboards do
              read: true
 end
 
-Rails.configuration.to_prepare do
-  RedmineDashboards.setup
-end
+RedmineDashboards.setup

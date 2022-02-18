@@ -27,10 +27,30 @@ module RedmineDashboards
   SEPARATOR = ' » '
   class << self
     def setup
+      autoload_blocks
+      Rails.configuration.to_prepare do
+        RedmineDashboards.render_async_configuration
+        RedmineDashboards.add_helpers
+        RedmineDashboards.instanciate_blocks
+      end
+    end
+
+    def autoload_blocks
+      plugin = Redmine::Plugin.find(:redmine_dashboards)
+      Rails.application.configure do
+        config.autoload_paths << "#{plugin.directory}/app/blocks"
+      end
+    end
+
+    def render_async_configuration
       RenderAsync.configuration.jquery = true
-      # Global helpers
+    end
+
+    def add_helpers
       ActionView::Base.include RedmineDashboards::Helpers
-      # Instanciate Blocks
+    end
+
+    def instanciate_blocks
       ActivityBlock.instance
       DocumentsBlock.instance
       FeedBlock.instance
