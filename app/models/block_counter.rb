@@ -36,7 +36,7 @@ class BlockCounter
   def next_block_id
     return nil if block_disabled?
 
-    block_frequency.positive? ? "#{type}__#{block_frequency + 1}" : type
+    block_frequency >= 0 ? "#{type}__#{block_frequency + 1}" : type
   end
 
   private
