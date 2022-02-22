@@ -48,6 +48,7 @@ de:
   label_issues_by_status: Tickets pro Status
     
   error_while_executing_bashboard_block: konnte nicht geladen werden, weil ein Fehler aufgetreten ist. Bitte informieren Sie Ihren Administrator.
+  error_dashboard_must_be_visible_for_everyone: Dashboard muss für jeden sichtbar sein
   activemodel:
     errors:
       messages:
