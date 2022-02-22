@@ -52,12 +52,12 @@ module RedmineDashboards
               return render_404
             end
           else
-            @dashboard = Dashboard.default DashboardContentWelcome::TYPE_NAME
+            @dashboard = Dashboard.default(DashboardContentWelcome::TYPE_NAME) || NullDashboard.new
           end
 
           resently_used_dashboard_save @dashboard
           @can_edit = @dashboard&.editable?
-          @dashboard_sidebar = dashboard_sidebar? @dashboard, params
+          @dashboard_sidebar = dashboard_sidebar? params
         end
       end
     end

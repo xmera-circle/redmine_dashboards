@@ -2,10 +2,7 @@
 
 # This file is part of the Plugin Redmine Dashboards.
 #
-# Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/additionals>.
-#
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -21,9 +18,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-module DashboardsRoutesHelper
-  def dashboard_link_path(dashboard, **options)
-    options[:dashboard_id] = dashboard.id
-    home_path(**options)
+class WelcomeControllerTest
+  define_method('test_index') do
+    get :index
+    assert_response :success
+    assert_select 'h2', :text => 'Home1 » unset'
   end
 end

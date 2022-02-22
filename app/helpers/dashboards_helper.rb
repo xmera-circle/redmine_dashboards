@@ -28,17 +28,11 @@ module DashboardsHelper
           skip_digest: true, &content_block
   end
 
-  def dashboard_sidebar?(dashboard, params)
-    if params['enable_sidebar'].blank?
-      if dashboard.blank?
-        # defaults without dashboard
-        !@project.nil?
-      else
-        dashboard.enable_sidebar?
-      end
-    else
-      RedmineDashboards.true? params['enable_sidebar']
-    end
+  def dashboard_sidebar?(params)
+    enabled = params['enable_sidebar']
+    return false if enabled.blank?
+
+    RedmineDashboards.true? enabled
   end
 
   def welcome_overview_name(dashboard = nil)
@@ -167,18 +161,14 @@ module DashboardsHelper
     link_to name, dashboard_link_path(dashboard), options
   end
 
-  def sidebar_action_toggle(enabled, dashboard, _project = nil)
-    return if dashboard.nil?
+  def sidebar_action_toggle(enabled, dashboard)
+    link_to sidebar_action_toggle_label(enabled),
+            dashboard_link_path(dashboard, enable_sidebar: !enabled),
+            class: 'icon icon-sidebar'
+  end
 
-    if enabled
-      link_to l(:label_disable_sidebar),
-              dashboard_link_path(dashboard, enable_sidebar: 0),
-              class: 'icon icon-sidebar'
-    else
-      link_to l(:label_enable_sidebar),
-              dashboard_link_path(dashboard, enable_sidebar: 1),
-              class: 'icon icon-sidebar'
-    end
+  def sidebar_action_toggle_label(enabled)
+    enabled ? l(:label_disable_sidebar) : l(:label_enable_sidebar)
   end
 
   def delete_dashboard_link(url)
