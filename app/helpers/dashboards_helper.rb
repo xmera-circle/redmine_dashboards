@@ -241,24 +241,11 @@ module DashboardsHelper
   end
 
   def build_dashboard_partial_locals(block_id, block_object, settings, dashboard)
-    partial_locals = { dashboard: dashboard,
-                       settings: settings,
-                       block_id: block_id,
-                       block_object: block_object,
-                       user: User.current }
-
-    if block_object[:query_block]
-      partial_locals[:query_block] = block_object[:query_block]
-      partial_locals[:klass] = block_object[:query_block][:class]
-      partial_locals[:async] = { required_settings: %i[query_id],
-                                 exposed_params: %i[sort],
-                                 partial: 'dashboards/blocks/query_list' }
-      partial_locals[:async][:unique_params] = [Redmine::Utils.random_hex(16)] if params[:refresh].present?
-      partial_locals[:async] = partial_locals[:async].merge block_object[:async] if block_object[:async]
-    elsif block_object[:async]
-      partial_locals[:async] = block_object[:async]
-    end
-    partial_locals
+    partial = BlockPartial.new(block: { id: block_id, object: block_object },
+                               settings: settings,
+                               dashboard: dashboard,
+                               params: params)
+    partial.locals
   end
 
   def dashboard_async_required_settings?(settings, async)
