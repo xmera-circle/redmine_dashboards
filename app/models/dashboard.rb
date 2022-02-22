@@ -442,7 +442,9 @@ class Dashboard < ActiveRecord::Base
   end
 
   def validate_visibility
-    errors.add :visibility, :must_be_for_everyone if system_default? && visibility != VISIBILITY_PUBLIC
+    return unless system_default? && visibility != VISIBILITY_PUBLIC
+
+    errors.add :base, l(:error_dashboard_must_be_visible_for_everyone)
   end
 
   def validate_name
