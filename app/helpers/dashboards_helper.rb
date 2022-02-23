@@ -392,19 +392,31 @@ module DashboardsHelper
     title.presence || block_object[:label]
   end
 
-  def options_for_query_select(klass, project)
-    # sidebar_queries cannot be use because descendants classes are included
-    # this changes on class loading
-    # queries = klass.visible.global_or_on_project(@project).sorted.to_a
-    queries = klass.visible
-                   .global_or_on_project(project)
-                   .where(type: klass.to_s)
-                   .sorted.to_a
+  def options_for_query_select(klass, project, selected = nil)
+    tag.option + options_from_collection_for_select(queries(klass, project), :id, :name, selected)
+  end
 
-    tag.option + options_from_collection_for_select(queries, :id, :name)
+  def grouped_options_for_query_select(klass, project, selected = nil)
+    all_queries = queries(klass, project)
+    group = { "#{l(:label_my_queries)}": all_queries.select(&:is_private?).pluck(:name, :id),
+              "#{l(:label_query_plural)}": all_queries.reject(&:is_private?).pluck(:name, :id) }
+
+    tag.option + grouped_options_for_select(group.to_a, selected)
   end
 
   private
+
+  ##
+  # sidebar_queries cannot be used because descendant classes are included
+  # this changes on class loading
+  # queries = klass.visible.global_or_on_project(@project).sorted.to_a
+  #
+  def queries(klass, project)
+    klass.visible
+         .global_or_on_project(project)
+         .where(type: klass.to_s)
+         .sorted.to_a
+  end
 
   # Renders a single block content
   def render_dashboard_block_content(block_id, block_object, dashboard, overwritten_settings = {})

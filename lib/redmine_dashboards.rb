@@ -64,6 +64,7 @@ module RedmineDashboards
       WelcomeBlock.instance
       ButtonBlock.instance
       ChartBlock.instance
+      IssueCounterBlock.instance
     end
 
     def true?(value)
