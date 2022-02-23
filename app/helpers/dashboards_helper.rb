@@ -241,24 +241,11 @@ module DashboardsHelper
   end
 
   def build_dashboard_partial_locals(block_id, block_object, settings, dashboard)
-    partial_locals = { dashboard: dashboard,
-                       settings: settings,
-                       block_id: block_id,
-                       block_object: block_object,
-                       user: User.current }
-
-    if block_object[:query_block]
-      partial_locals[:query_block] = block_object[:query_block]
-      partial_locals[:klass] = block_object[:query_block][:class]
-      partial_locals[:async] = { required_settings: %i[query_id],
-                                 exposed_params: %i[sort],
-                                 partial: 'dashboards/blocks/query_list' }
-      partial_locals[:async][:unique_params] = [Redmine::Utils.random_hex(16)] if params[:refresh].present?
-      partial_locals[:async] = partial_locals[:async].merge block_object[:async] if block_object[:async]
-    elsif block_object[:async]
-      partial_locals[:async] = block_object[:async]
-    end
-    partial_locals
+    partial = BlockPartial.new(block: { id: block_id, object: block_object },
+                               settings: settings,
+                               dashboard: dashboard,
+                               params: params)
+    partial.locals
   end
 
   def dashboard_async_required_settings?(settings, async)
@@ -405,19 +392,31 @@ module DashboardsHelper
     title.presence || block_object[:label]
   end
 
-  def options_for_query_select(klass, project)
-    # sidebar_queries cannot be use because descendants classes are included
-    # this changes on class loading
-    # queries = klass.visible.global_or_on_project(@project).sorted.to_a
-    queries = klass.visible
-                   .global_or_on_project(project)
-                   .where(type: klass.to_s)
-                   .sorted.to_a
+  def options_for_query_select(klass, project, selected = nil)
+    tag.option + options_from_collection_for_select(queries(klass, project), :id, :name, selected)
+  end
 
-    tag.option + options_from_collection_for_select(queries, :id, :name)
+  def grouped_options_for_query_select(klass, project, selected = nil)
+    all_queries = queries(klass, project)
+    group = { "#{l(:label_my_queries)}": all_queries.select(&:is_private?).pluck(:name, :id),
+              "#{l(:label_query_plural)}": all_queries.reject(&:is_private?).pluck(:name, :id) }
+
+    tag.option + grouped_options_for_select(group.to_a, selected)
   end
 
   private
+
+  ##
+  # sidebar_queries cannot be used because descendant classes are included
+  # this changes on class loading
+  # queries = klass.visible.global_or_on_project(@project).sorted.to_a
+  #
+  def queries(klass, project)
+    klass.visible
+         .global_or_on_project(project)
+         .where(type: klass.to_s)
+         .sorted.to_a
+  end
 
   # Renders a single block content
   def render_dashboard_block_content(block_id, block_object, dashboard, overwritten_settings = {})

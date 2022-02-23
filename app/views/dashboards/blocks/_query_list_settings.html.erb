@@ -39,7 +39,7 @@
 <% else %>
   <%= tag.div class: 'box tabular settings' do %>
     <%= tag.p dashboards_settings_select :query_id,
-                                    options_for_query_select(klass, @project),
+                                    grouped_options_for_query_select(klass, @project),
                                     label: block_object[:label],
                                     tag_name: "settings[#{block_id}][query_id]",
                                     required: true %>

@@ -222,6 +222,31 @@ p.role-visibility input {
   text-align: left;
 }
 
+/* Issue Counter */
+
+.dashboard .issue-counter {
+  color: white;
+  padding: 1rem;
+  border-radius: 3px;
+  text-align: center;
+  overflow: hidden;
+  word-wrap: normal;
+  min-width: min-content;
+}
+.dashboard .count {
+  font-size: 2rem;
+  font-weight: bold;
+}
+.dashboard .issue-counter-title {
+  text-transform: uppercase;
+  font-size:0.75rem;
+}
+
+.dashboard .issue-counter:hover {
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+    color: white;
+  }
+
 /* Button Block */
   .dashboard .button {
     border: none;
