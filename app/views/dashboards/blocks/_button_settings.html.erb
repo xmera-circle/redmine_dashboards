@@ -49,10 +49,15 @@
 %>
 
 <%= tag.div class: 'box tabular settings' do %>
-  <%= tag.p dashboards_settings_urlfield :link,
+  <%= tag.p dashboards_settings_textfield :link,
                                          value: settings[:link],
                                          tag_name: "settings[#{block_id}][link]",
                                          required: true %>
+  
+  <%= tag.p dashboards_settings_checkbox :external,
+                                          active_value: settings.fetch(:external,'false'),
+                                          label: l(:label_link_external),
+                                          tag_name: "settings[#{block_id}][external]" %> 
   
   <%= tag.p dashboards_settings_textfield :text,
                                           value: settings[:text],
