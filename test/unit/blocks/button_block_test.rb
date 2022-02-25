@@ -24,16 +24,21 @@ class ButtonBlockValidationTest < RedmineDashboards::TestCase
   def setup
     @button_block = ButtonBlock.instance
     @button_block.text = 'Button'
-    @button_block.link = 'https://redmine.org'
+    @button_block.link = '/issues'
     @button_block.css = 'inline'
     @button_block.color = '#83BF40'
   end
 
   def teardown
+    @button_block.text = nil
+    @button_block.link = nil
+    @button_block.css = nil
+    @button_block.color = nil
     @button_block = nil
   end
 
   def test_valid_button
+    setup # sometimes the test fails due to an invalid attr which was set before
     assert @button_block.valid?
   end
 
@@ -43,8 +48,17 @@ class ButtonBlockValidationTest < RedmineDashboards::TestCase
   end
 
   def test_invalid_link
-    @button_block.link = '#'
+    @button_block.external = true
+    @button_block.link = 'mailto:'
     assert @button_block.invalid?
+  end
+
+  def test_valid_link_without_frontslash
+    @button_block.external = false
+    @button_block.link = +'projects'
+    expected = '/projects'
+    current = @button_block.link if @button_block.valid?
+    assert_equal expected, current
   end
 
   def test_invalid_css

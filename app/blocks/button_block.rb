@@ -18,11 +18,17 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
+require 'forwardable'
+
 class ButtonBlock < DashboardBlock
-  attr_accessor :text, :link, :color, :css
+  extend Forwardable
+  attr_accessor :text, :link, :external, :color, :css
+
+  def_delegator RedmineDashboards, :true?
 
   validates :text, :link, presence: true
-  validates :link, format: URI::DEFAULT_PARSER.make_regexp(%w[http https])
+  validates :link, format: URI::DEFAULT_PARSER.make_regexp(%w[http https]), if: :external?
+  validate :internal_link, unless: :external?
   validates :css, inclusion: { in: BlockStyles.position_classes }, allow_nil: true
   validates :color, format: { with: /\A#([a-f0-9]{3}){,2}\z/i }
 
@@ -42,7 +48,24 @@ class ButtonBlock < DashboardBlock
   def register_settings
     { text: nil,
       link: nil,
+      external: nil,
       color: nil,
       css: nil }
+  end
+
+  private
+
+  def external?
+    true? external
+  end
+
+  ##
+  # The validation call back above is misused here
+  # in order to make sure the relative link starts
+  # with a frontslash.
+  #
+  def internal_link
+    link.prepend('/') unless link.start_with?('/')
+    link
   end
 end

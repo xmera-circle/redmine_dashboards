@@ -29,6 +29,7 @@ en:
   label_text_sync: Text
   label_text_async: Text (asynchronous)
   label_button: Button
+  label_link_external: External link?
   label_button_text: Link text
   label_button_background_color: Button background color
   label_position_unset: Unset

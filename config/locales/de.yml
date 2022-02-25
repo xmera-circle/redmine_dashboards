@@ -30,6 +30,7 @@ de:
   label_text_async: Text (asynchron)
   label_button: Button
   label_button_text: Linktext
+  label_link_external: Externer Link?
   label_button_background_color: Button Hintergrundfarbe
   label_block_positioning: Positionierung
   label_position_unset: ohne
