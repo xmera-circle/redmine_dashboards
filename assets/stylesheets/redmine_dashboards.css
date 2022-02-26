@@ -277,3 +277,33 @@ p.role-visibility input {
     cursor: pointer;
     border-radius: 50%;
   }
+
+  /* News Block */
+
+  .news-container {
+    display: flex;
+  }
+
+  .news-img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 1.3rem;
+  }
+
+  .news-thumb {
+    flex-shrink: 0;
+  }
+
+  .news-content {
+    margin-left: 1rem;
+  }
+
+  h4.news-title {
+    font-size: 0.9rem !important;
+    font-weight: bold;
+  }
+  .image-placeholder {
+      background-color: #eee;
+      height: 40px;
+      width: 70px;
+  }
