@@ -24,7 +24,7 @@ module RedmineDashboards
 
     class BaseViewListener < Redmine::Hook::ViewListener
       def view_layouts_base_html_head(context = {})
-        return unless /^(Dashboards|Welcome)/.match?(context[:controller].class.name)
+        return unless /^(Dashboards|Welcome|Projects)/.match?(context[:controller].class.name)
 
         "\n".html_safe + stylesheet_link_tag('redmine_dashboards', plugin: :redmine_dashboards) +
           "\n".html_safe + javascript_include_tag('redmine_dashboards', plugin: :redmine_dashboards)

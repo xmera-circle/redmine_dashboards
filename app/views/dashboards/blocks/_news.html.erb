@@ -45,7 +45,7 @@
 <% end %>
 <% if news.any? %>
   <%= render partial: 'news/news', collection: news %>
-  <%= tag.p do %>
+  <%= tag.p class: 'all-news' do %>
     <% if @project %>
       <%= link_to l(:label_news_view_all), project_news_index_path(@project) %>
     <% else %>
@@ -53,5 +53,5 @@
     <% end %>
   <% end %>
 <% else %>
-  <%= render partial: 'dashboards/blocks/nodata', collection: documents %>
+  <%= render partial: 'dashboards/blocks/nodata', locals: { label: nil } %>
 <% end %>
