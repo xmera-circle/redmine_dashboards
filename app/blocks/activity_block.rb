@@ -40,6 +40,7 @@ class ActivityBlock < DashboardBlock
   def register_settings
     { max_entries: nil,
       me_only: nil,
-      user_id: nil }
+      user_id: nil,
+      user_is_admin: nil }
   end
 end
