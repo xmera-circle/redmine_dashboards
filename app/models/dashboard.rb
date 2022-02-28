@@ -63,7 +63,6 @@ class Dashboard < ActiveRecord::Base
 
   safe_attributes 'visibility', 'role_ids',
                   if: (lambda do |dashboard, user|
-                    user.allowed_to?(:share_dashboards, dashboard.project, global: true) ||
                       user.allowed_to?(:set_system_dashboards, dashboard.project, global: true)
                   end)
 
@@ -434,7 +433,6 @@ class Dashboard < ActiveRecord::Base
     user = User.current
 
     return if system_default? ||
-              user.allowed_to?(:share_dashboards, project, global: true) ||
               user.allowed_to?(:set_system_dashboards, project, global: true)
 
     # change to private

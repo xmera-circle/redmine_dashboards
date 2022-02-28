@@ -38,8 +38,7 @@
   <%= tag.div class: 'splitcontent' do %>
     <%= tag.div class: 'splitcontentleft' do %>
       <%= hidden_field_tag 'dashboard[dashboard_type]', @dashboard.dashboard_type if @dashboard.new_record? %>
-      <% if User.current.allowed_to?(:share_dashboards, nil, global: true) || \
-            User.current.allowed_to?(:set_system_dashboards, nil, global: true) %>
+      <% if User.current.allowed_to?(:set_system_dashboards, nil, global: true) %>
         <%=tag.p do %>
             <%=tag.label l(:field_visible) %>
             <%= f.radio_button 'visibility', Dashboard::VISIBILITY_PRIVATE %>
