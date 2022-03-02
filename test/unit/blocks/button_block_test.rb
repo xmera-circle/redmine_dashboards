@@ -39,7 +39,7 @@ class ButtonBlockValidationTest < RedmineDashboards::TestCase
 
   def test_valid_button
     setup # sometimes the test fails due to an invalid attr which was set before
-    assert @button_block.valid?
+    assert @button_block.valid?, @button_block.errors.full_messages
   end
 
   def test_invalid_button_text

@@ -29,12 +29,22 @@ Redmine::Plugin.register :redmine_dashboards do
 
   requires_redmine version_or_higher: '4.2.0'
 
-  permission :set_system_dashboards,
-             {},
+  permission :manage_system_dashboards,
+             { dashboards: %i[index new create edit update destroy] },
              require: :loggedin,
              read: true
-  permission :save_dashboards,
-             { dashboards: %i[index new create edit update destroy] },
+  permission :edit_public_dashboards,
+             { dashboards: %i[edit update destroy] },
+             require: :loggedin
+  permission :edit_own_dashboards,
+             { dashboards: %i[edit update destroy] },
+             require: :loggedin
+  permission :add_dashboards,
+             { dashboards: %i[index new create] },
+             require: :loggedin,
+             read: true
+  permission :add_own_dashboards,
+             { dashboards: %i[index new create] },
              require: :loggedin,
              read: true
 end

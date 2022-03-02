@@ -53,23 +53,18 @@ class Dashboard < ActiveRecord::Base
                   'always_expose', 'project_id', 'author_id',
                   if: (lambda do |dashboard, user|
                     dashboard.new_record? ||
-                      user.allowed_to?(:save_dashboards, dashboard.project, global: true)
+                      dashboard.editable?(user)
                   end)
 
   safe_attributes 'dashboard_type',
-                  if: (lambda do |dashboard, _user|
-                    dashboard.new_record?
-                  end)
+                  if: ->(dashboard, _user) { dashboard.new_record? }
 
   safe_attributes 'visibility', 'role_ids',
-                  if: (lambda do |dashboard, user|
-                    user.allowed_to?(:share_dashboards, dashboard.project, global: true) ||
-                      user.allowed_to?(:set_system_dashboards, dashboard.project, global: true)
-                  end)
+                  if: ->(dashboard, user) { dashboard.editable? user }
 
   safe_attributes 'system_default',
                   if: (lambda do |dashboard, user|
-                    user.allowed_to? :set_system_dashboards, dashboard.project, global: true
+                    dashboard.allowed_to_manage_system_dashboards?(user, dashboard.project)
                   end)
 
   before_validation :strip_whitespace
@@ -90,35 +85,30 @@ class Dashboard < ActiveRecord::Base
   validate :validate_layout_settings
 
   class << self
-    def system_default(dashboard_type)
-      select(:id).find_by(dashboard_type: dashboard_type, system_default: true)
-                 .try(:id)
-    end
-
     def default(dashboard_type, project = nil, user = User.current)
       recently_id = User.current.pref.recently_used_dashboard dashboard_type, project
 
       scope = where dashboard_type: dashboard_type
       scope = scope.where(project_id: project.id).or(scope.where(project_id: nil)) if project.present?
 
-      dashboard = scope.visible.find_by id: recently_id if recently_id.present?
+      selected = scope.visible
+      dashboard = selected.select { |item| item.id == recently_id }
 
-      if dashboard.blank?
-        scope = scope.where(system_default: true).or(scope.where(author_id: user.id))
-        dashboard = scope.order(system_default: :desc, project_id: :desc, id: :asc).first
+      return dashboard.first if dashboard.present?
 
-        if recently_id.present?
-          Rails.logger.debug 'default cleanup required'
-          # Remove invalid recently_id
-          if project.present?
-            User.current.pref.recently_used_dashboards[dashboard_type].delete project.id
-          else
-            User.current.pref.recently_used_dashboards[dashboard_type] = nil
-          end
-        end
-      end
+      remove_invalid_recently_id(recently_id, dashboard_type)
+      system_default(dashboard_type)
+    end
 
-      dashboard
+    def system_default(dashboard_type)
+      find_by(dashboard_type: dashboard_type, system_default: true)
+    end
+
+    def remove_invalid_recently_id(recently_id, dashboard_type)
+      return unless recently_id
+
+      Rails.logger.debug 'default cleanup required'
+      User.current.pref.recently_used_dashboards[dashboard_type] = nil
     end
 
     def fields_for_order_statement(table = nil)
@@ -126,15 +116,20 @@ class Dashboard < ActiveRecord::Base
       ["#{table}.name"]
     end
 
+    ##
+    # A user is allowed to see a dashboard if
+    #  i) she is allowed to edit it,
+    #  ii) she is authorized by her role, having in any project, to read it,
+    #  iii) it is public or her own dashboard.
+    #
     def visible(user = User.current, **options)
-      scope = left_outer_joins :project
-      scope = scope.where(projects: { id: nil }).or(scope.where(Project.allowed_to_condition(user, :view_project,
-                                                                                             options)))
+      return all if all.all? { |item| item.editable?(user) || item.system_default? }
 
-      if user.admin?
-        scope.where.not(visibility: VISIBILITY_PRIVATE).or(scope.where(author_id: user.id))
-      elsif user.memberships.any?
-        scope.where("#{table_name}.visibility = ?" \
+      scoped = left_outer_joins :project
+      scoped = scoped.where(projects: { id: nil }).or(scoped.where(Project.allowed_to_condition(user, :view_project,
+                                                                                                options)))
+      if user.memberships.any?
+        scoped.where("#{table_name}.visibility = ?" \
                     " OR (#{table_name}.visibility = ? AND #{table_name}.id IN (" \
                     "SELECT DISTINCT d.id FROM #{table_name} d"  \
                     " INNER JOIN #{table_name_prefix}dashboard_roles#{table_name_suffix} dr ON dr.dashboard_id = d.id" \
@@ -149,9 +144,9 @@ class Dashboard < ActiveRecord::Base
                     Project::STATUS_ARCHIVED,
                     user.id)
       elsif user.logged?
-        scope.where(visibility: VISIBILITY_PUBLIC).or(scope.where(author_id: user.id))
+        scoped.where(visibility: VISIBILITY_PUBLIC).or(scoped.where(author_id: user.id))
       else
-        scope.where visibility: VISIBILITY_PUBLIC
+        scoped.where visibility: VISIBILITY_PUBLIC
       end
     end
   end
@@ -188,23 +183,20 @@ class Dashboard < ActiveRecord::Base
     end
   end
 
-  # Returns true if the dashboard is visible to +user+ or the current user.
+  ##
+  # A user is allowed to see a dashboard if
+  #  i) she is allowed to edit it,
+  #  ii) it is public,
+  #  iii) she is authorized by her role, having in any project, to read it.
+  #
   def visible?(user = User.current)
-    return true if user.admin?
-
-    return false unless project.nil? || user.allowed_to?(:view_project, project)
-
-    return true if user == author
+    return true if editable? user
 
     case visibility
     when VISIBILITY_PUBLIC
       true
     when VISIBILITY_ROLES
-      if project
-        (user.roles_for_project(project) & roles).any?
-      else
-        user.memberships.joins(:member_roles).where(member_roles: { role_id: roles.map(&:id) }).any?
-      end
+      any_authorized?(user) || author?(user)
     end
   end
 
@@ -279,31 +271,40 @@ class Dashboard < ActiveRecord::Base
   end
 
   def private?(user = User.current)
-    author_id == user.id && visibility == VISIBILITY_PRIVATE
+    author?(user) && visibility == VISIBILITY_PRIVATE
+  end
+
+  def author?(user = User.current)
+    author_id == user.id
   end
 
   def public?
     visibility != VISIBILITY_PRIVATE
   end
 
-  def editable_by?(usr = User.current, prj = nil)
-    prj ||= project
-    usr && (usr.admin? ||
-           (author == usr && usr.allowed_to?(:save_dashboards, prj, global: true)))
-  end
-
   def editable?(usr = User.current)
     @editable ||= editable_by? usr
   end
 
-  def destroyable_by?(usr = User.current)
-    return unless editable_by? usr, project
+  def editable_by?(user = User.current, prj = nil)
+    prj ||= project
+    return true if user&.admin?
 
-    !system_default_was
+    if system_default?
+      allowed_to_manage_system_dashboards?(user, prj)
+    else
+      allowed_to_edit_dashboards?(user, prj)
+    end
   end
 
   def destroyable?
-    @destroyable ||= destroyable_by? User.current
+    @destroyable ||= destroyable_by?
+  end
+
+  def destroyable_by?(usr = User.current)
+    return false if system_default? || !editable_by?(usr, project)
+
+    true
   end
 
   def to_s
@@ -318,7 +319,7 @@ class Dashboard < ActiveRecord::Base
   end
 
   def allowed_target_projects(user = User.current)
-    Project.where Project.allowed_to_condition(user, :save_dashboards)
+    Project.where Project.allowed_to_condition(user, :add_dashboards)
   end
 
   # this is used to get unique cache for blocks
@@ -372,7 +373,28 @@ class Dashboard < ActiveRecord::Base
                    project_id_was.present?
   end
 
+  def allowed_to_manage_system_dashboards?(user, prj = nil)
+    user.allowed_to?(:manage_system_dashboards, prj, global: true)
+  end
+
   private
+
+  def any_authorized?(user)
+    user.memberships.joins(:member_roles).where(member_roles: { role_id: role_ids }).any?
+  end
+
+  def allowed_to_edit_dashboards?(user, prj = nil)
+    allowed_to_edit_public_dashboards?(user, prj) ||
+      allowed_to_edit_own_dashboards?(user, prj)
+  end
+
+  def allowed_to_edit_public_dashboards?(user, prj = nil)
+    user.allowed_to?(:edit_public_dashboards, prj, global: true)
+  end
+
+  def allowed_to_edit_own_dashboards?(user, prj = nil)
+    (author == user && user.allowed_to?(:edit_own_dashboards, prj, global: true))
+  end
 
   def strip_whitespace
     name&.strip!
@@ -420,7 +442,7 @@ class Dashboard < ActiveRecord::Base
   end
 
   def update_system_defaults
-    return unless system_default? && User.current.allowed_to?(:set_system_dashboards, project, global: true)
+    return unless system_default? && User.current.allowed_to?(:manage_system_dashboards, project, global: true)
 
     scope = self.class
                 .where(dashboard_type: dashboard_type)
@@ -434,8 +456,8 @@ class Dashboard < ActiveRecord::Base
     user = User.current
 
     return if system_default? ||
-              user.allowed_to?(:share_dashboards, project, global: true) ||
-              user.allowed_to?(:set_system_dashboards, project, global: true)
+              allowed_to_edit_dashboards?(user, project) ||
+              allowed_to_manage_system_dashboards?(user, project)
 
     # change to private
     self.visibility = VISIBILITY_PRIVATE

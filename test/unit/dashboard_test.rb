@@ -135,8 +135,11 @@ class DashboardTest < RedmineDashboards::TestCase
 
   def test_destroy_dashboard_without_roles
     dashboard = dashboards :private_welcome2
+    user = users(:users_002)
+    manager = user.roles.where(id: 1).take
+    manager.add_permission! :edit_own_dashboards
     assert dashboard.roles.none?
-    assert dashboard.destroyable_by? users(:users_002)
+    assert dashboard.destroyable_by? user
     assert_difference 'Dashboard.count', -1 do
       assert dashboard.destroy
     end
