@@ -32,11 +32,11 @@ class IssueCounterBlockValidationTest < RedmineDashboards::TestCase
     @issue_counter_block = nil
   end
 
-  def test_valid_button
+  def test_valid_issue_counter
     assert @issue_counter_block.valid?
   end
 
-  def test_valid_button_title_when_not_given
+  def test_valid_issue_counter_title_when_not_given
     @issue_counter_block.title = nil
     assert @issue_counter_block.valid?
   end
@@ -46,7 +46,7 @@ class IssueCounterBlockValidationTest < RedmineDashboards::TestCase
     assert @issue_counter_block.invalid?
   end
 
-  def test_invalid_button_color
+  def test_invalid_issue_counter_color
     @issue_counter_block.color = '83BF40'
     assert @issue_counter_block.invalid?
   end

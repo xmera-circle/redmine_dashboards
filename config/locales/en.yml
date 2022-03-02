@@ -94,5 +94,8 @@ en:
   field_enable_sidebar: Enable sidebar 
   field_system_default: Define as system default
 
-  permission_save_dashboards: Save dashboard
-  permission_set_system_dashboards: Define system dashboard
+  permission_manage_system_dashboards: Manage system dashboard
+  permission_edit_public_dashboards: Edit public dashboards
+  persission_edit_own_dashboards: Edit own dashboards
+  permission_add_dashboards: Add dashboards
+  permission_add_own_dashboards: Add own dashboards 

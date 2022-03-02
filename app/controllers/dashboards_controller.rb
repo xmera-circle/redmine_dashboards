@@ -26,6 +26,7 @@ class DashboardsController < ApplicationController
 
   before_action :find_dashboard, except: %i[index new create]
   before_action :find_optional_project, only: %i[new create index]
+  before_action :authorize_global
 
   accept_rss_auth :index, :show
   accept_api_auth :index, :show, :create, :update, :destroy

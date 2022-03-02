@@ -39,12 +39,12 @@ module RedmineDashboards
 
     def prepare_tests
       Role.where(id: [1, 2]).each do |role|
-        role.permissions << :save_dashboards
+        role.permissions << :add_dashboards
         role.save
       end
 
       Role.where(id: [1]).each do |role|
-        role.permissions << :set_system_dashboards
+        role.permissions << :manage_system_dashboards
         role.save
       end
 
