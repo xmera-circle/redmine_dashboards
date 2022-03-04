@@ -21,6 +21,7 @@
 require 'redmine_dashboards/extensions/user_patch'
 require 'redmine_dashboards/extensions/user_preference_patch'
 require 'redmine_dashboards/extensions/welcome_controller_patch'
+require 'redmine_dashboards/wiki_macros/button_macro'
 
 require 'redmine_dashboards/hooks/base_view_listener'
 

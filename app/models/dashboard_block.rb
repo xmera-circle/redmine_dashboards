@@ -134,10 +134,14 @@ class DashboardBlock
     update_settings(settings)
     return dashboard if valid?
 
-    dashboard.errors.add(:base, "#{l(:label_dashboard_block)} » #{label}: #{errors.full_messages.join(', ')}")
+    dashboard.errors.add(:base, "#{label}: #{errors.full_messages.join(', ')}")
     clear_settings
     errors.clear
     dashboard
+  end
+
+  def clear_settings
+    settings&.each { |attr| clear_setting(attr) }
   end
 
   def forbidden?(user, project)
@@ -165,10 +169,6 @@ class DashboardBlock
 
   def update_settings(settings)
     assign_attributes(settings)
-  end
-
-  def clear_settings
-    settings&.each { |attr| clear_setting(attr) }
   end
 
   def clear_setting(attr)

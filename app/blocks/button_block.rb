@@ -53,6 +53,10 @@ class ButtonBlock < DashboardBlock
       css: nil }
   end
 
+  def random_id
+    "#{type}__#{SecureRandom.alphanumeric}"
+  end
+
   private
 
   def external?

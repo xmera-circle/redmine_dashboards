@@ -7,7 +7,6 @@ de:
 
   label_dashboard: Dashboard
   label_edit_dashboard: Dashboard bearbeiten
-  label_dashboard_block: Dashboard Block
   label_add_dashboard_block: Block hinzufügen
   label_my_dashboard_plural: Meine Dashboards
   label_shared_dashboard_plural: Gemeinsame Dashboards
@@ -51,6 +50,8 @@ de:
     
   error_while_executing_bashboard_block: konnte nicht geladen werden, weil ein Fehler aufgetreten ist. Bitte informieren Sie Ihren Administrator.
   error_dashboard_must_be_visible_for_everyone: Dashboard muss für jeden sichtbar sein
+  error_link_required: Link muss angegeben werden
+  error_external_not_in_list: 'Button: External muss 1 sein'
   activemodel:
     errors:
       messages:

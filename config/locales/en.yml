@@ -7,7 +7,6 @@ en:
   
   label_dashboard: Dashboard
   label_edit_dashboard: Edit dashboard
-  label_dashboard_block: Dashboard block
   label_add_dashboard_block: Add block
   label_my_dashboard_plural: My Dashboards
   label_shared_dashboard_plural: Shared Dashboards
@@ -51,6 +50,8 @@ en:
   
   error_while_executing_bashboard_block: dashboard block cannot be displayed due to an error. Please report this error to your administrator.
   error_dashboard_must_be_visible_for_everyone: Dashboard must be visible for everyone
+  error_link_required: Link needs to be given
+  error_external_not_in_list: 'Button: External needs to be 1'
   activemodel:
     errors:
       messages:
