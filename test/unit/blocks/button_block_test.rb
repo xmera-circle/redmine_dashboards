@@ -38,8 +38,7 @@ class ButtonBlockValidationTest < RedmineDashboards::TestCase
   end
 
   def test_valid_button
-    setup # sometimes the test fails due to an invalid attr which was set before
-    assert @button_block.valid?, @button_block.errors.full_messages
+    assert @button_block.valid?, @button_block.link
   end
 
   def test_invalid_button_text
@@ -57,7 +56,8 @@ class ButtonBlockValidationTest < RedmineDashboards::TestCase
     @button_block.external = false
     @button_block.link = +'projects'
     expected = '/projects'
-    current = @button_block.link if @button_block.valid?
+    @button_block.valid?
+    current = @button_block.link
     assert_equal expected, current
   end
 

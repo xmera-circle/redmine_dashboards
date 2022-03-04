@@ -22,10 +22,12 @@
 # Prevents especially default Redmine tests from failing.
 #
 class NullDashboard
-  attr_reader :content
+  attr_reader :content, :errors
+  attr_writer :name
 
   def initialize
     @content = DashboardContentNull.new
+    @errors = ActiveModel::Errors.new(self)
   end
 
   def id
@@ -62,5 +64,17 @@ class NullDashboard
 
   def available_groups
     []
+  end
+
+  def read_attribute_for_validation(attr)
+    send(attr)
+  end
+
+  def self.human_attribute_name(attr, _options = {})
+    attr
+  end
+
+  def self.lookup_ancestors
+    [self]
   end
 end
