@@ -34,4 +34,20 @@ class LegacyLeftBlock < DashboardBlock
   def register_settings
     {}
   end
+
+  ##
+  # The legacy left block will only be provided in the block selection
+  # list if there is a hook listener providing a partial with content.
+  #
+  def forbidden?(user, project)
+    return super if Redmine::Hook.hook_listeners(hook).present?
+
+    true
+  end
+
+  private
+
+  def hook
+    :view_welcome_index_left
+  end
 end

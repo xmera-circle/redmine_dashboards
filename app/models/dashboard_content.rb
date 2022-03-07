@@ -60,8 +60,8 @@ class DashboardContent
   #
   def default_layout
     {
-      'left' => ['legacy_left'],
-      'right' => ['legacy_right']
+      'left' => %w[welcome],
+      'right' => %w[news]
     }
   end
 
