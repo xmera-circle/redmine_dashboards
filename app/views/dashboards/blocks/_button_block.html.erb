@@ -20,19 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 %>
 
-<%= render partial: 'dashboards/blocks/button_block', locals: { block_id: block_id, settings: settings }%>
-
-<% if @can_edit %>
-  <%= tag.div id: "#{block_id}-settings", style: "display: none;" do %>
-    <%= form_tag(update_layout_setting_dashboard_path(@dashboard), remote: true) do %>
-      <%= render partial: 'dashboards/blocks/button_settings', locals: { block_id: block_id, settings: settings }%>
-      <%= tag.p do %>
-        <%= submit_tag l(:button_save) %>
-        <%= link_to_function l(:button_cancel), "$('##{block_id}-settings').toggle();" %>
-      <% end %>
-    <% end %>
-  <% end %>
-<% end %>
+<%= sanitize(link_to(settings.fetch(:text, 'Button'),settings.fetch(:link, '#'), class: 'button', tags: %w(a), attributes: %w(href))) %>
 
 <%= tag.style do %>
  #<%= "block-#{block_id}" %> .button {
