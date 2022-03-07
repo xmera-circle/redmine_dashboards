@@ -25,8 +25,8 @@ class DashboardContentWelcome < DashboardContent
   # Returns the default layout for a new dashboard
   def default_layout
     {
-      'left' => %w[welcome legacy_left],
-      'right' => ['legacy_right']
+      'left' => %w[welcome],
+      'right' => %w[news]
     }
   end
 end
