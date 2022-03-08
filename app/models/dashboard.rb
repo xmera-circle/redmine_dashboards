@@ -86,7 +86,7 @@ class Dashboard < ActiveRecord::Base
 
   class << self
     def default(dashboard_type, project = nil, user = User.current)
-      recently_id = User.current.pref.recently_used_dashboard dashboard_type, project
+      recently_id = user.pref.recently_used_dashboard dashboard_type, project
 
       scope = where dashboard_type: dashboard_type
       scope = scope.where(project_id: project.id).or(scope.where(project_id: nil)) if project.present?

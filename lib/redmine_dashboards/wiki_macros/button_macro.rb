@@ -50,7 +50,7 @@ module RedmineDashboards
           raise valid.errors.full_messages.join(', ') if valid.errors.any?
 
           tag.div id: "block-#{block_id}" do
-            render(partial: 'dashboards/blocks/button',
+            render(partial: 'dashboards/blocks/button_block',
                    locals: { settings: settings, block_id: block_id })
           end
         end
