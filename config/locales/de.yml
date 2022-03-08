@@ -2,6 +2,8 @@
 de:
   button_dashboard_edit: Dashboard bearbeiten
   button_dashboard_delete: Dashboard löschen
+  button_cancel: Abbrechen
+  button_save: Speichern
 
   label_dashboard: Dashboard
   label_edit_dashboard: Dashboard bearbeiten
@@ -17,22 +19,84 @@ de:
   label_dashboard_author: "Autor: %{name}"
   label_only_my_activities: Zeige nur meine Einträge
   label_my_activity: Meine Aktivitäten
-  label_dashboard_feed: Feed
+  label_feed: Feed
   label_invalid_feed_data: Ungültige Feeddaten
   label_dashboard_legacy_left: Standard-Inhalt links
   label_dashboard_legacy_right: Standard-Inhalt rechts
   label_my_spent_time: Meine aufgewendete Zeit
-  label_query_with_name: Eigene Abfrage
+  label_query_with_name: "Abfrage: %{value}"
   label_text_sync: Text
   label_text_async: Text (asynchron)
-  
+  label_button: Button
+  label_button_text: Linktext
+  label_link_external: Externer Link?
+  label_button_background_color: Button Hintergrundfarbe
+  label_block_positioning: Positionierung
+  label_position_unset: ohne
+  label_position_inline: In Reihe
+  label_position_full_width: Volle Breite
+  label_position_left: Links
+  label_position_right: Rechts 
+  label_position_center: Mitte
+  label_chart: Diagramme
+  label_chart_type: Diagrammtyp
+  label_chart_legend: Legende anzeigen
+  label_filter: Filter
+  label_bar_chart_vertical: Balkendiagramm, vertikal
+  label_bar_chart_horizontal: Balkendiagramm, horizontal
+  label_issues_by_tracker: Tickets pro Tracker
+  label_issues_by_status: Tickets pro Status
+  label_issue_counter_with_name: Ticketzähler
+    
   error_while_executing_bashboard_block: konnte nicht geladen werden, weil ein Fehler aufgetreten ist. Bitte informieren Sie Ihren Administrator.
+  error_dashboard_must_be_visible_for_everyone: Dashboard muss für jeden sichtbar sein
+  error_link_required: Link muss angegeben werden
+  error_external_not_in_list: 'Button: External muss 1 sein'
+  activemodel:
+    errors:
+      messages:
+        inclusion: "ist kein gültiger Wert"
+        exclusion: "ist nicht verfügbar"
+        invalid: "ist nicht gültig"
+        confirmation: "stimmt nicht mit der Bestätigung überein"
+        accepted: "muss akzeptiert werden"
+        empty: "muss ausgefüllt werden"
+        blank: "muss ausgefüllt werden"
+        too_long: "ist zu lang (nicht mehr als %{count} Zeichen)"
+        too_short: "ist zu kurz (nicht weniger als %{count} Zeichen)"
+        wrong_length: "hat die falsche Länge (muss genau %{count} Zeichen haben)"
+        taken: "ist bereits vergeben"
+        not_a_number: "ist keine Zahl"
+        not_a_date: "ist kein gültiges Datum"
+        greater_than: "muss größer als %{count} sein"
+        greater_than_or_equal_to: "muss größer oder gleich %{count} sein"
+        equal_to: "muss genau %{count} sein"
+        less_than: "muss kleiner als %{count} sein"
+        less_than_or_equal_to: "muss kleiner oder gleich %{count} sein"
+        odd: "muss ungerade sein"
+        even: "muss gerade sein"
+        greater_than_start_date: "muss größer als der Beginn sein"
+        not_same_project: "gehört nicht zum selben Projekt"
+        circular_dependency: "Diese Beziehung würde eine zyklische Abhängigkeit erzeugen"
+        cant_link_an_issue_with_a_descendant: "Ein Ticket kann nicht mit einem seiner untergeordneten Tickets verlinkt werden"
+        earlier_than_minimum_start_date: "kann wegen eines Vorgängertickets nicht vor %{date} liegen"
+        not_a_regexp: "ist kein gültiger regulärer Ausdruck"
+        open_issue_with_closed_parent: "Ein offenes Ticket kann nicht an ein geschlossenes übergeordnetes Ticket angehängt werden"
+        must_contain_uppercase: "muss Großbuchstaben (A-Z) enthalten"
+        must_contain_lowercase: "muss Kleinbuchstaben (a-z) enthalten"
+        must_contain_digits: "muss Zahlen (0-9) enthalten"
+        must_contain_special_chars: "muss Sonderzeichen (!, $, %, ...) enthalten"
 
+  alert_only_visible_by_yourself: Nur für Sie sichtbar!
+  alert_only_visible_by_admins: Nur für Administratoren sichtbar!
   text_default_welcome: "Herzlich willkommen, %{value}!"
 
   field_always_expose: Dashboard immer offenlegen
   field_enable_sidebar: Seitenleiste aktivieren
   field_system_default: Als Systemstandard festlegen
 
-  permission_save_dashboards: Dashboards anlegen
-  permission_set_system_dashboards: System Dashboards festlegen
+  permission_manage_system_dashboards: System Dashboards verwalten
+  permission_edit_public_dashboards: Öffentliche Dashboards bearbeiten
+  permission_edit_own_dashboards: Eigene Dashboards bearbeiten
+  permission_add_dashboards: Dashboards anlegen
+  permission_add_own_dashboards: Eigene Dashboards anlegen  

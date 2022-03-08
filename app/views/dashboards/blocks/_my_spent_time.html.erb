@@ -1,0 +1,63 @@
+<%
+# frozen_string_literal: true
+
+# This file is part of the Plugin Redmine Dashboards.
+#
+# Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
+# See <https://github.com/AlphaNodes/additionals>.
+#
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+#
+# This plugin program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+%>
+
+<%= tag.h3 block_object[:label] %>
+
+<% if @can_edit %>
+  <%= tag.div id: "#{block_id}-settings", style: 'display: none;' do %>
+    <%= form_tag(update_layout_setting_dashboard_path(@dashboard), remote: true) do %>
+      <%= tag.div class: 'box tabular settings' do %>
+        <%= tag.p do %>
+          <%= dashboards_settings_numberfield :day,
+                                              value: days,
+                                              label: l(:button_show),
+                                              tag_name: "settings[#{block_id}][days]",
+                                              min: 1, max: 100, required: true %>
+          <%= l(:label_day_plural) %>
+        <% end %>
+        <%= tag.p do %>
+          <%= submit_tag l(:button_save) %>
+          <%= link_to_function l(:button_cancel), "$('##{block_id}-settings').toggle();" %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= tag.ul class: 'reporting-list' do %>
+  <%= tag.li class: 'today' do %>
+    <%= l(:label_today) %>: <%= l_hours_short entries_today.sum(&:hours) %>
+  <% end %>
+  <%= tag.li class: 'days' do %>
+    <%=  l(:label_last_n_days, days) %>: <%= l_hours_short entries_days.sum(&:hours) %>
+  <% end %>
+<% end %>
+
+<%= link_to l(:label_spent_time), _time_entries_path(@project, nil, user_id: 'me') %>
+<%= link_to l(:button_log_time),
+            _new_time_entry_path(@project, nil),
+            class: 'icon-only icon-add',
+            title: l(:button_log_time) %>
+

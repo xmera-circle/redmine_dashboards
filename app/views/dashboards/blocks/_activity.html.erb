@@ -4,7 +4,7 @@
 # This file is part of the Plugin Redmine Dashboards.
 #
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/RedmineDashboards>.
+# See <https://github.com/AlphaNodes/additionals>.
 #
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
@@ -24,8 +24,8 @@
 %>
 
 <% if User.current.logged? %>
-  <% dashboard_async_cache(dashboard, block, async, settings) do %>
-    <% events_by_day = activity_dashboard_data(settings, dashboard) %>
+  <% dashboard_async_cache(dashboard, block_id, async, settings) do %>
+    <% events_by_day = activity_dashboard_data(block_object, settings, dashboard) %>
     <% title = RedmineDashboards.true?(settings[:me_only]) ? l(:label_my_activity) : l(:label_activity) %>
     <%= tag.h3 link_to title, activity_path(user_id: User.current, from: events_by_day.keys.first) %>
     <%= render partial: 'activities/activities', locals: { events_by_day: events_by_day } %>

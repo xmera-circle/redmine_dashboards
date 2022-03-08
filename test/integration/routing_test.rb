@@ -3,7 +3,7 @@
 # This file is part of the Plugin Redmine Dashboards.
 #
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/RedmineDashboards>.
+# See <https://github.com/AlphaNodes/additionals>.
 #
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
@@ -21,27 +21,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require File.expand_path '../../test_helper', __FILE__
+require File.expand_path '../test_helper', __dir__
 
 class RoutingTest < Redmine::RoutingTest
-  # def test_issue_assign_to_me
-  #   should_route 'PUT /issues/1/assign_to_me' => 'additionals_assign_to_me#update', issue_id: '1'
-  # end
-
-  # def test_issue_change_status
-  #   should_route 'PUT /issues/1/change_status' => 'additionals_change_status#update', issue_id: '1'
-  # end
-
-  # def test_help_macro
-  #   should_route 'GET /help/macros' => 'additionals_macros#show'
-  # end
-
-  # def test_auto_completes
-  #   should_route 'GET /auto_completes/fontawesome' => 'auto_completes#fontawesome'
-  #   should_route 'GET /auto_completes/issue_assignee' => 'auto_completes#issue_assignee'
-  #   should_route 'GET /auto_completes/global_users' => 'auto_completes#global_users'
-  # end
-
   def test_dashboards
     should_route 'GET /dashboards.xml' => 'dashboards#index', format: 'xml'
     should_route 'GET /dashboards.json' => 'dashboards#index', format: 'json'

@@ -3,7 +3,7 @@
 # This file is part of the Plugin Redmine Dashboards.
 #
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/RedmineDashboards>.
+# See <https://github.com/AlphaNodes/additionals>.
 #
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
@@ -39,12 +39,12 @@ module RedmineDashboards
 
     def prepare_tests
       Role.where(id: [1, 2]).each do |role|
-        role.permissions << :save_dashboards
+        role.permissions << :add_dashboards
         role.save
       end
 
       Role.where(id: [1]).each do |role|
-        role.permissions << :set_system_dashboards
+        role.permissions << :manage_system_dashboards
         role.save
       end
 

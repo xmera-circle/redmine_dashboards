@@ -3,7 +3,7 @@
 # This file is part of the Plugin Redmine Dashboards.
 #
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/RedmineDashboards>.
+# See <https://github.com/AlphaNodes/additionals>.
 #
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
@@ -23,6 +23,10 @@
 
 module RedmineDashboards
   module GlobalTestHelper
+    def find_or_create_block(klass)
+      klass.instance
+    end
+
     def assert_select_td_column(column_name)
       c = column_name.to_s
                      .gsub('issue.cf', 'issue_cf')
@@ -76,17 +80,17 @@ module RedmineDashboards
     end
 
     def assert_dashboard_query_blocks(blocks = [])
-      blocks.each do |block_def|
-        block_def[:user_id]
-        @request.session[:user_id] = block_def[:user_id].presence || 2
-        get block_def[:action].presence || :show,
-            params: { dashboard_id: block_def[:dashboard_id],
-                      block: block_def[:block],
-                      project_id: block_def[:project],
+      blocks.each do |attrs|
+        attrs[:user_id]
+        @request.session[:user_id] = attrs[:user_id].presence || 2
+        get attrs[:action].presence || :show,
+            params: { dashboard_id: attrs[:dashboard_id],
+                      block_id: attrs[:block_id],
+                      project_id: attrs[:project],
                       format: 'js' }
 
-        assert_response :success, "assert_response for #{block_def[:block]}"
-        assert_select "table.list.#{block_def[:entities_class]}"
+        assert_response :success, "assert_response for #{attrs[:block_id]}"
+        assert_select "table.list.#{attrs[:entities_class]}"
       end
     end
   end

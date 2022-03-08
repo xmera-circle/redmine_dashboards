@@ -18,18 +18,55 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
+require 'redmine_dashboards/extensions/user_patch'
 require 'redmine_dashboards/extensions/user_preference_patch'
 require 'redmine_dashboards/extensions/welcome_controller_patch'
+require 'redmine_dashboards/wiki_macros/button_macro'
 
 require 'redmine_dashboards/hooks/base_view_listener'
 
 module RedmineDashboards
-  LIST_SEPARATOR = ' » '
+  SEPARATOR = ' » '
   class << self
     def setup
+      autoload_blocks
+      Rails.configuration.to_prepare do
+        RedmineDashboards.render_async_configuration
+        RedmineDashboards.add_helpers
+        RedmineDashboards.instanciate_blocks
+      end
+    end
+
+    def autoload_blocks
+      plugin = Redmine::Plugin.find(:redmine_dashboards)
+      Rails.application.configure do
+        config.autoload_paths << "#{plugin.directory}/app/blocks"
+      end
+    end
+
+    def render_async_configuration
       RenderAsync.configuration.jquery = true
-      # Global helpers
+    end
+
+    def add_helpers
       ActionView::Base.include RedmineDashboards::Helpers
+    end
+
+    def instanciate_blocks
+      ActivityBlock.instance
+      DocumentsBlock.instance
+      FeedBlock.instance
+      IssueQueryBlock.instance
+      LegacyLeftBlock.instance
+      LegacyRightBlock.instance
+      MySpentTimeBlock.instance
+      NewsBlock.instance
+      TextAsyncBlock.instance
+      TextBlock.instance
+      WelcomeBlock.instance
+      ButtonBlock.instance
+      ChartBlock.instance
+      IssueCounterBlock.instance
     end
 
     def true?(value)

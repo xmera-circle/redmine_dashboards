@@ -1,0 +1,55 @@
+<%
+# frozen_string_literal: true
+
+# This file is part of the Plugin Redmine Dashboards.
+#
+# Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
+# See <https://github.com/AlphaNodes/additionals>.
+#
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+#
+# This plugin program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+%>
+
+<%= tag.h3 l(:label_document_plural), class: 'icon icon-document' %>
+
+<% if @can_edit %>
+  <%= tag.div id: "#{block_id}-settings", style: 'display: none;' do %>
+    <%= form_tag(update_layout_setting_dashboard_path(@dashboard), remote: true) do %>
+      <%= tag.div class: 'box tabular settings' do %>
+        <%= tag.p do %>
+          <%= dashboards_settings_numberfield :max_entries,
+                                              value: max_entries,
+                                              tag_name: "settings[#{block_id}][max_entries]",
+                                              min: 1, max: 100, required: true %>
+        <% end %>
+        <%= tag.p do %>
+          <%= submit_tag l(:button_save) %>
+          <%= link_to_function l(:button_cancel), "$('##{block_id}-settings').toggle();" %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+<% if documents.any? %>
+  <%= render partial: 'documents/document', collection: documents %>
+  <%= tag.p do %>
+    <% if @project %>
+      <%= link_to l(:label_document_view_all), project_documents_path(@project) %>
+    <% end %>
+  <% end %>
+<% else %>
+  <%= render partial: 'dashboards/blocks/nodata', locals: { label: nil } %>
+<% end %>

@@ -19,17 +19,21 @@ system_default_welcome:
       - text__1
       - legacy_right
     :layout_settings:
-      issuequery:
+      issue_query:
         :query_id: '1'
+        :max_entries: '5'
       text:
         :title: Welcome left
         :text: Some example text in left text block
+        :css: unset
       text_async:
         :title: Async loaded
         :text: Use it for better performance
+        :css: unset
       text__1:
         :title: Welcome right
         :text: Some example text in right text block
+        :css: unset
 
 private_welcome:
   name: Only for user 1

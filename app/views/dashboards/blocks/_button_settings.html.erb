@@ -1,0 +1,77 @@
+<%
+# frozen_string_literal: true
+
+# This file is part of the Plugin Redmine Dashboards.
+#
+# Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
+# See <https://github.com/AlphaNodes/additionals>.
+#
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+#
+# This plugin program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+%>
+
+<%
+# frozen_string_literal: true
+
+# This file is part of the Plugin Redmine Dashboards.
+#
+# Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
+# See <https://github.com/AlphaNodes/additionals>.
+#
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+#
+# This plugin program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+%>
+
+<%= tag.div class: 'box tabular settings' do %>
+  <%= tag.p dashboards_settings_textfield :link,
+                                         value: settings[:link],
+                                         tag_name: "settings[#{block_id}][link]",
+                                         required: true %>
+  
+  <%= tag.p dashboards_settings_checkbox :external,
+                                          active_value: settings.fetch(:external,'false'),
+                                          label: l(:label_link_external),
+                                          tag_name: "settings[#{block_id}][external]" %> 
+  
+  <%= tag.p dashboards_settings_textfield :text,
+                                          value: settings[:text],
+                                          label: l(:label_button_text),
+                                          tag_name: "settings[#{block_id}][text]" %>
+
+  <%=tag.p dashboards_settings_colorfield :color,
+                                         value: settings.fetch(:color,'#a8a7a7'),
+                                         label: l(:label_button_background_color),
+                                         tag_name: "settings[#{block_id}][color]" %>
+
+  <%=tag.p dashboards_settings_select :css,
+                                      options_for_select(BlockStyles.position_options_for_select, selected: settings[:css]) ,
+                                      label: l(:label_block_positioning),
+                                      tag_name: "settings[#{block_id}][css]" %>
+  
+<% end %>

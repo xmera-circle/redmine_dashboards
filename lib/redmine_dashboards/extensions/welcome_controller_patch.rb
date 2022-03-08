@@ -3,7 +3,7 @@
 # This file is part of the Plugin Redmine Dashboards.
 #
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/RedmineDashboards>.
+# See <https://github.com/AlphaNodes/additionals>.
 #
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
@@ -52,12 +52,12 @@ module RedmineDashboards
               return render_404
             end
           else
-            @dashboard = Dashboard.default DashboardContentWelcome::TYPE_NAME
+            @dashboard = Dashboard.default(DashboardContentWelcome::TYPE_NAME) || NullDashboard.new
           end
 
           resently_used_dashboard_save @dashboard
           @can_edit = @dashboard&.editable?
-          @dashboard_sidebar = dashboard_sidebar? @dashboard, params
+          @dashboard_sidebar = dashboard_sidebar? params
         end
       end
     end

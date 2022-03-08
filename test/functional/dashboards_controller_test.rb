@@ -3,7 +3,7 @@
 # This file is part of the Plugin Redmine Dashboards.
 #
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/RedmineDashboards>.
+# See <https://github.com/AlphaNodes/additionals>.
 #
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
@@ -46,10 +46,12 @@ class DashboardsControllerTest < RedmineDashboards::ControllerTest
 
     User.current = nil
     @user = users :users_002
+    manager = roles :roles_001
+    manager.add_permission! :edit_own_dashboards
     @user_without_permission = users :users_004
 
     @crud = { form: :dashboard,
-              show_assert_response: 406,
+              show_assert_response: 403,
               index_assert_response: 406,
               create_params: { name: 'tester board',
                                enable_sidebar: true,
@@ -64,5 +66,21 @@ class DashboardsControllerTest < RedmineDashboards::ControllerTest
               update_assert: %i[enable_sidebar],
               entity: dashboards(:private_welcome2),
               delete_redirect_to: home_url }
+  end
+
+  def test_should_not_edit_public_dashboard
+    prepare_crud_test :update
+    @crud[:entity] = dashboards(:public_welcome)
+    put :update, params: form_params(:update)
+
+    assert_response :forbidden
+  end
+
+  def should_not_edit_system_dashboard
+    prepare_crud_test :update
+    @crud[:entity] = dashboards(:system_default_welcome)
+    put :update, params: form_params(:update)
+
+    assert_response :forbidden
   end
 end

@@ -1,31 +1,56 @@
+<%
+# frozen_string_literal: true
+
+# This file is part of the Plugin Redmine Dashboards.
+#
+# Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
+# See <https://github.com/AlphaNodes/additionals>.
+#
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+#
+# This plugin program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+%>
+
 <% with_async = dashboard_async_required_settings? settings, async %>
 
 <% unless with_async %>
-  <%= tag.h3 settings[:title].presence || block_definition[:label] %>
+  <%= tag.h3 settings[:title].presence || block_object[:label] %>
 <% end %>
 
 <% if @can_edit && \
-     block_definition[:no_settings].blank? && \
-     (!block_definition.key?(:with_settings_if) || block_definition[:with_settings_if].call(@project)) %>
+     block_object[:no_settings].blank? && \
+     (!block_object.key?(:with_settings_if) || block_object[:with_settings_if].call(@project)) %>
 
-  <%= tag.div id: "#{block}-settings", style: "#{'display: none;' if with_async}" do %>
+  <%= tag.div id: "#{block_id}-settings", style: "#{'display: none;' if with_async}" do %>
     <%= form_tag(update_layout_setting_dashboard_path(dashboard), remote: true) do %>
-      <%= render  partial: block_definition[:settings_partial].presence || "#{async[:partial]}_settings",
-                  locals: build_dashboard_partial_locals(block,
-                                                        block_definition,
+      <%= render  partial: block_object[:settings_partial].presence || "#{async[:partial]}_settings",
+                  locals: build_dashboard_partial_locals(block_id,
+                                                        block_object,
                                                         settings,
                                                         dashboard).merge(with_async: with_async) %>
 
       <%= tag.p do%>
         <%= submit_tag l(:button_save) %>
-        <%= link_to_function l(:button_cancel), "$('##{block}-settings').toggle();" %>
+        <%= link_to_function l(:button_cancel), "$('##{block_id}-settings').toggle();" %>
       <% end %>
     <% end %>
   <% end %>
 <% end %>
 
 <% if with_async %>
-  <%= render_async_cache dashboard_async_blocks_path(dashboard.async_params(block, async, settings)) do %>
+  <%= render_async_cache dashboard_async_blocks_path(dashboard.async_params(block_id, async, settings)) do %>
     <%= tag.div class: 'clear-both' %>
     <%= tag.p do %>
       <%= tag.i class: 'fas fa-sync fa-spin' %>
@@ -42,5 +67,5 @@
       })
   <% end %>  
 <% else %>
-  <%= tag.p l(:label_no_data), class: 'nodata' %>
+  <%= render partial: 'dashboards/blocks/nodata', locals: { label: nil } %>
 <% end %>

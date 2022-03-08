@@ -2,6 +2,8 @@
 en: 
   button_dashboard_edit: Edit dashboard
   button_dashboard_delete: Delete dashboard
+  button_cancel: Cancel
+  button_save: Save
   
   label_dashboard: Dashboard
   label_edit_dashboard: Edit dashboard
@@ -17,23 +19,84 @@ en:
   label_dashboard_author: "Author: %{name}"
   label_only_my_activities: Only my activities
   label_my_activity: My activities
-  label_dashboard_feed: Feed
+  label_feed: Feed
   label_invalid_feed_data: Invalid feed data
   label_dashboard_legacy_left: Default content left
   label_dashboard_legacy_right: Default content right
   label_my_spent_time: My spent time
-  label_query_with_name: My Query
+  label_query_with_name: "Query: %{value}"
   label_text_sync: Text
   label_text_async: Text (asynchronous)
+  label_button: Button
+  label_link_external: External link?
+  label_button_text: Link text
+  label_button_background_color: Button background color
+  label_position_unset: Unset
+  label_position_inline: Inline
+  label_position_full_width: Full width
+  label_position_left: Left
+  label_position_right: Right
+  label_position_center: Center
+  label_chart: Diagram
+  label_chart_type: Diagram type
+  label_chart_legend: Show legend
+  label_filter: Filter
+  label_bar_chart_vertical: Bar chart, vertical
+  label_bar_chart_horizontal: Bar chart, horizontal
+  label_issues_by_tracker: Issues by tracker
+  label_issues_by_status: Issues by status
+  label_issue_counter_with_name: Issue counter
 
-
+  
   error_while_executing_bashboard_block: dashboard block cannot be displayed due to an error. Please report this error to your administrator.
+  error_dashboard_must_be_visible_for_everyone: Dashboard must be visible for everyone
+  error_link_required: Link needs to be given
+  error_external_not_in_list: 'Button: External needs to be 1'
+  activemodel:
+    errors:
+      messages:
+        inclusion: "is not included in the list"
+        exclusion: "is reserved"
+        invalid: "is invalid"
+        confirmation: "doesn't match confirmation"
+        accepted: "must be accepted"
+        empty: "cannot be empty"
+        blank: "cannot be blank"
+        too_long: "is too long (maximum is %{count} characters)"
+        too_short: "is too short (minimum is %{count} characters)"
+        wrong_length: "is the wrong length (should be %{count} characters)"
+        taken: "has already been taken"
+        not_a_number: "is not a number"
+        not_a_date: "is not a valid date"
+        greater_than: "must be greater than %{count}"
+        greater_than_or_equal_to: "must be greater than or equal to %{count}"
+        equal_to: "must be equal to %{count}"
+        less_than: "must be less than %{count}"
+        less_than_or_equal_to: "must be less than or equal to %{count}"
+        odd: "must be odd"
+        even: "must be even"
+        greater_than_start_date: "must be greater than start date"
+        not_same_project: "doesn't belong to the same project"
+        circular_dependency: "This relation would create a circular dependency"
+        cant_link_an_issue_with_a_descendant: "An issue cannot be linked to one of its subtasks"
+        earlier_than_minimum_start_date: "cannot be earlier than %{date} because of preceding issues"
+        not_a_regexp: "is not a valid regular expression"
+        open_issue_with_closed_parent: "An open issue cannot be attached to a closed parent task"
+        must_contain_uppercase: "must contain uppercase letters (A-Z)"
+        must_contain_lowercase: "must contain lowercase letters (a-z)"
+        must_contain_digits: "must contain digits (0-9)"
+        must_contain_special_chars: "must contain special characters (!, $, %, ...)"
 
+  alert_only_visible_by_yourself: Only visible by yourself!
+  alert_only_visible_by_admins: Only visible by admins!
   text_default_welcome: "Welcome, %{value}!"
 
   field_always_expose: Always expose dashboard
   field_enable_sidebar: Enable sidebar 
   field_system_default: Define as system default
 
-  permission_save_dashboards: Save dashboard
-  permission_set_system_dashboards: Define system dashboard
+  permission_manage_system_dashboards: Manage system dashboard
+  permission_edit_public_dashboards: Edit public dashboards
+  persission_edit_own_dashboards: Edit own dashboards
+  permission_add_dashboards: Add dashboards
+  permission_add_own_dashboards: Add own dashboards 

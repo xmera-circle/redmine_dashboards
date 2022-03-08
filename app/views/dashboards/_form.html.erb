@@ -4,7 +4,7 @@
 # This file is part of the Plugin Redmine Dashboards.
 #
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/RedmineDashboards>.
+# See <https://github.com/AlphaNodes/additionals>.
 #
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
@@ -38,8 +38,8 @@
   <%= tag.div class: 'splitcontent' do %>
     <%= tag.div class: 'splitcontentleft' do %>
       <%= hidden_field_tag 'dashboard[dashboard_type]', @dashboard.dashboard_type if @dashboard.new_record? %>
-      <% if User.current.allowed_to?(:share_dashboards, nil, global: true) || \
-            User.current.allowed_to?(:set_system_dashboards, nil, global: true) %>
+      <% if User.current.allowed_to?(:manage_system_dashboards, nil, global: true) || \
+             %>
         <%=tag.p do %>
             <%=tag.label l(:field_visible) %>
             <%= f.radio_button 'visibility', Dashboard::VISIBILITY_PRIVATE %>
@@ -63,13 +63,17 @@
 
     <%= tag.div class: 'splitcontentright' do %>
       <%= tag.p f.check_box :enable_sidebar, class: 'long-label' %>
-      <% if User.current.allowed_to? :set_system_dashboards, nil, global: true %>
+      <% if User.current.allowed_to? :manage_system_dashboards, nil, global: true %>
         <%= tag.p f.check_box(:system_default), disabled: !@dashboard.destroyable?, class: 'long-label' %>
         <%= tag.p f.check_box(:always_expose), class: 'long-label', id: 'always-expose' %>
-      <% elsif @dashboard.persisted? %>
+      <% elsif @dashboard.system_default? %>
+        <%= tag.p f.check_box(:system_default), disabled: true, class: 'long-label' %>
+        <%= tag.p f.check_box(:always_expose), class: 'long-label', id: 'always-expose' %>
+      <% end %>
+      <% if @dashboard.persisted? %>
         <%=tag.p class: 'object-select' do %>
           <%= f.select  :author_id,
-                        author_options_for_select(nil, @dashboard, :save_dashboards),
+                        author_options_for_select(nil, @dashboard, :edit_public_dashboards),
                         required: true %>
         <% end %>
       <% end %>

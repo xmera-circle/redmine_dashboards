@@ -1,8 +1,34 @@
+<%
+# frozen_string_literal: true
+
+# This file is part of the Plugin Redmine Dashboards.
+#
+# Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
+# See <https://github.com/AlphaNodes/additionals>.
+#
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+#
+# This plugin program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+%>
+
+
 <%= call_hook :view_dashboard_top, dashboard: dashboard, project: @project %>
 <%=tag.div id: 'my-page', class: "splitcontent #{dashboard_css_classes dashboard}" do %>
   <% dashboard.available_groups.each do |group| %>
-    <% box = dashboard.layout[group].present? ?  'box' : nil %>
-    <%= tag.div id: "list-#{group}", class: "block-receiver splitcontent#{group} #{box}" do %>
+    <% style = (dashboard.layout[group].present? && User.current.logged?) ?  'box' : 'disable'  %>
+    <%= tag.div id: "list-#{group}", class: "block-receiver splitcontent#{group} #{style}" do %>
       <%= render_dashboard_blocks dashboard.layout[group], dashboard %>
     <% end %>
   <% end %>
@@ -21,18 +47,38 @@
 
 <% if dashboard.content.with_chartjs? %>
   <% content_for :header_tags do %>
-    <%= additionals_library_load %i[chartjs chartjs_colorschemes chartjs_datalabels] %>
+    <% # chartjs_datalabels %>
+    <%= javascript_include_tag "Chart.bundle.min", plugin: 'redmine_dashboards' %>
+    <%= javascript_include_tag "chartjs-plugin-colorschemes.min", plugin: 'redmine_dashboards' %>
   <% end %>
 <% end %>
 
 <%= javascript_tag do %>
+<%
+  # Code for preventing vertical scroll jump is taken from 
+  # https://stackoverflow.com/questions/1735372/jquery-sortable-list-scroll-bar-jumps-up-when-sorting#answer-32575012
+%>
   $(function() {
     $('#block-select').val('');
-    $('.block-receiver').sortable({
+    $('.block-receiver').mousedown(function() {
+        // set fixed height to prevent scroll jump
+        // when dragging from bottom
+        $(this).height($(this).height());
+    }).mouseup(function () {
+        // set height back to auto 
+        // when user just clicked on item
+        $(this).height('auto');
+    }).sortable({
       connectWith: '.block-receiver',
       tolerance: 'pointer',
       handle: '.sort-handle',
-      start: function(event, ui){$(this).parent().addClass('dragging');},
+      start: function(event, ui){
+        // dragging is happening
+        // and scroll jump was prevented,
+        // we can set it back to auto
+        $(this).height('auto');
+        $(this).parent().addClass('dragging');
+      },
       stop: function(event, ui){$(this).parent().removeClass('dragging');},
       update: function(event, ui){
         // trigger the call on the list that receives the block only
@@ -42,7 +88,7 @@
             type: 'post',
             data: {
               'group': $(this).attr('id').replace(/^list-/, ''),
-              'blocks': $.map($(this).children(), function(el){return $(el).attr('id').replace(/^block-/, '');})
+              'block_ids': $.map($(this).children(), function(el){return $(el).attr('id').replace(/^block-/, '');})
             }
           });
         }

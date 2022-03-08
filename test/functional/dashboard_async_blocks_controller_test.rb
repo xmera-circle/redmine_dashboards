@@ -3,7 +3,7 @@
 # This file is part of the Plugin Redmine Dashboards.
 #
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/RedmineDashboards>.
+# See <https://github.com/AlphaNodes/additionals>.
 #
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
@@ -53,7 +53,7 @@ class DashboardAsyncBlocksControllerTest < RedmineDashboards::ControllerTest
 
   def test_query_blocks
     assert_dashboard_query_blocks [
-      { dashboard_id: @welcome_dashboard.id, block: 'issuequery', entities_class: 'issues' }
+      { dashboard_id: @welcome_dashboard.id, block_id: 'issue_query', entities_class: 'issues' }
     ]
   end
 end

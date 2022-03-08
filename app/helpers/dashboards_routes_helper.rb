@@ -3,7 +3,7 @@
 # This file is part of the Plugin Redmine Dashboards.
 #
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/RedmineDashboards>.
+# See <https://github.com/AlphaNodes/additionals>.
 #
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
@@ -24,12 +24,6 @@
 module DashboardsRoutesHelper
   def dashboard_link_path(dashboard, **options)
     options[:dashboard_id] = dashboard.id
-    type = dashboard.dashboard_type
-
-    return home_path(**options) if type == DashboardContentWelcome::TYPE_NAME
-
-    dashboard_type_name = type[0..-10]
-    route_helper = "DashboardContent#{dashboard_type_name}::ROUTE_HELPER".constantize
-    send route_helper, **options
+    home_path(**options)
   end
 end

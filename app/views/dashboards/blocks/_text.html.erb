@@ -1,0 +1,54 @@
+<%
+# frozen_string_literal: true
+
+# This file is part of the Plugin Redmine Dashboards.
+#
+# Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
+# See <https://github.com/AlphaNodes/additionals>.
+#
+# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+#
+# This plugin program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+%>
+
+<% if settings[:text].nil? 
+    headline = l(:label_text_sync)
+  elsif settings[:title].present?
+    headline = settings[:title]
+  end
+%>
+
+<%= tag.h3 headline %>
+
+
+<% if @can_edit %>
+  <%= tag.div id: "#{block_id}-settings", style: "display: none;" do %>
+    <%= form_tag(update_layout_setting_dashboard_path(@dashboard), remote: true) do %>
+      <%= render partial: 'dashboards/blocks/text_async_settings', locals: { block_id: block_id, settings: settings }%>
+      <%= tag.p do %>
+        <%= submit_tag l(:button_save) %>
+        <%= link_to_function l(:button_cancel), "$('##{block_id}-settings').toggle();" %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%=tag.div class: 'wiki' do %>
+  <%= textilizable settings[:text] %>
+<% end %>
+
+<%= javascript_tag do %>
+  adjustCurserAtCenteredBlockItems('<%= "#block-#{block_id}" %>');
+<% end %>

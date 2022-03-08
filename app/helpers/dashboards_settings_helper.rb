@@ -3,7 +3,7 @@
 # This file is part of the Plugin Redmine Dashboards.
 #
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/RedmineDashboards>.
+# See <https://github.com/AlphaNodes/additionals>.
 #
 # Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
@@ -22,6 +22,34 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 module DashboardsSettingsHelper
+  def with_default(arg, default)
+    arg.presence || default
+  end
+
+  def dashboards_settings_colorfield(name, **options)
+    dashboards_settings_input_field(:color_field_tag, name, **options)
+  end
+
+  def dashboards_settings_numberfield(name, **options)
+    dashboards_settings_input_field :number_field_tag, name, **options
+  end
+
+  def dashboards_settings_textfield(name, **options)
+    dashboards_settings_input_field :text_field_tag, name, **options
+  end
+
+  def dashboards_settings_passwordfield(name, **options)
+    dashboards_settings_input_field :password_field_tag, name, **options
+  end
+
+  def dashboards_settings_urlfield(name, **options)
+    dashboards_settings_input_field :url_field_tag, name, **options
+  end
+
+  def dashboards_settings_timefield(name, **options)
+    dashboards_settings_input_field :time_field_tag, name, **options
+  end
+
   def dashboards_settings_checkbox(name, **options)
     active_value = options.delete(:active_value).presence || (@settings.present? && @settings[name])
     tag_name = options.delete(:tag_name).presence || "settings[#{name}]"
@@ -47,26 +75,6 @@ module DashboardsSettingsHelper
     s << hidden_field_tag(tag_name, 0, id: nil) if !custom_value || value_is_bool
     s << check_box_tag(tag_name, value, checked, **options)
     safe_join s
-  end
-
-  def dashboards_settings_numberfield(name, **options)
-    dashboards_settings_input_field :number_field_tag, name, **options
-  end
-
-  def dashboards_settings_textfield(name, **options)
-    dashboards_settings_input_field :text_field_tag, name, **options
-  end
-
-  def dashboards_settings_passwordfield(name, **options)
-    dashboards_settings_input_field :password_field_tag, name, **options
-  end
-
-  def dashboards_settings_urlfield(name, **options)
-    dashboards_settings_input_field :url_field_tag, name, **options
-  end
-
-  def dashboards_settings_timefield(name, **options)
-    dashboards_settings_input_field :time_field_tag, name, **options
   end
 
   def dashboards_settings_select(name, values, **options)
