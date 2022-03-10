@@ -32,8 +32,6 @@
       count = query.send query_block[:count_method]
     %>
 
-    
-
     <%= link_to send(query_block[:link_helper], @project, query.as_params) do %>
       <%= tag.div class: 'issue-counter' do %>
         <%= tag.span count, class: 'count' %></br>
@@ -42,21 +40,21 @@
       <% end %>
     <% end %>
 
+    <%= tag.style do %>
+    #<%= "block-#{block_id}" %> .issue-counter {
+        background-color: <%= settings.fetch(:color, '#a8a7a7') %>;
+      }
+    #<%= "block-#{block_id}" %> > a {
+        text-decoration: none;
+    }
+    <% end %>
+
+    <%= javascript_tag do %>
+      adjustCurserAtCenteredBlockItems('<%= "#block-#{block_id}" %>');
+    <% end %>
+
   <% else %>
     <%= render partial: 'dashboards/blocks/nodata', locals: { label: nil } %>
   <% end %>
 <% end %>
 
-
-<%= tag.style do %>
- #<%= "block-#{block_id}" %> .issue-counter {
-    background-color: <%= settings.fetch(:color, '#a8a7a7') %>;
-  }
- #<%= "block-#{block_id}" %> > a {
-    text-decoration: none;
- }
-<% end %>
-
-<%= javascript_tag do %>
-  adjustCurserAtCenteredBlockItems('<%= "#block-#{block_id}" %>');
-<% end %>
