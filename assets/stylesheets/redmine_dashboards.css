@@ -231,7 +231,6 @@ p.role-visibility input {
   text-align: center;
   overflow: hidden;
   word-wrap: normal;
-  min-width: min-content;
 }
 .dashboard .count {
   font-size: 2rem;
