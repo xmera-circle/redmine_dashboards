@@ -65,7 +65,7 @@ module DashboardsHelper
     base_css = 'icon icon-dashboard'
     out = []
 
-    dashboards.select!(&:public?) unless User.current.allowed_to? :edit_public_dashboards, project, global: true
+    dashboards.select!(&:visible?)
     dashboards.each do |dashboard|
       css_class = base_css
       dashboard_name = "#{l :label_dashboard}: #{dashboard.name}"
@@ -88,16 +88,16 @@ module DashboardsHelper
     dashboards = sidebar_dashboards dashboard, project
     out = [dashboard_links(l(:label_my_dashboard_plural),
                            dashboard,
-                           if User.current.allowed_to?(:edit_public_dashboards, project,
+                           if User.current.allowed_to?(:edit_own_dashboards, project,
                                                        global: true)
-                             dashboards.select(&:private?)
+                             dashboards.select(&:own?)
                            else
                              []
                            end,
                            project),
            dashboard_links(l(:label_shared_dashboard_plural),
                            dashboard,
-                           dashboards.select(&:public?),
+                           dashboards.select(&:non_private?),
                            project)]
 
     out << dashboard_info(dashboard) if dashboard.always_expose? || !dashboard.system_default
