@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 * width of issue counter block by removing min-width css attribute
+* display of visibility settings in dashboard configurations according to the
+permission
+
+### Fixed
+
+* missing permission to change contents on a dashboard when allowed to change
+dashboard configuration
 
 ## 1.0.1 - 2022-04-28
 

@@ -85,6 +85,8 @@ class Dashboard < ActiveRecord::Base
   validate :validate_layout_settings
 
   class << self
+    alias :all_dashboards :all
+
     def default(dashboard_type, project = nil, user = User.current)
       recently_id = user.pref.recently_used_dashboard dashboard_type, project
 
@@ -117,13 +119,12 @@ class Dashboard < ActiveRecord::Base
     end
 
     ##
-    # A user is allowed to see a dashboard if
-    #  i) she is allowed to edit it,
-    #  ii) she is authorized by her role, having in any project, to read it,
-    #  iii) it is public or her own dashboard.
+    # Selects all those dashboards for the given user which are visible to her.
+    #
+    # @note Public dashboards could be visible for anonymous users!
     #
     def visible(user = User.current, **options)
-      return all if all.all? { |item| item.editable?(user) || item.system_default? }
+      return all_dashboards if all_dashboards.all? { |dashboard| dashboard.visible?(user) || dashboard.system_default? }
 
       scoped = left_outer_joins :project
       scoped = scoped.where(projects: { id: nil }).or(scoped.where(Project.allowed_to_condition(user, :view_project,
@@ -185,18 +186,24 @@ class Dashboard < ActiveRecord::Base
 
   ##
   # A user is allowed to see a dashboard if
-  #  i) she is allowed to edit it,
-  #  ii) it is public,
-  #  iii) she is authorized by her role, having in any project, to read it.
+  #
+  #  i) she is admin,
+  #  ii) the dashboard is public,
+  #  iii) she is authorized by her role, having in any project or
+  #  iv) she is the author if the dashboard is private
   #
   def visible?(user = User.current)
-    return true if editable? user
+    return true if user.admin?
 
     case visibility
     when VISIBILITY_PUBLIC
       true
     when VISIBILITY_ROLES
       any_authorized?(user) || author?(user)
+    when VISIBILITY_PRIVATE
+      author?(user)
+    else
+      false
     end
   end
 
@@ -270,16 +277,28 @@ class Dashboard < ActiveRecord::Base
     layout_settings[block_id] = block_settings
   end
 
-  def private?(user = User.current)
-    author?(user) && visibility == VISIBILITY_PRIVATE
+  def private?
+    visibility == VISIBILITY_PRIVATE
+  end
+
+  def non_private?
+    public? || by_role?
   end
 
   def author?(user = User.current)
     author_id == user.id
   end
 
+  def by_role?
+    visibility == VISIBILITY_ROLES
+  end
+
   def public?
-    visibility != VISIBILITY_PRIVATE
+    visibility == VISIBILITY_PUBLIC
+  end
+
+  def own?(user = User.current)
+    author?(user) && visibility == VISIBILITY_PRIVATE
   end
 
   def editable?(usr = User.current)
@@ -290,7 +309,9 @@ class Dashboard < ActiveRecord::Base
     prj ||= project
     return true if user&.admin?
 
-    if system_default?
+    if private?
+      allowed_to_edit_own_dashboards?(user, prj)
+    elsif system_default?
       allowed_to_manage_system_dashboards?(user, prj)
     else
       allowed_to_edit_dashboards?(user, prj)
@@ -384,8 +405,7 @@ class Dashboard < ActiveRecord::Base
   end
 
   def allowed_to_edit_dashboards?(user, prj = nil)
-    allowed_to_edit_public_dashboards?(user, prj) ||
-      allowed_to_edit_own_dashboards?(user, prj)
+    allowed_to_edit_public_dashboards?(user, prj)
   end
 
   def allowed_to_edit_public_dashboards?(user, prj = nil)

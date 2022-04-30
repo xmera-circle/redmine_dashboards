@@ -29,22 +29,32 @@ Redmine::Plugin.register :redmine_dashboards do
 
   requires_redmine version_or_higher: '4.2.0'
 
+  full_action_set = %i[index new create edit update destroy]
+  edit_action_set = %i[edit update destroy]
+  add_action_set = %i[index new create]
+  content_action_set = %i[update_layout_setting
+                          add_block
+                          remove_block
+                          order_blocks]
+
   permission :manage_system_dashboards,
-             { dashboards: %i[index new create edit update destroy] },
+             { dashboards: full_action_set | content_action_set },
              require: :loggedin,
              read: true
+  # Public means here not private, i.e., role dashboards and public dashboards
   permission :edit_public_dashboards,
-             { dashboards: %i[edit update destroy] },
-             require: :loggedin
+             { dashboards: full_action_set | content_action_set },
+             require: :loggedin,
+             read: true
   permission :edit_own_dashboards,
-             { dashboards: %i[edit update destroy] },
+             { dashboards: full_action_set | content_action_set },
              require: :loggedin
   permission :add_dashboards,
-             { dashboards: %i[index new create] },
+             { dashboards: add_action_set | content_action_set },
              require: :loggedin,
              read: true
   permission :add_own_dashboards,
-             { dashboards: %i[index new create] },
+             { dashboards: add_action_set | content_action_set },
              require: :loggedin,
              read: true
 end
