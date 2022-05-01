@@ -52,6 +52,7 @@ de:
   error_dashboard_must_be_visible_for_everyone: Dashboard muss für jeden sichtbar sein
   error_link_required: Link muss angegeben werden
   error_external_not_in_list: 'Button: External muss 1 sein'
+  error_query_statement_invalid: Die Abfrage kann nicht ausgeführt werden. Es ist ein Fehler aufgetreten. Bitte informieren Sie Ihren Administratior.
   activemodel:
     errors:
       messages:
