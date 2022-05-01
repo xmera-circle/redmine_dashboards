@@ -24,7 +24,7 @@ Redmine::Plugin.register :redmine_dashboards do
   name 'Redmine Dashboards'
   author 'Liane Hampe, Alexander Meindl'
   description 'Flexible dashboards for Redmine welcome page'
-  version '1.0.1'
+  version '1.0.2'
   author_url 'https://circle.xmera.de/projects/redmine-dashboards'
 
   requires_redmine version_or_higher: '4.2.0'

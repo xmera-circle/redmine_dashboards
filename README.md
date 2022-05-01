@@ -2,7 +2,7 @@
 
 Flexible dashboards on Redmine welcome page
 
-![Redmine Plugin Version](https://img.shields.io/badge/Redmine_Plugin-v1.0.1-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v4.2.x-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important)
+![Redmine Plugin Version](https://img.shields.io/badge/Redmine_Plugin-v1.0.2-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v4.2.x-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important)
 
 The Redmine Dashboards plugin is a Redmine plugin which allows the user to create serveral different Dashboards on the welcome page by using information blocks.
 
@@ -18,7 +18,7 @@ More information about xmera Omnia can be found at [xmera](https://xmera.de).
 
 ## Credits
 
-The basic code of this plugin is extracted from Additionals plugin [3.0.3](https://github.com/AlphaNodes/additionals/releases/tag/3.0.3) of Alexander Meindl in order to avoid potential incompatabilities with other plugins.
+The basic code of this plugin is extracted from Additionals plugin [3.0.3](https://github.com/AlphaNodes/additionals/releases/tag/3.0.3) of Alexander Meindl. The Additionals plugin comprises a lot of very different feature what makes it difficult to run it with other plugins. 
 
 Thanks to Alexander Meindl for this great peace of work.
 
