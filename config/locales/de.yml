@@ -97,7 +97,6 @@ de:
   field_system_default: Als Systemstandard festlegen
 
   permission_manage_system_dashboards: System Dashboards verwalten
-  permission_edit_public_dashboards: Öffentliche Dashboards bearbeiten
-  permission_edit_own_dashboards: Eigene Dashboards bearbeiten
-  permission_add_dashboards: Dashboards anlegen
-  permission_add_own_dashboards: Eigene Dashboards anlegen  
+  permission_manage_public_dashboards: Öffentliche Dashboards verwalten
+  permission_manage_own_dashboards: Eigene Dashboards verwalten
+  permission_manage_dashboards: Dashboards verwalten

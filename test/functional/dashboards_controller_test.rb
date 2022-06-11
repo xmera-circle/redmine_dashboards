@@ -46,8 +46,8 @@ class DashboardsControllerTest < RedmineDashboards::ControllerTest
 
     User.current = nil
     @user = users :users_002
-    manager = roles :roles_001
-    manager.add_permission! :edit_own_dashboards
+    # manager = roles :roles_001
+    # manager.add_permission! :manage_own_dashboards
     @user_without_permission = users :users_004
 
     @crud = { form: :dashboard,
@@ -69,18 +69,19 @@ class DashboardsControllerTest < RedmineDashboards::ControllerTest
   end
 
   def test_should_not_edit_public_dashboard
-    prepare_crud_test :update
+    prepare_crud_test :edit
     @crud[:entity] = dashboards(:public_welcome)
-    put :update, params: form_params(:update)
+    get :edit, params: { id: @crud[:entity].id }
 
     assert_response :forbidden
   end
 
-  def should_not_edit_system_dashboard
-    prepare_crud_test :update
+  def test_should_edit_system_dashboard
+    prepare_crud_test :edit
     @crud[:entity] = dashboards(:system_default_welcome)
-    put :update, params: form_params(:update)
 
-    assert_response :forbidden
+    get :edit, params: { id: @crud[:entity].id }
+
+    assert_response :success
   end
 end
