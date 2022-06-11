@@ -97,7 +97,6 @@ en:
   field_system_default: Define as system default
 
   permission_manage_system_dashboards: Manage system dashboard
-  permission_edit_public_dashboards: Edit public dashboards
-  persission_edit_own_dashboards: Edit own dashboards
-  permission_add_dashboards: Add dashboards
-  permission_add_own_dashboards: Add own dashboards 
+  permission_manage_public_dashboards: Manage public dashboards
+  persission_manage_own_dashboards: Manage own dashboards
+  permission_manage_dashboards: Manage dashboards

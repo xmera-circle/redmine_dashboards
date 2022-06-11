@@ -34,11 +34,12 @@ class ButtonBlockValidationTest < RedmineDashboards::TestCase
     @button_block.link = nil
     @button_block.css = nil
     @button_block.color = nil
+    @button_block.clear_settings
     @button_block = nil
   end
 
   def test_valid_button
-    assert @button_block.valid?, @button_block.link
+    assert @button_block.valid?
   end
 
   def test_invalid_button_text

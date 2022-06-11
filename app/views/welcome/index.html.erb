@@ -44,8 +44,8 @@
   <% end %>
 
   <%= actions_dropdown do %>
-    <% if User.current.allowed_to?(:add_dashboards, nil, global: true) ||
-          User.current.allowed_to?(:add_own_dashboards, nil, global: true)  %>
+    <% if User.current.allowed_to?(:manage_dashboards, nil, global: true) ||
+          User.current.allowed_to?(:manage_own_dashboards, nil, global: true)  %>
       <%= link_to l(:label_new_dashboard),
                   new_dashboard_path,
                   class: 'icon icon-add new-additionals-dashboard' %>

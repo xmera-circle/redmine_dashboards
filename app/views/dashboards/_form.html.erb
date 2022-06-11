@@ -39,13 +39,13 @@
     <%= tag.div class: 'splitcontentleft' do %>
       <%= hidden_field_tag 'dashboard[dashboard_type]', @dashboard.dashboard_type if @dashboard.new_record? %>
         <%=tag.p do %>
-          <% if User.current.allowed_to?(:edit_own_dashboards, nil, global: true) %>
+          <% if User.current.allowed_to?(:manage_own_dashboards, nil, global: true) %>
             <%=tag.label l(:field_visible) %>
             <%= f.radio_button 'visibility', Dashboard::VISIBILITY_PRIVATE %>
             <%= l(:label_visibility_private) %>
             <%=tag.br %>
           <% end %>
-          <% if User.current.allowed_to?(:edit_public_dashboards, nil, global: true) %>
+          <% if User.current.allowed_to?(:manage_public_dashboards, nil, global: true) %>
             <%= f.radio_button 'visibility', Dashboard::VISIBILITY_PUBLIC %>
             <%= l(:label_visibility_public) %>
             <%=tag.br %>
@@ -74,7 +74,7 @@
       <% if @dashboard.persisted? %>
         <%=tag.p class: 'object-select' do %>
           <%= f.select  :author_id,
-                        author_options_for_select(nil, @dashboard, :edit_public_dashboards),
+                        author_options_for_select(nil, @dashboard, :manage_public_dashboards),
                         required: true %>
         <% end %>
       <% end %>
