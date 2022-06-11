@@ -20,7 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 %>
 
-<%= sanitize(link_to(settings.fetch(:text, 'Button'),settings.fetch(:link, '#'), class: 'button', tags: %w(a), attributes: %w(href))) %>
+<%= sanitize(link_to(settings.fetch(:text, 'Button'), settings.fetch(:link, '#'), class: 'button', tags: %w(a), attributes: %w(href))) %>
 
 <%= tag.style do %>
  #<%= "block-#{block_id}" %> .button {
