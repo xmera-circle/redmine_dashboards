@@ -43,6 +43,10 @@
     <%= tag.style do %>
     #<%= "block-#{block_id}" %> .issue-counter {
         background-color: <%= settings.fetch(:color, '#a8a7a7') %>;
+      <% unless settings.fetch(:css, 'inline') == 'full_width' %>
+        max-width: 150px;  
+        display: inline-block;
+      <% end %>
       }
     #<%= "block-#{block_id}" %> > a {
         text-decoration: none;
