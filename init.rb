@@ -24,14 +24,12 @@ Redmine::Plugin.register :redmine_dashboards do
   name 'Redmine Dashboards'
   author 'Liane Hampe, Alexander Meindl'
   description 'Flexible dashboards for Redmine welcome page'
-  version '1.0.2'
+  version '1.0.3'
   author_url 'https://circle.xmera.de/projects/redmine-dashboards'
 
   requires_redmine version_or_higher: '4.2.0'
 
   full_action_set = %i[index new create edit update destroy]
-  edit_action_set = %i[edit update destroy]
-  add_action_set = %i[index new create]
   content_action_set = %i[update_layout_setting
                           add_block
                           remove_block
@@ -42,19 +40,15 @@ Redmine::Plugin.register :redmine_dashboards do
              require: :loggedin,
              read: true
   # Public means here not private, i.e., role dashboards and public dashboards
-  permission :edit_public_dashboards,
+  permission :manage_public_dashboards,
              { dashboards: full_action_set | content_action_set },
              require: :loggedin,
              read: true
-  permission :edit_own_dashboards,
+  permission :manage_own_dashboards,
              { dashboards: full_action_set | content_action_set },
              require: :loggedin
-  permission :add_dashboards,
-             { dashboards: add_action_set | content_action_set },
-             require: :loggedin,
-             read: true
-  permission :add_own_dashboards,
-             { dashboards: add_action_set | content_action_set },
+  permission :manage_dashboards,
+             { dashboards: full_action_set | content_action_set },
              require: :loggedin,
              read: true
 end

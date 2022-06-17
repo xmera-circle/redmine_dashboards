@@ -19,17 +19,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 %>
-<% if @can_edit %>
-  <%= tag.div id: "#{block_id}-settings", style: "display: none;" do %>
-    <%= form_tag(update_layout_setting_dashboard_path(@dashboard), remote: true) do %>
-      <%= render partial: 'dashboards/blocks/chart_settings', locals: { block_id: block_id, settings: settings }%>
-      <%= tag.p do %>
-        <%= submit_tag l(:button_save) %>
-        <%= link_to_function l(:button_cancel), "$('##{block_id}-settings').toggle();" %>
-      <% end %>
-    <% end %>
-  <% end %>
-<% end %>
 
 <% project = Project.find_by(id: settings[:project_id] ) %>
 <%=tag.h3 "#{project&.name} #{RedmineDashboards::SEPARATOR} #{with_default(settings[:title], l(:label_report))}" %>
@@ -96,14 +85,18 @@
       }
     </style>
   <% end %>
-<% elsif settings.present? %>
+<% else settings.present? %>
   <%= render partial: 'dashboards/blocks/nodata', locals: { label: nil } %>
-<% else %>
-  <%= form_tag(update_layout_setting_dashboard_path(@dashboard), remote: true) do %>
+<% end %>
+
+<% if @can_edit %>
+  <%= tag.div id: "#{block_id}-settings", style: 'display: none;' do %>
+    <%= form_tag(update_layout_setting_dashboard_path(@dashboard), remote: true) do %>
       <%= render partial: 'dashboards/blocks/chart_settings', locals: { block_id: block_id, settings: settings }%>
       <%= tag.p do %>
         <%= submit_tag l(:button_save) %>
         <%= link_to_function l(:button_cancel), "$('##{block_id}-settings').toggle();" %>
       <% end %>
     <% end %>
+  <% end %>
 <% end %>

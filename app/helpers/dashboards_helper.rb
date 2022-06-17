@@ -88,7 +88,7 @@ module DashboardsHelper
     dashboards = sidebar_dashboards dashboard, project
     out = [dashboard_links(l(:label_my_dashboard_plural),
                            dashboard,
-                           if User.current.allowed_to?(:edit_own_dashboards, project,
+                           if User.current.allowed_to?(:manage_own_dashboards, project,
                                                        global: true)
                              dashboards.select(&:own?)
                            else

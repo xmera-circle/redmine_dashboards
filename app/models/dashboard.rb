@@ -310,11 +310,11 @@ class Dashboard < ActiveRecord::Base
     return true if user&.admin?
 
     if private?
-      allowed_to_edit_own_dashboards?(user, prj)
+      allowed_to_manage_own_dashboards?(user, prj)
     elsif system_default?
       allowed_to_manage_system_dashboards?(user, prj)
     else
-      allowed_to_edit_dashboards?(user, prj)
+      allowed_to_manage_dashboards?(user, prj)
     end
   end
 
@@ -340,7 +340,7 @@ class Dashboard < ActiveRecord::Base
   end
 
   def allowed_target_projects(user = User.current)
-    Project.where Project.allowed_to_condition(user, :add_dashboards)
+    Project.where Project.allowed_to_condition(user, :manage_dashboards)
   end
 
   # this is used to get unique cache for blocks
@@ -404,16 +404,16 @@ class Dashboard < ActiveRecord::Base
     user.memberships.joins(:member_roles).where(member_roles: { role_id: role_ids }).any?
   end
 
-  def allowed_to_edit_dashboards?(user, prj = nil)
-    allowed_to_edit_public_dashboards?(user, prj)
+  def allowed_to_manage_dashboards?(user, prj = nil)
+    allowed_to_manage_public_dashboards?(user, prj)
   end
 
-  def allowed_to_edit_public_dashboards?(user, prj = nil)
-    user.allowed_to?(:edit_public_dashboards, prj, global: true)
+  def allowed_to_manage_public_dashboards?(user, prj = nil)
+    user.allowed_to?(:manage_public_dashboards, prj, global: true)
   end
 
-  def allowed_to_edit_own_dashboards?(user, prj = nil)
-    (author == user && user.allowed_to?(:edit_own_dashboards, prj, global: true))
+  def allowed_to_manage_own_dashboards?(user, prj = nil)
+    (author == user && user.allowed_to?(:manage_own_dashboards, prj, global: true))
   end
 
   def strip_whitespace
@@ -476,7 +476,7 @@ class Dashboard < ActiveRecord::Base
     user = User.current
 
     return if system_default? ||
-              allowed_to_edit_dashboards?(user, project) ||
+              allowed_to_manage_dashboards?(user, project) ||
               allowed_to_manage_system_dashboards?(user, project)
 
     # change to private
