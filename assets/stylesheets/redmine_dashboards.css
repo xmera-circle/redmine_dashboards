@@ -290,6 +290,7 @@ p.role-visibility input {
   }
 
   .news-thumb {
+    margin-top: 1rem;
     flex-shrink: 0;
   }
 
@@ -300,6 +301,8 @@ p.role-visibility input {
   h4.news-title {
     font-size: 0.9rem !important;
     font-weight: bold;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
   }
   .image-placeholder {
       background-color: #eee;
