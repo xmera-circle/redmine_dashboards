@@ -33,6 +33,7 @@ class DashboardAsyncBlocksController < ApplicationController
   helper :issues
   helper :activities
   helper :dashboards
+  helper :calendars
 
   include DashboardsHelper
 
