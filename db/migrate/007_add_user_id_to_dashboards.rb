@@ -5,8 +5,6 @@
 # Copyright (C) 2020 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
 # See <https://github.com/AlphaNodes/additionals>.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
-#
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
@@ -21,9 +19,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-class CreateDashboardDefaults < ActiveRecord::Migration[5.2]
-  def up
-    # Creating default welcome dashboard is not supported anymore.
-    # The migration file is left in order to avoid migration conficts.
+class AddUserIdToDashboards < ActiveRecord::Migration[5.2]
+  def change
+    add_column :dashboards, :user_id, :integer
   end
 end
