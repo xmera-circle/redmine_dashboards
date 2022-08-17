@@ -6,7 +6,7 @@ api.dashboard do
   api.enable_sidebar @dashboard.enable_sidebar
   api.system_default @dashboard.system_default
   api.always_expose @dashboard.always_expose
-  api.author id: @dashboard.author_id, name: @dashboard.author.name
+  api.user id: @dashboard.user_id, name: @dashboard.user.name
   api.visibility @dashboard.visibility
   api.options @dashboard.options
   api.created_on @dashboard.created_at

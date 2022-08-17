@@ -16,7 +16,7 @@ de:
   label_disable_sidebar: Seitenleiste verstecken
   label_new_dashboard: Neues Dashboard
   label_max_entries: Maximale Einträge
-  label_dashboard_author: "Autor: %{name}"
+  label_dashboard_user: "Autor: %{name}"
   label_only_my_activities: Zeige nur meine Einträge
   label_my_activity: Meine Aktivitäten
   label_feed: Feed
