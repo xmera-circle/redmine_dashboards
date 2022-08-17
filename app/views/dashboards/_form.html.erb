@@ -73,8 +73,8 @@
       <% end %>
       <% if @dashboard.persisted? %>
         <%=tag.p class: 'object-select' do %>
-          <%= f.select  :author_id,
-                        author_options_for_select(nil, @dashboard, :manage_public_dashboards),
+          <%= f.select  :user_id,
+                        user_options_for_select(nil, @dashboard, :manage_public_dashboards),
                         required: true %>
         <% end %>
       <% end %>

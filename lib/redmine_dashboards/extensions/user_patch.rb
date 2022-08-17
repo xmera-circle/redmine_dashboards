@@ -26,6 +26,9 @@ module RedmineDashboards
     module UserPatch
       def self.included(base)
         base.extend(ClassMethods)
+        base.class_eval do
+          has_many :dashboards, dependent: :nullify
+        end
       end
 
       module ClassMethods

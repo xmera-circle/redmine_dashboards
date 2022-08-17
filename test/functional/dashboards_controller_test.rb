@@ -56,7 +56,7 @@ class DashboardsControllerTest < RedmineDashboards::ControllerTest
               create_params: { name: 'tester board',
                                enable_sidebar: true,
                                dashboard_type: DashboardContentWelcome::TYPE_NAME,
-                               author_id: @user.id },
+                               user_id: @user.id },
               create_assert_equals: { name: 'tester board' },
               create_assert: %i[enable_sidebar],
               edit_assert_select: ['form#dashboard-form'],

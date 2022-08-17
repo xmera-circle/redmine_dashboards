@@ -16,7 +16,7 @@ en:
   label_disable_sidebar: Disable_sidebar
   label_new_dashboard: New dashboard
   label_max_entries: Maximum entries
-  label_dashboard_author: "Author: %{name}"
+  label_dashboard_user: "Author: %{name}"
   label_only_my_activities: Only my activities
   label_my_activity: My activities
   label_feed: Feed

@@ -41,7 +41,7 @@ class DashboardTest < RedmineDashboards::TestCase
   def test_create_welcome_dashboard
     dashboard = Dashboard.new name: 'my welcome dashboard',
                               dashboard_type: DashboardContentWelcome::TYPE_NAME,
-                              author_id: 2
+                              user_id: 2
 
     assert_save dashboard
   end
@@ -49,7 +49,7 @@ class DashboardTest < RedmineDashboards::TestCase
   def test_do_not_create_dashboard_for_role_without_roles
     dashboard = Dashboard.new name: 'dashboard for roles',
                               dashboard_type: DashboardContentWelcome::TYPE_NAME,
-                              author_id: 2,
+                              user_id: 2,
                               visibility: Dashboard::VISIBILITY_ROLES
 
     assert_not dashboard.valid?
@@ -58,7 +58,7 @@ class DashboardTest < RedmineDashboards::TestCase
   def test_create_dashboard_with_roles
     dashboard = Dashboard.new name: 'dashboard for roles',
                               dashboard_type: DashboardContentWelcome::TYPE_NAME,
-                              author_id: 2,
+                              user_id: 2,
                               visibility: Dashboard::VISIBILITY_ROLES,
                               roles: Role.where(id: [1, 3]).to_a
 
@@ -68,11 +68,11 @@ class DashboardTest < RedmineDashboards::TestCase
     assert_equal [1, 3], dashboard.role_ids.sort
   end
 
-  def test_create_dashboard_with_unused_role_should_visible_for_author
+  def test_create_dashboard_with_unused_role_should_visible_for_user
     used_role = Role.generate!
     dashboard = Dashboard.new name: 'dashboard for unused role',
                               dashboard_type: DashboardContentWelcome::TYPE_NAME,
-                              author_id: 2,
+                              user_id: 2,
                               visibility: Dashboard::VISIBILITY_ROLES,
                               roles: [used_role]
     assert_save dashboard
@@ -90,7 +90,7 @@ class DashboardTest < RedmineDashboards::TestCase
     dashboard = Dashboard.new dashboard_type: DashboardContentWelcome::TYPE_NAME,
                               name: 'WelcomeTest',
                               system_default: true,
-                              author: User.current,
+                              user: User.current,
                               visibility: 2
     assert_save dashboard
 
@@ -102,7 +102,7 @@ class DashboardTest < RedmineDashboards::TestCase
     assert Dashboard.create!(dashboard_type: DashboardContentWelcome::TYPE_NAME,
                              name: 'WelcomeTest',
                              system_default: true,
-                             author: User.current,
+                             user: User.current,
                              visibility: 2)
 
     assert_equal 1, Dashboard.welcome_only.where(system_default: true).count
@@ -112,7 +112,7 @@ class DashboardTest < RedmineDashboards::TestCase
     dashboard = Dashboard.create!(dashboard_type: DashboardContentWelcome::TYPE_NAME,
                                   name: 'WelcomeTest public',
                                   system_default: true,
-                                  author: User.current,
+                                  user: User.current,
                                   visibility: 2)
 
     assert dashboard.valid?

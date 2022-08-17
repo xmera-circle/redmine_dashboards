@@ -48,7 +48,7 @@ module DashboardsHelper
   end
 
   def sidebar_dashboards(dashboard, project = nil)
-    scope = Dashboard.visible.includes [:author]
+    scope = Dashboard.visible.includes [:user]
 
     scope = if project.present?
               scope = scope.project_only
@@ -110,7 +110,7 @@ module DashboardsHelper
       out = [tag.h3(l(:label_active_dashboard)),
              tag.ul do
                concat tag.li "#{l :field_name}: #{dashboard.name}"
-               concat tag.li safe_join([l(:field_author), link_to_user(dashboard.author)], ': ')
+               concat tag.li safe_join([l(:field_user), link_to_user(dashboard.user)], ': ')
                concat tag.li "#{l :field_created_on}: #{format_time dashboard.created_at}"
                concat tag.li "#{l :field_updated_on}: #{format_time dashboard.updated_at}"
              end]
@@ -148,12 +148,12 @@ module DashboardsHelper
 
   def dashboard_link(dashboard, **options)
     if options[:title].blank? && dashboard.public?
-      author = if dashboard.author_id == User.current.id
+      user = if dashboard.user_id == User.current.id
                  l :label_me
                else
-                 dashboard.author
+                 dashboard.user
                end
-      options[:title] = l :label_dashboard_author, name: author
+      options[:title] = l :label_dashboard_user, name: user
     end
 
     name = options.delete(:name) || dashboard.name
@@ -320,7 +320,7 @@ module DashboardsHelper
              dashboard.content_project
                       .news
                       .limit(max_entries)
-                      .includes(:author, :project)
+                      .includes(:user, :project)
                       .reorder(created_on: :desc)
                       .to_a
            end
@@ -352,7 +352,7 @@ module DashboardsHelper
     max_entries = settings.fetch(:max_entries, block_object.default_max_entries).to_i
     user = User.current
     options = {}
-    options[:author] = user if RedmineDashboards.true? settings[:me_only]
+    options[:user] = user if RedmineDashboards.true? settings[:me_only]
     options[:project] = dashboard.content_project if dashboard.content_project.present?
 
     Redmine::Activity::Fetcher.new(user, options)
@@ -471,29 +471,29 @@ module DashboardsHelper
     a
   end
 
-  def author_options_for_select(project, entity = nil, permission = nil)
+  def user_options_for_select(project, entity = nil, permission = nil)
     scope = project.present? ? project.users.visible : User.active.visible
     scope = scope.with_permission permission, project unless permission.nil?
-    authors = scope.sorted.to_a
+    users = scope.sorted.to_a
 
     unless entity.nil?
-      current_author_found = authors.detect { |u| u.id == entity.author_id_was }
-      if current_author_found.blank?
-        current_author = User.find_by id: entity.author_id_was
-        authors << current_author if current_author
+      current_user_found = users.detect { |u| u.id == entity.user_id_was }
+      if current_user_found.blank?
+        current_user = User.find_by id: entity.user_id_was
+        users << current_user if current_user
       end
     end
 
     s = []
-    return s unless authors.any?
+    return s unless users.any?
 
-    s << tag.option("<< #{l :label_me} >>", value: User.current.id) if authors.include? User.current
+    s << tag.option("<< #{l :label_me} >>", value: User.current.id) if users.include? User.current
 
     if entity.nil?
-      s << options_from_collection_for_select(authors, 'id', 'name')
+      s << options_from_collection_for_select(users, 'id', 'name')
     else
-      s << tag.option(entity.author, value: entity.author_id, selected: true) if entity.author && authors.exclude?(entity.author)
-      s << options_from_collection_for_select(authors, 'id', 'name', entity.author_id)
+      s << tag.option(entity.user, value: entity.user_id, selected: true) if entity.user && users.exclude?(entity.user)
+      s << options_from_collection_for_select(users, 'id', 'name', entity.user_id)
     end
     safe_join s
   end
