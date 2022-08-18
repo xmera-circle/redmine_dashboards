@@ -6,6 +6,8 @@ en:
   button_save: Save
   
   label_dashboard: Dashboard
+  label_redmine_dashboards: Dashboards
+  label_redmine_dashboards_description: Create custom dashboards easily
   label_edit_dashboard: Edit dashboard
   label_add_dashboard_block: Add block
   label_my_dashboard_plural: My Dashboards
@@ -47,6 +49,8 @@ en:
   label_issues_by_status: Issues by status
   label_issue_counter_with_name: Issue counter
   label_spent_time_with_table: Show entries
+  label_show_my_page: Show My Page
+  label_top_menu: Top Menu
 
   error_while_executing_bashboard_block: dashboard block cannot be displayed due to an error. Please report this error to your administrator.
   error_dashboard_must_be_visible_for_everyone: Dashboard must be visible for everyone
@@ -91,6 +95,7 @@ en:
   alert_only_visible_by_yourself: Only visible by yourself!
   alert_only_visible_by_admins: Only visible by admins!
   text_default_welcome: "Welcome, %{value}!"
+  text_show_my_page: Show My Page and use some information blocks dedicated to the current user by default.
 
   field_always_expose: Always expose dashboard
   field_enable_sidebar: Enable sidebar 

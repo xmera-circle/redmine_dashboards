@@ -35,6 +35,7 @@ module RedmineDashboards
         RedmineDashboards.add_helpers
         RedmineDashboards.instanciate_blocks
       end
+      top_menu_settings
     end
 
     def autoload_blocks
@@ -43,6 +44,29 @@ module RedmineDashboards
         config.autoload_paths << "#{plugin.directory}/app/blocks"
         config.autoload_paths << "#{plugin.directory}/app/presenters"
       end
+    end
+
+    def top_menu_settings
+      return if Rails.env.test?
+
+      Redmine::MenuManager.map(:top_menu).delete(:my_page)
+
+      Redmine::MenuManager.map(:top_menu) do |menu|
+        menu.push :my_page, { controller: 'my', action: 'page' },
+                  after: :home, if: proc { User.current.logged? && show_my_page? }
+      end
+    end
+
+    def show_my_page?
+      Setting.plugin_redmine_dashboards[:show_my_page].presence
+    end
+
+    def partial
+      'settings/redmine_dashboards'
+    end
+
+    def defaults
+      { show_my_page: '0' }
     end
 
     def render_async_configuration

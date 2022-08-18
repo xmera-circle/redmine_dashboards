@@ -6,6 +6,8 @@ de:
   button_save: Speichern
 
   label_dashboard: Dashboard
+  label_redmine_dashboards: Dashboards
+  label_redmine_dashboards_description: Eigene Dashboards einfach erstellen
   label_edit_dashboard: Dashboard bearbeiten
   label_add_dashboard_block: Block hinzufügen
   label_my_dashboard_plural: Meine Dashboards
@@ -48,6 +50,9 @@ de:
   label_issues_by_status: Tickets pro Status
   label_issue_counter_with_name: Ticketzähler
   label_spent_time_with_table: Einträge anzeigen
+  label_show_my_page: Meine Seite anzeigen
+  label_top_menu: Topmenü
+
     
   error_while_executing_bashboard_block: konnte nicht geladen werden, weil ein Fehler aufgetreten ist. Bitte informieren Sie Ihren Administrator.
   error_dashboard_must_be_visible_for_everyone: Dashboard muss für jeden sichtbar sein
@@ -92,6 +97,7 @@ de:
   alert_only_visible_by_yourself: Nur für Sie sichtbar!
   alert_only_visible_by_admins: Nur für Administratoren sichtbar!
   text_default_welcome: "Herzlich willkommen, %{value}!"
+  text_show_my_page: Meine Seite anzeigen und einige Informationsblöcke ausschließlich für den aktuellen Benutzer bereitstellen.
 
   field_always_expose: Dashboard immer offenlegen
   field_enable_sidebar: Seitenleiste aktivieren
