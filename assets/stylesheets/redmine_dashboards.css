@@ -222,6 +222,15 @@ p.role-visibility input {
   text-align: left;
 }
 
+/* My Spent Time */
+
+.my-spent-time-block h3,
+.my-spent-time-block h3 a {
+  word-break: normal;
+  line-height: 1.3;
+  font-size: 1em;
+}
+
 /* Issue Counter */
 
 .dashboard .issue-counter {

@@ -46,8 +46,8 @@ en:
   label_issues_by_tracker: Issues by tracker
   label_issues_by_status: Issues by status
   label_issue_counter_with_name: Issue counter
+  label_spent_time_with_table: Show entries
 
-  
   error_while_executing_bashboard_block: dashboard block cannot be displayed due to an error. Please report this error to your administrator.
   error_dashboard_must_be_visible_for_everyone: Dashboard must be visible for everyone
   error_link_required: Link needs to be given
