@@ -22,8 +22,8 @@ require File.expand_path '../test_helper', __dir__
 
 class BlockCounterTest < RedmineDashboards::TestCase
   def setup
-    type = 'button',
-    label = 'Button',
+    type = 'button'
+    label = 'Button'
     active_blocks = %w[text button]
     @block_counter = counter(type, label, active_blocks)
   end
@@ -33,7 +33,7 @@ class BlockCounterTest < RedmineDashboards::TestCase
   end
 
   def test_respond_to_next_block_id
-    assert @block_counter.respond_to? :next_block_id  
+    assert @block_counter.respond_to? :next_block_id
   end
 
   def test_number_of_block_id_is_zero
@@ -55,8 +55,8 @@ class BlockCounterTest < RedmineDashboards::TestCase
   end
 
   def test_block_disabled
-    type = 'button',
-    label = 'Button',
+    type = 'button'
+    label = 'Button'
     active_blocks = %w[text button__11]
     block_counter = counter(type, label, active_blocks)
     assert block_counter.send :block_disabled?
