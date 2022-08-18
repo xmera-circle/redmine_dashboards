@@ -29,6 +29,9 @@ Redmine::Plugin.register :redmine_dashboards do
 
   requires_redmine version_or_higher: '4.2.0'
 
+  settings partial: RedmineDashboards.partial,
+           default: RedmineDashboards.defaults
+
   full_action_set = %i[index new create edit update destroy]
   content_action_set = %i[update_layout_setting
                           add_block
