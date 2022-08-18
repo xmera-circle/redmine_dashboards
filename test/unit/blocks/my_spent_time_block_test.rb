@@ -24,6 +24,7 @@ class MySpentTimeBlockValidationTest < RedmineDashboards::TestCase
   def setup
     @my_spent_time_block = MySpentTimeBlock.instance
     @my_spent_time_block.days = '5'
+    @my_spent_time_block.table = '0'
   end
 
   def teardown
@@ -36,6 +37,11 @@ class MySpentTimeBlockValidationTest < RedmineDashboards::TestCase
 
   def test_invalid_days
     @my_spent_time_block.days = '101'
+    assert @my_spent_time_block.invalid?
+  end
+
+  def test_invalid_table
+    @my_spent_time_block.table = 'invalid'
     assert @my_spent_time_block.invalid?
   end
 end

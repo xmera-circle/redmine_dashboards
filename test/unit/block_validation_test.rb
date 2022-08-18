@@ -79,14 +79,14 @@ class BlockValidationTest < RedmineDashboards::TestCase
 
   def test_valid_my_spent_time_settings
     my_spent_time_block = find_or_create_block(MySpentTimeBlock)
-    settings = { days: '5' }
+    settings = { days: '5', table: '1' }
     my_spent_time_block.send :update_settings, settings
     assert my_spent_time_block.valid?, my_spent_time_block.errors.full_messages
   end
 
   def test_invalid_my_spent_time_settings
     my_spent_time_block = find_or_create_block(MySpentTimeBlock)
-    settings = { days: '0' }
+    settings = { days: '0', table: '100' }
     my_spent_time_block.send :update_settings, settings
     assert my_spent_time_block.invalid?, my_spent_time_block.errors.full_messages
   end
