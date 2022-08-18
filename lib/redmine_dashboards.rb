@@ -69,9 +69,10 @@ module RedmineDashboards
       ChartBlock.instance
       IssueCounterBlock.instance
       CalendarBlock.instance
-      if Redmine::Plugin.installed?(:redmine_dashboards)
-        OpenApprovalsBlock.instance
-      end
+      return unless Redmine::Plugin.installed?(:redmine_dashboards)
+
+      OpenApprovalsBlock.instance
+      LockedDocumentsBlock.instance
     end
 
     def true?(value)
