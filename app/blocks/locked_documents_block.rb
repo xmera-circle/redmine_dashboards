@@ -18,18 +18,18 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-class OpenApprovalsBlock < DashboardBlock
+class LockedDocumentsBlock < DashboardBlock
   def register_type
-    'open_approvals'
+    'locked_documents'
   end
 
   def register_label
-    -> { l(:open_approvals) }
+    -> { l(:locked_documents) }
   end
 
   def register_specs
     { no_settings: true,
-      partial: 'my/blocks/open_approvals' }
+      partial: 'my/blocks/locked_documents' }
   end
 
   def register_settings
