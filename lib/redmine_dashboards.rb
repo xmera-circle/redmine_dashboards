@@ -41,6 +41,7 @@ module RedmineDashboards
       plugin = Redmine::Plugin.find(:redmine_dashboards)
       Rails.application.configure do
         config.autoload_paths << "#{plugin.directory}/app/blocks"
+        config.autoload_paths << "#{plugin.directory}/app/presenters"
       end
     end
 
@@ -67,6 +68,7 @@ module RedmineDashboards
       ButtonBlock.instance
       ChartBlock.instance
       IssueCounterBlock.instance
+      CalendarBlock.instance
     end
 
     def true?(value)

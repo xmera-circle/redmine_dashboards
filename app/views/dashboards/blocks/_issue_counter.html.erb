@@ -36,7 +36,7 @@
       <%= tag.div class: 'issue-counter' do %>
         <%= tag.span count, class: 'count' %></br>
         <%= tag.span (settings[:title].presence || query.name) , class: 'issue-counter-title' %>
-        <%= dashboard_query_list_block_alerts dashboard, query, block_object %>
+        <%= show(query).dashboard_query_list_block_alerts(dashboard, block_object) %>
       <% end %>
     <% end %>
 

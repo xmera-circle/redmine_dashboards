@@ -26,7 +26,7 @@
 $('#errorExplanation').remove();
 
 <% @block_ids.each do |block_id| %>
-  $("#block-<%= block_id %>").replaceWith("<%= escape_javascript render_dashboard_block(block_id.to_s, @dashboard) %>");
+  $("#block-<%= block_id %>").replaceWith("<%= escape_javascript show(@dashboard).render_dashboard_block(block_id.to_s) %>");
 <% end %>
 
 <% if @dashboard.valid? %>

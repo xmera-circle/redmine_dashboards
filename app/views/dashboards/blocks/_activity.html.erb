@@ -25,7 +25,7 @@
 
 <% if User.current.logged? %>
   <% dashboard_async_cache(dashboard, block_id, async, settings) do %>
-    <% events_by_day = activity_dashboard_data(block_object, settings, dashboard) %>
+    <% events_by_day = block_object.activity(settings, dashboard) %>
     <% title = RedmineDashboards.true?(settings[:me_only]) ? l(:label_my_activity) : l(:label_activity) %>
     <%= tag.h3 link_to title, activity_path(user_id: User.current, from: events_by_day.keys.first) %>
     <%= render partial: 'activities/activities', locals: { events_by_day: events_by_day } %>

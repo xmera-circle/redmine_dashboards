@@ -24,5 +24,5 @@
 %>
 
 $("#block-<%= escape_javascript @block_id %>").remove();
-$("#list-top").prepend("<%= escape_javascript render_dashboard_blocks([@block_id], @dashboard) %>");
-$("#block-select").replaceWith("<%= escape_javascript dashboard_block_select_tag(@dashboard) %>");
+$("#list-top").prepend("<%= escape_javascript  show(@dashboard).render_dashboard_blocks([@block_id]) %>");
+$("#block-select").replaceWith("<%= escape_javascript show(@dashboard).dashboard_block_select_tag %>");

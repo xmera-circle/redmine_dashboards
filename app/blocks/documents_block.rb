@@ -32,10 +32,32 @@ class DocumentsBlock < DashboardBlock
   end
 
   def register_specs
-    { permission: :view_documents }
+    { permission: :view_documents,
+      partial: 'dashboards/blocks/documents' }
   end
 
   def register_settings
     { max_entries: '' }
+  end
+
+  def prepare_custom_locals(settings, dashboard)
+    maximum = fetch_max_entries(settings)
+    { documents: query_documents(dashboard, maximum),
+      max_entries: maximum }
+  end
+
+  private
+
+  def fetch_max_entries(settings)
+    settings.fetch(:max_entries, default_max_entries)
+  end
+
+  def query_documents(dashboard, given_max_entries)
+    scope = Document.visible
+    scope = scope.where project: dashboard.project if dashboard.project
+
+    scope.order(created_on: :desc)
+         .limit(given_max_entries)
+         .to_a
   end
 end

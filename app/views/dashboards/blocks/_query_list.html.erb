@@ -34,9 +34,9 @@
       query.sort_criteria = params[:sort] if params[:sort].present?
     %>
     <%= tag.h3 class: 'query-list-block' do %>
-      <%= dashboard_query_list_block_title query, query_block, @project %>
+      <%= show(query).dashboard_query_list_block_title(query_block, @project) %>
       <%= " (#{count})" %>
-      <%= dashboard_query_list_block_alerts dashboard, query, block_object %>
+      <%= show(query).dashboard_query_list_block_alerts(dashboard, block_object) %>
     <% end %>
     <% if query.respond_to?(:description) && query.description.present? %>
       <%=tag.div class: 'query-description' do %>

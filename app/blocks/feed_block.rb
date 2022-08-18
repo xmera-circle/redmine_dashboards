@@ -47,6 +47,37 @@ class FeedBlock < DashboardBlock
       max_entries: nil }
   end
 
+  def dashboard_feed_title(title)
+    title.presence || label
+  end
+
+  def dashboard_feed_catcher(url, max_entries)
+    feed = { items: [], valid: false }
+    return feed if url.blank?
+
+    cnt = 0
+    max_entries = max_entries.present? ? max_entries.to_i : 10
+
+    begin
+      URI.parse(url).open do |rss_feed|
+        rss = RSS::Parser.parse rss_feed
+        rss.items.each do |item|
+          cnt += 1
+          feed[:items] << { title: item.title.try(:content)&.presence || item.title,
+                            link: item.link.try(:href)&.presence || item.link }
+          break if cnt >= max_entries
+        end
+      end
+    rescue StandardError => e
+      Rails.logger.info "dashboard_feed_catcher error for #{url}: #{e}"
+      return feed
+    end
+
+    feed[:valid] = true
+
+    feed
+  end
+
   private
 
   def valid_url

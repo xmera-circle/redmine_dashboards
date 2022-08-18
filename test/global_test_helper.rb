@@ -88,8 +88,8 @@ module RedmineDashboards
                       block_id: attrs[:block_id],
                       project_id: attrs[:project],
                       format: 'js' }
-
         assert_response :success, "assert_response for #{attrs[:block_id]}"
+        assert response.body.presence, "response.body missing for #{attrs[:block_id]}"
         assert_select "table.list.#{attrs[:entities_class]}"
       end
     end

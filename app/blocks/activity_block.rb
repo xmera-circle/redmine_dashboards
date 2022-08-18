@@ -19,7 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class ActivityBlock < DashboardBlock
-  attr_accessor :max_entries, :me_only, :user_id
+  attr_accessor :max_entries, :me_only, :user_id, :user_is_admin
 
   validates :max_entries, presence: true, numericality: true, inclusion: { in: (1..100).map(&:to_s) }, allow_nil: true
   validates :me_only, inclusion: { in: %w[0 1] }
@@ -33,8 +33,7 @@ class ActivityBlock < DashboardBlock
   end
 
   def register_specs
-    { async: { data_method: 'activity_dashboard_data',
-               partial: 'dashboards/blocks/activity' } }
+    { async: { partial: 'dashboards/blocks/activity' } }
   end
 
   def register_settings
@@ -42,5 +41,22 @@ class ActivityBlock < DashboardBlock
       me_only: nil,
       user_id: nil,
       user_is_admin: nil }
+  end
+
+  def activity(settings, dashboard)
+    self.max_entries = settings.fetch(:max_entries, default_max_entries).to_i
+    user = User.current
+    options = {}
+    options[:user] = user if RedmineDashboards.true? settings[:me_only]
+    options[:project] = dashboard.content_project if dashboard.content_project.present?
+    query_events(user, options)
+  end
+
+  private
+
+  def query_events(user, options)
+    Redmine::Activity::Fetcher.new(user, options)
+                              .events(nil, nil, limit: max_entries)
+                              .group_by { |event| user.time_to_date event.event_datetime }
   end
 end
