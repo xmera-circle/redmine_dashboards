@@ -47,6 +47,7 @@ de:
   label_issues_by_tracker: Tickets pro Tracker
   label_issues_by_status: Tickets pro Status
   label_issue_counter_with_name: Ticketzähler
+  label_spent_time_with_table: Einträge anzeigen
     
   error_while_executing_bashboard_block: konnte nicht geladen werden, weil ein Fehler aufgetreten ist. Bitte informieren Sie Ihren Administrator.
   error_dashboard_must_be_visible_for_everyone: Dashboard muss für jeden sichtbar sein
