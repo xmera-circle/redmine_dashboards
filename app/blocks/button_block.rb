@@ -69,6 +69,8 @@ class ButtonBlock < DashboardBlock
   # with a frontslash.
   #
   def internal_link
+    return true unless link
+
     link.prepend('/') unless link.start_with?('/')
     link
   end

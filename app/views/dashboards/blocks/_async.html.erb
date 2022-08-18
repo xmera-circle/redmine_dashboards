@@ -23,8 +23,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 %>
 
-<% with_async = dashboard_async_required_settings? settings, async %>
-
+<% with_async = dashboard_async_required_settings?(settings, async) %>
 <% unless with_async %>
   <%= tag.h3 settings[:title].presence || block_object[:label] %>
 <% end %>
@@ -37,9 +36,9 @@
     <%= form_tag(update_layout_setting_dashboard_path(dashboard), remote: true) do %>
       <%= render  partial: block_object[:settings_partial].presence || "#{async[:partial]}_settings",
                   locals: build_dashboard_partial_locals(block_id,
-                                                        block_object,
-                                                        settings,
-                                                        dashboard).merge(with_async: with_async) %>
+                                                         block_object,
+                                                         settings,
+                                                         dashboard).merge(with_async: with_async) %>
 
       <%= tag.p do%>
         <%= submit_tag l(:button_save) %>

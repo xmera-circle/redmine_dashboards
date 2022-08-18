@@ -32,10 +32,39 @@ class NewsBlock < DashboardBlock
   end
 
   def register_specs
-    { permission: :view_news }
+    { permission: :view_news,
+      partial: 'dashboards/blocks/news' }
   end
 
   def register_settings
     { max_entries: nil }
+  end
+
+  def prepare_custom_locals(settings, dashboard)
+    maximum = fetch_max_entries(settings)
+    { max_entries: maximum,
+      news: query_news(dashboard, maximum) }
+  end
+
+  private
+
+  def fetch_max_entries(settings)
+    settings.fetch(:max_entries, default_max_entries)
+  end
+
+  def query_news(dashboard, given_max_entries)
+    return latest_news(given_max_entries) if dashboard.content_project.nil?
+
+    dashboard
+      .content_project
+      .news
+      .limit(given_max_entries)
+      .includes(:user, :project)
+      .reorder(created_on: :desc)
+      .to_a
+  end
+
+  def latest_news(given_max_entries)
+    News.latest User.current, given_max_entries
   end
 end

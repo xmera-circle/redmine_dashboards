@@ -25,11 +25,11 @@
 
 
 <%= call_hook :view_dashboard_top, dashboard: dashboard, project: @project %>
-<%=tag.div id: 'my-page', class: "splitcontent #{dashboard_css_classes dashboard}" do %>
+<%=tag.div id: 'my-page', class: "splitcontent #{show(dashboard).css_classes}" do %>
   <% dashboard.available_groups.each do |group| %>
     <% style = (dashboard.layout[group].present? && User.current.logged?) ?  'box' : 'disable'  %>
     <%= tag.div id: "list-#{group}", class: "block-receiver splitcontent#{group} #{style}" do %>
-      <%= render_dashboard_blocks dashboard.layout[group], dashboard %>
+      <%= show(dashboard).render_dashboard_blocks dashboard.layout[group] %>
     <% end %>
   <% end %>
 <% end %>

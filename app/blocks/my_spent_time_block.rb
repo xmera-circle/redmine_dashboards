@@ -32,10 +32,42 @@ class MySpentTimeBlock < DashboardBlock
   end
 
   def register_specs
-    { permission: :log_time }
+    { permission: :log_time,
+      partial: 'dashboards/blocks/my_spent_time' }
   end
 
   def register_settings
     { days: nil }
+  end
+
+  def prepare_custom_locals(settings, dashboard)
+    days = calculate_days(settings)
+    entries_today, entries_days = quey_time_entries(dashboard, days)
+    { entries_today: entries_today,
+      entries_days: entries_days,
+      days: days }
+  end
+
+  private
+
+  def calculate_days(settings)
+    days = settings[:days].to_i
+    7 if days < 1 || days > 365
+  end
+
+  def quey_time_entries(dashboard, days)
+    scope = TimeEntry.where user_id: User.current.id
+    scope = scope.where project_id: dashboard.content_project.id unless dashboard.content_project.nil?
+    entries_today = query_entries_today(scope)
+    entries_days = query_entries_days(scope, days)
+    [entries_today, entries_days]
+  end
+
+  def query_entries_today(base)
+    base.where spent_on: User.current.today
+  end
+
+  def query_entries_days(base, days)
+    base.where spent_on: User.current.today - (days - 1)..User.current.today
   end
 end
