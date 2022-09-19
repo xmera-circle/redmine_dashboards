@@ -22,13 +22,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 module DashboardsHelper
-  def show(object, klass = nil)
-    klass ||= "RedmineDashboards::#{object.class}Presenter".constantize
-    presenter = klass.new(object, self)
-    yield presenter if block_given?
-    presenter
-  end
-
   def dashboard_async_cache(dashboard, block_id, async, settings, &content_block)
     cache render_async_cache_key(dashboard_async_blocks_path(dashboard.async_params(block_id, async, settings))),
           expires_in: async[:cache_expires_in] || DashboardContent::RENDER_ASYNC_CACHE_EXPIRES_IN,

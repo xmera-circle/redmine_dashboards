@@ -18,13 +18,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require_relative 'base_presenter'
+# require_relative 'base_presenter'
 
 module RedmineDashboards
   ##
   # Prepares all issue query components to be ready for rendering.
   #
-  class IssueQueryPresenter < BasePresenter
+  class IssueQueryPresenter < AdvancedPluginHelper::BasePresenter
     presents :query
 
     def dashboard_query_list_block_title(query_block, project)
