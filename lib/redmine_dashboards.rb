@@ -48,9 +48,9 @@ module RedmineDashboards
     end
 
     def register_presenters
-      AdvancedPluginHelper::BasePresenter.register 'RedmineDashboards::DashboardPresenter', 'Dashboard'
-      AdvancedPluginHelper::BasePresenter.register 'RedmineDashboards::IssueQueryPresenter', 'IssueQuery'
-      AdvancedPluginHelper::BasePresenter.register 'RedmineDashboards::NewsPresenter', 'News'
+      AdvancedPluginHelper::BasePresenter.register RedmineDashboards::DashboardPresenter, Dashboard
+      AdvancedPluginHelper::BasePresenter.register RedmineDashboards::IssueQueryPresenter, IssueQuery
+      AdvancedPluginHelper::BasePresenter.register RedmineDashboards::NewsPresenter, News
     end
 
     def top_menu_settings
