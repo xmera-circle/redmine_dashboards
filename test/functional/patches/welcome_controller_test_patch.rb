@@ -19,9 +19,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class WelcomeControllerTest
-  define_method('test_index') do
+  define_method(:test_index) do
     get :index
     assert_response :success
-    assert_select 'h2', :text => 'Home1 » unset'
+    assert_select 'h2', text: 'Home1'
+    assert_select '#my-page'
   end
 end
