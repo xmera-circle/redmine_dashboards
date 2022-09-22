@@ -35,6 +35,7 @@ module RedmineDashboards
         RedmineDashboards.add_helpers
         RedmineDashboards.instanciate_blocks
       end
+      register_presenters
       top_menu_settings
     end
 
@@ -44,6 +45,12 @@ module RedmineDashboards
         config.autoload_paths << "#{plugin.directory}/app/blocks"
         config.autoload_paths << "#{plugin.directory}/app/presenters"
       end
+    end
+
+    def register_presenters
+      AdvancedPluginHelper::BasePresenter.register RedmineDashboards::DashboardPresenter, Dashboard
+      AdvancedPluginHelper::BasePresenter.register RedmineDashboards::IssueQueryPresenter, IssueQuery
+      AdvancedPluginHelper::BasePresenter.register RedmineDashboards::NewsPresenter, News
     end
 
     def top_menu_settings

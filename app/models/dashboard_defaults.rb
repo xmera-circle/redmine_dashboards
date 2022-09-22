@@ -21,6 +21,9 @@
 class DashboardDefaults
   class << self
     def create_welcome_dashboard
+      # Store the current user
+      current_user = User.current
+      # Change to admin user temporarily
       admin = User.admin.active.first
       return unless admin
 
@@ -29,11 +32,14 @@ class DashboardDefaults
       return if Dashboard.exists? dashboard_type: DashboardContentWelcome::TYPE_NAME
 
       Rails.logger.debug 'Creating welcome default dashboard'
-      Dashboard.create! name: 'Welcome dashboard',
-                        dashboard_type: DashboardContentWelcome::TYPE_NAME,
-                        system_default: true,
-                        user_id: User.current.id,
-                        visibility: 2
+      dashboard = Dashboard.create! name: 'Welcome dashboard',
+                                    dashboard_type: DashboardContentWelcome::TYPE_NAME,
+                                    system_default: true,
+                                    user_id: User.current.id,
+                                    visibility: 2
+      # Change back to the inital current user
+      User.current = current_user
+      dashboard
     end
   end
 end

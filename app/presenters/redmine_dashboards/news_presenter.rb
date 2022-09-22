@@ -18,11 +18,17 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-class WelcomeControllerTest
-  define_method(:test_index) do
-    get :index
-    assert_response :success
-    assert_select 'h2', text: 'Home1'
-    assert_select '#my-page'
+module RedmineDashboards
+  ##
+  # Prepares all news components to be ready for rendering.
+  #
+  class NewsPresenter < AdvancedPluginHelper::BasePresenter
+    presents :news
+
+    def summary
+      return '' unless news.summary
+
+      news.summary.truncate_words(10)
+    end
   end
 end

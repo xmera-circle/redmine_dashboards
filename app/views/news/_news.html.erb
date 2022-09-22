@@ -17,7 +17,8 @@ thumbnail_size = Setting.thumbnails_size.to_i
     <%= tag.div class: 'news-content' do %>
       <%= tag.header do %>
         <%= content_tag :h4, news.title, class: "news-title" %>
-        <%= content_tag :small, (content_tag :em, news.summary.truncate_words(10)), class: "news-summary" %>
+        <% summary = defined?(:show) ? show(news).summary : news.summary %>
+        <%= content_tag :small, (content_tag :em, summary), class: "news-summary" %>
       <% end %>
     <% end %>
   <% end %>
