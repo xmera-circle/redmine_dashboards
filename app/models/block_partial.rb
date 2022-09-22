@@ -27,22 +27,32 @@
 class BlockPartial
   def initialize(block:, settings:, dashboard:, params:)
     @block = block
-    @default_locals = { dashboard: dashboard,
-                        settings: settings,
-                        block_id: block_id,
-                        block_object: block_object,
-                        user: User.current }
+    @settings = settings
+    @dashboard = dashboard
     @params = params
+    @user = User.current
     @current_locals = {}
   end
 
   def locals
-    [default_locals, query_locals, async_locals].inject(&:merge)
+    [default_locals, custom_locals, query_locals, async_locals].inject(&:merge)
   end
 
   private
 
-  attr_reader :block, :params, :default_locals, :current_locals
+  attr_reader :block, :settings, :dashboard, :params, :user, :current_locals
+
+  def default_locals
+    { dashboard: dashboard,
+      settings: settings,
+      block_id: block_id,
+      block_object: block_object,
+      user: user }
+  end
+
+  def custom_locals
+    block_object.custom_locals(settings, dashboard)
+  end
 
   def query_locals
     return {} unless query_block

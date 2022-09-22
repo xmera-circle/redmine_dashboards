@@ -33,6 +33,7 @@ class DashboardAsyncBlocksController < ApplicationController
   helper :issues
   helper :activities
   helper :dashboards
+  helper :calendars
 
   include DashboardsHelper
 
@@ -83,7 +84,6 @@ class DashboardAsyncBlocksController < ApplicationController
   def find_block
     @block_id = params['block_id']
     @block_object = @dashboard.content.find_block @block_id
-
     render_404 if @block_id.blank?
     render_403 if @block_object.blank?
 

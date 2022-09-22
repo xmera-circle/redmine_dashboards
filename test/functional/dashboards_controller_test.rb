@@ -21,7 +21,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require File.expand_path '../../test_helper', __FILE__
+require File.expand_path '../test_helper', __dir__
 
 class DashboardsControllerTest < RedmineDashboards::ControllerTest
   fixtures :projects,
@@ -56,7 +56,7 @@ class DashboardsControllerTest < RedmineDashboards::ControllerTest
               create_params: { name: 'tester board',
                                enable_sidebar: true,
                                dashboard_type: DashboardContentWelcome::TYPE_NAME,
-                               author_id: @user.id },
+                               user_id: @user.id },
               create_assert_equals: { name: 'tester board' },
               create_assert: %i[enable_sidebar],
               edit_assert_select: ['form#dashboard-form'],

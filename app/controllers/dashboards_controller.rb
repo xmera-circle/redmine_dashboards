@@ -80,13 +80,13 @@ class DashboardsController < ApplicationController
 
   def new
     @dashboard = Dashboard.new(project: @project,
-                               author: User.current)
+                               user: User.current)
     @dashboard.dashboard_type = assign_dashboard_type
     @allowed_projects = @dashboard.allowed_target_projects
   end
 
   def create
-    @dashboard = Dashboard.new(author: User.current)
+    @dashboard = Dashboard.new(user: User.current)
     @dashboard.safe_attributes = params[:dashboard]
     @dashboard.dashboard_type = assign_dashboard_type
     @dashboard.role_ids = params[:dashboard][:role_ids] if params[:dashboard].present?

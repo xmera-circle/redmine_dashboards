@@ -18,30 +18,28 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require File.expand_path '../../test_helper', __dir__
+class DashboardDefaults
+  class << self
+    def create_welcome_dashboard
+      # Store the current user
+      current_user = User.current
+      # Change to admin user temporarily
+      admin = User.admin.active.first
+      return unless admin
 
-class MySpentTimeBlockValidationTest < RedmineDashboards::TestCase
-  def setup
-    @my_spent_time_block = MySpentTimeBlock.instance
-    @my_spent_time_block.days = '5'
-    @my_spent_time_block.table = '0'
-  end
+      User.current = User.find_by(id: admin.id)
 
-  def teardown
-    @my_spent_time_block = nil
-  end
+      return if Dashboard.exists? dashboard_type: DashboardContentWelcome::TYPE_NAME
 
-  def test_valid_my_spent_time
-    assert @my_spent_time_block.valid?
-  end
-
-  def test_invalid_days
-    @my_spent_time_block.days = '101'
-    assert @my_spent_time_block.invalid?
-  end
-
-  def test_invalid_table
-    @my_spent_time_block.table = 'invalid'
-    assert @my_spent_time_block.invalid?
+      Rails.logger.debug 'Creating welcome default dashboard'
+      dashboard = Dashboard.create! name: 'Welcome dashboard',
+                                    dashboard_type: DashboardContentWelcome::TYPE_NAME,
+                                    system_default: true,
+                                    user_id: User.current.id,
+                                    visibility: 2
+      # Change back to the inital current user
+      User.current = current_user
+      dashboard
+    end
   end
 end

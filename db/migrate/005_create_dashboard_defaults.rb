@@ -23,15 +23,7 @@
 
 class CreateDashboardDefaults < ActiveRecord::Migration[5.2]
   def up
-    User.current = User.find_by(id: ENV['DEFAULT_USER_ID'].presence || User.admin.active.first.id)
-
-    return if Dashboard.exists? dashboard_type: DashboardContentWelcome::TYPE_NAME
-
-    Rails.logger.debug 'Creating welcome default dashboard'
-    Dashboard.create! name: 'Welcome dashboard',
-                      dashboard_type: DashboardContentWelcome::TYPE_NAME,
-                      system_default: true,
-                      author_id: User.current.id,
-                      visibility: 2
+    # Creating default welcome dashboard is not supported anymore.
+    # The migration file is left in order to avoid migration conficts.
   end
 end

@@ -19,6 +19,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 class LegacyLeftBlock < DashboardBlock
+  include Redmine::Hook::Helper
+
   def register_type
     'legacy_left'
   end
@@ -33,6 +35,10 @@ class LegacyLeftBlock < DashboardBlock
 
   def register_settings
     {}
+  end
+
+  def render_legacy_left_block(_block_id, _settings, _dashboard)
+    call_hook :view_welcome_index_left
   end
 
   ##

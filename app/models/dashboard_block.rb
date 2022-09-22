@@ -130,6 +130,19 @@ class DashboardBlock
     not_implemented(__method__)
   end
 
+  def custom_locals(settings, dashboard)
+    prepare_custom_locals(settings, dashboard) || {}
+  end
+
+  ##
+  # Override this in a block class when necessary.
+  # @return [Hash] A hash with the custom locals required for rendering the
+  #  corresponding partial.
+  #
+  def prepare_custom_locals(_setting, _dashboard)
+    false
+  end
+
   def validate_settings(settings, dashboard)
     update_settings(settings)
     return dashboard if valid?

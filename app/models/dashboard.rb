@@ -29,7 +29,7 @@ class Dashboard < ActiveRecord::Base
   class ProjectSystemDefaultChangeException < StandardError; end
 
   belongs_to :project
-  belongs_to :author, class_name: 'User'
+  belongs_to :user
   has_many :dashboard_roles, dependent: :destroy
   has_many :roles, through: :dashboard_roles
 
@@ -50,7 +50,7 @@ class Dashboard < ActiveRecord::Base
   scope :welcome_only, (-> { where dashboard_type: DashboardContentWelcome::TYPE_NAME })
 
   safe_attributes 'name', 'description', 'enable_sidebar',
-                  'always_expose', 'project_id', 'author_id',
+                  'always_expose', 'project_id', 'user_id',
                   if: (lambda do |dashboard, user|
                     dashboard.new_record? ||
                       dashboard.editable?(user)
@@ -75,7 +75,7 @@ class Dashboard < ActiveRecord::Base
   after_save :update_system_defaults
   after_save :remove_unused_role_relations
 
-  validates :name, :dashboard_type, :author, :visibility, presence: true
+  validates :name, :dashboard_type, :visibility, presence: true
   validates :visibility, inclusion: { in: [VISIBILITY_PUBLIC, VISIBILITY_ROLES, VISIBILITY_PRIVATE] }
   validate :validate_roles
   validate :validate_visibility
@@ -84,8 +84,10 @@ class Dashboard < ActiveRecord::Base
   validate :validate_project_system_default
   validate :validate_layout_settings
 
+  alias author user if connection.table_exists?(:dashboards)
+
   class << self
-    alias :all_dashboards :all
+    alias all_dashboards all
 
     def default(dashboard_type, project = nil, user = User.current)
       recently_id = user.pref.recently_used_dashboard dashboard_type, project
@@ -103,7 +105,10 @@ class Dashboard < ActiveRecord::Base
     end
 
     def system_default(dashboard_type)
-      find_by(dashboard_type: dashboard_type, system_default: true)
+      sys = find_by(dashboard_type: dashboard_type, system_default: true)
+      return sys if sys
+
+      DashboardDefaults.create_welcome_dashboard
     end
 
     def remove_invalid_recently_id(recently_id, dashboard_type)
@@ -131,21 +136,21 @@ class Dashboard < ActiveRecord::Base
                                                                                                 options)))
       if user.memberships.any?
         scoped.where("#{table_name}.visibility = ?" \
-                    " OR (#{table_name}.visibility = ? AND #{table_name}.id IN (" \
-                    "SELECT DISTINCT d.id FROM #{table_name} d"  \
-                    " INNER JOIN #{table_name_prefix}dashboard_roles#{table_name_suffix} dr ON dr.dashboard_id = d.id" \
-                    " INNER JOIN #{MemberRole.table_name} mr ON mr.role_id = dr.role_id" \
-                    " INNER JOIN #{Member.table_name} m ON m.id = mr.member_id AND m.user_id = ?" \
-                    " INNER JOIN #{Project.table_name} p ON p.id = m.project_id AND p.status <> ?" \
-                    ' WHERE d.project_id IS NULL OR d.project_id = m.project_id))' \
-                    " OR #{table_name}.author_id = ?",
-                    VISIBILITY_PUBLIC,
-                    VISIBILITY_ROLES,
-                    user.id,
-                    Project::STATUS_ARCHIVED,
-                    user.id)
+                     " OR (#{table_name}.visibility = ? AND #{table_name}.id IN (" \
+                     "SELECT DISTINCT d.id FROM #{table_name} d"  \
+                     " INNER JOIN #{table_name_prefix}dashboard_roles#{table_name_suffix} dr ON dr.dashboard_id = d.id" \
+                     " INNER JOIN #{MemberRole.table_name} mr ON mr.role_id = dr.role_id" \
+                     " INNER JOIN #{Member.table_name} m ON m.id = mr.member_id AND m.user_id = ?" \
+                     " INNER JOIN #{Project.table_name} p ON p.id = m.project_id AND p.status <> ?" \
+                     ' WHERE d.project_id IS NULL OR d.project_id = m.project_id))' \
+                     " OR #{table_name}.user_id = ?",
+                     VISIBILITY_PUBLIC,
+                     VISIBILITY_ROLES,
+                     user.id,
+                     Project::STATUS_ARCHIVED,
+                     user.id)
       elsif user.logged?
-        scoped.where(visibility: VISIBILITY_PUBLIC).or(scoped.where(author_id: user.id))
+        scoped.where(visibility: VISIBILITY_PUBLIC).or(scoped.where(user_id: user.id))
       else
         scoped.where visibility: VISIBILITY_PUBLIC
       end
@@ -399,6 +404,10 @@ class Dashboard < ActiveRecord::Base
   end
 
   private
+
+  def author_id
+    user_id
+  end
 
   def any_authorized?(user)
     user.memberships.joins(:member_roles).where(member_roles: { role_id: role_ids }).any?

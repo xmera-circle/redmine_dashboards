@@ -3,7 +3,7 @@ system_default_welcome:
   dashboard_type: <%= DashboardContentWelcome::TYPE_NAME %>
   system_default: true
   enable_sidebar: false
-  author_id: 1
+  user_id: 1
   visibility: 2
   options: |
     ---
@@ -39,7 +39,7 @@ private_welcome:
   name: Only for user 1
   dashboard_type: <%= DashboardContentWelcome::TYPE_NAME %>
   enable_sidebar: true
-  author_id: 1
+  user_id: 1
   visibility: 0
   options: |
     ---
@@ -53,7 +53,7 @@ private_welcome:
 private_welcome2:
   name: Only for user 2
   dashboard_type: <%= DashboardContentWelcome::TYPE_NAME %>
-  author_id: 2
+  user_id: 2
   visibility: 0
   options: |
     ---
@@ -67,11 +67,11 @@ private_welcome2:
 public_welcome:
   name: Public welcome
   dashboard_type: <%= DashboardContentWelcome::TYPE_NAME %>
-  author_id: 1
+  user_id: 1
   visibility: 2
 
 welcome_for_roles:
   name: Welcome for roles
   dashboard_type: <%= DashboardContentWelcome::TYPE_NAME %>
-  author_id: 1
+  user_id: 1
   visibility: 1

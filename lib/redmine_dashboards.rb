@@ -35,13 +35,45 @@ module RedmineDashboards
         RedmineDashboards.add_helpers
         RedmineDashboards.instanciate_blocks
       end
+      register_presenters
+      top_menu_settings
     end
 
     def autoload_blocks
       plugin = Redmine::Plugin.find(:redmine_dashboards)
       Rails.application.configure do
         config.autoload_paths << "#{plugin.directory}/app/blocks"
+        config.autoload_paths << "#{plugin.directory}/app/presenters"
       end
+    end
+
+    def register_presenters
+      AdvancedPluginHelper::BasePresenter.register RedmineDashboards::DashboardPresenter, Dashboard
+      AdvancedPluginHelper::BasePresenter.register RedmineDashboards::IssueQueryPresenter, IssueQuery
+      AdvancedPluginHelper::BasePresenter.register RedmineDashboards::NewsPresenter, News
+    end
+
+    def top_menu_settings
+      return if Rails.env.test?
+
+      Redmine::MenuManager.map(:top_menu).delete(:my_page)
+
+      Redmine::MenuManager.map(:top_menu) do |menu|
+        menu.push :my_page, { controller: 'my', action: 'page' },
+                  after: :home, if: proc { User.current.logged? && show_my_page? }
+      end
+    end
+
+    def show_my_page?
+      Setting.plugin_redmine_dashboards[:show_my_page].presence
+    end
+
+    def partial
+      'settings/redmine_dashboards'
+    end
+
+    def defaults
+      { show_my_page: '0' }
     end
 
     def render_async_configuration
@@ -67,6 +99,11 @@ module RedmineDashboards
       ButtonBlock.instance
       ChartBlock.instance
       IssueCounterBlock.instance
+      CalendarBlock.instance
+      return unless Redmine::Plugin.installed?(:redmine_dashboards)
+
+      OpenApprovalsBlock.instance
+      LockedDocumentsBlock.instance
     end
 
     def true?(value)

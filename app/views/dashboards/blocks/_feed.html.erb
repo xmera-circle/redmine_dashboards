@@ -24,10 +24,10 @@
 %>
 
 <% dashboard_async_cache(dashboard, block_id, async, settings) do %>
-  <% feed = dashboard_feed_catcher(settings[:url], 
-                                   settings.fetch(:max_entries, 
-                                                  block_object.default_max_entries)) %>
-  <%= tag.h3 dashboard_feed_title(settings[:title], block_object) %>
+  <% feed = block_object.dashboard_feed_catcher(settings[:url], 
+                                                settings.fetch(:max_entries, 
+                                                               block_object.default_max_entries)) %>
+  <%= tag.h3 block_object.dashboard_feed_title(settings[:title]) %>
   <% if feed[:valid] %>
       <% if feed[:items].count.positive? %>
         <%= tag.ul class: 'reporting-list feed' do %>

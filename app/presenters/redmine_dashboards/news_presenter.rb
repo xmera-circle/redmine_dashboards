@@ -1,12 +1,8 @@
-<%
 # frozen_string_literal: true
 
 # This file is part of the Plugin Redmine Dashboards.
 #
-# Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
-# See <https://github.com/AlphaNodes/additionals>.
-#
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2022 Liane Hampe <liaham@xmera.de>, xmera.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -21,6 +17,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-%>
 
-$("#block-<%= block_id %>").replaceWith("<%= escape_javascript show(dashboard).render_dashboard_block(block_id.to_s, sort_options) %>");
+module RedmineDashboards
+  ##
+  # Prepares all news components to be ready for rendering.
+  #
+  class NewsPresenter < AdvancedPluginHelper::BasePresenter
+    presents :news
+
+    def summary
+      return '' unless news.summary
+
+      news.summary.truncate_words(10)
+    end
+  end
+end

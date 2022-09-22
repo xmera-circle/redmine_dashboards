@@ -23,4 +23,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 %>
 
-$("#block-<%= block_id %>").replaceWith("<%= escape_javascript show(dashboard).render_dashboard_block(block_id.to_s, sort_options) %>");
+<% if User.current.logged? %>
+  <% dashboard_async_cache(dashboard, block_id, async, settings) do %>
+   <%=tag.h3 l(:label_calendar) %>
+    <%=tag.div class: 'calendar-block' do %>
+      <%= render :partial => 'common/calendar', :locals => {:calendar => block_object.calendar } %>
+    <% end %>
+  <% end %>
+<% end %>

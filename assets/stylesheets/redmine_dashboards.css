@@ -222,6 +222,15 @@ p.role-visibility input {
   text-align: left;
 }
 
+/* My Spent Time */
+
+.my-spent-time-block h3,
+.my-spent-time-block h3 a {
+  word-break: normal;
+  line-height: 1.3;
+  font-size: 1em;
+}
+
 /* Issue Counter */
 
 .dashboard .issue-counter {
@@ -247,65 +256,70 @@ p.role-visibility input {
   }
 
 /* Button Block */
-  .dashboard .button {
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 3px;
-  }
-  .dashboard .button:hover {
-    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-    color: white;
-  }
+.dashboard .button {
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+.dashboard .button:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+  color: white;
+}
 
-  /* Issue Query Block */
+/* Issue Query Block */
 
-  .attention {
-    border: none;
-    color: #eabe1c;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 50%;
-  }
+.attention {
+  border: none;
+  color: #eabe1c;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 50%;
+}
 
-  /* News Block */
+/* News Block */
 
-  .news-container {
-    display: flex;
-  }
+.news-container {
+  display: flex;
+}
 
-  .news-img {
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 1.3rem;
-  }
+.news-img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 1.3rem;
+}
 
-  .news-thumb {
-    margin-top: 1rem;
-    flex-shrink: 0;
-  }
+.news-thumb {
+  margin-top: 1rem;
+  flex-shrink: 0;
+}
 
-  .news-content {
-    margin-left: 1rem;
-  }
+.news-content {
+  margin-left: 1rem;
+}
 
-  h4.news-title {
-    font-size: 0.9rem !important;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    margin-top: 1rem;
-  }
-  .image-placeholder {
-      background-color: #eee;
-      height: 40px;
-      width: 70px;
-  }
+h4.news-title {
+  font-size: 0.9rem !important;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+.image-placeholder {
+    background-color: #eee;
+    height: 40px;
+    width: 70px;
+}
+
+/* Calendar Block */
+.calendar-block {
+  overflow: scroll;
+}

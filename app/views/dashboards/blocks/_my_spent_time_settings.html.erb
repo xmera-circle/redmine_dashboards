@@ -23,4 +23,18 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 %>
 
-$("#block-<%= block_id %>").replaceWith("<%= escape_javascript show(dashboard).render_dashboard_block(block_id.to_s, sort_options) %>");
+<%= tag.div class: 'box tabular settings' do %>
+  <%= tag.p do %>
+    <%= dashboards_settings_numberfield :day,
+                                        value: settings.fetch(:days, 7),
+                                        label: l(:button_show),
+                                        tag_name: "settings[#{block_id}][days]",
+                                        min: 1, max: 100, required: true %>
+    <%= l(:label_day_plural) %>
+  <% end %>
+  <%= tag.p dashboards_settings_checkbox :table,
+                                          active_value: settings.fetch(:table, 'false'),
+                                          label: l(:label_spent_time_with_table),
+                                          tag_name: "settings[#{block_id}][table]" %>
+<% end %>
+
