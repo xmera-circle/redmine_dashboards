@@ -22,6 +22,15 @@ The basic code of this plugin is extracted from Additionals plugin [3.0.3](https
 
 Thanks to Alexander Meindl for this great peace of work.
 
+## Requirements
+
+Make sure you have the following software installed:
+
+|Software                                                                        |Version |
+|--------------------------------------------------------------------------------|--------|
+|[Redmine](https://www.redmine.org/projects/redmine/wiki/Download)               |>= 4.2.0|
+|[Advanced Plugin Helper](https://github.com/xmera-circle/advanced_plugin_helper)|>= 0.1.0|
+
 ## Installation
 
 You need a running Redmine instance in order to install the plugin. If you need help with the installation, please refer to [Redmine.org](https://redmine.org).
