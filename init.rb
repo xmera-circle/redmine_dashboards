@@ -24,10 +24,12 @@ Redmine::Plugin.register :redmine_dashboards do
   name 'Redmine Dashboards'
   author 'Liane Hampe, Alexander Meindl'
   description 'Flexible dashboards for Redmine welcome page'
-  version '1.1.0'
-  author_url 'https://circle.xmera.de/projects/redmine-dashboards'
+  version '1.1.1'
+  url 'https://circle.xmera.de/projects/redmine-dashboards'
+  author_url 'https://github.com/liaham'
 
   requires_redmine version_or_higher: '4.2.0'
+  requires_redmine_plugin :advanced_plugin_helper, version_or_higher: '0.1.0'
 
   settings partial: RedmineDashboards.partial,
            default: RedmineDashboards.defaults
