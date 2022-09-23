@@ -28,6 +28,7 @@ Redmine::Plugin.register :redmine_dashboards do
   author_url 'https://circle.xmera.de/projects/redmine-dashboards'
 
   requires_redmine version_or_higher: '4.2.0'
+  requires_redmine_plugin :advanced_plugin_helper, version_or_higher: '0.1.0'
 
   settings partial: RedmineDashboards.partial,
            default: RedmineDashboards.defaults
