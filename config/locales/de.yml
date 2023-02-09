@@ -43,6 +43,7 @@ de:
   label_chart: Diagramme
   label_chart_type: Diagrammtyp
   label_chart_legend: Legende anzeigen
+  label_chart_stacked: Gestapelt anzeigen
   label_filter: Filter
   label_bar_chart_vertical: Balkendiagramm, vertikal
   label_bar_chart_horizontal: Balkendiagramm, horizontal
@@ -53,7 +54,6 @@ de:
   label_show_my_page: Meine Seite anzeigen
   label_top_menu: Topmenü
 
-    
   error_while_executing_bashboard_block: konnte nicht geladen werden, weil ein Fehler aufgetreten ist. Bitte informieren Sie Ihren Administrator.
   error_dashboard_must_be_visible_for_everyone: Dashboard muss für jeden sichtbar sein
   error_link_required: Link muss angegeben werden

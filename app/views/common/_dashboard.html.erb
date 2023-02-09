@@ -47,9 +47,7 @@
 
 <% if dashboard.content.with_chartjs? %>
   <% content_for :header_tags do %>
-    <% # chartjs_datalabels %>
-    <%= javascript_include_tag "Chart.bundle.min", plugin: 'redmine_dashboards' %>
-    <%= javascript_include_tag "chartjs-plugin-colorschemes.min", plugin: 'redmine_dashboards' %>
+    <%= javascript_include_tag 'chart.min' %>
   <% end %>
 <% end %>
 
