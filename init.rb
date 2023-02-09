@@ -18,7 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require_dependency 'redmine_dashboards'
+require File.expand_path('lib/redmine_dashboards', __dir__)
 
 Redmine::Plugin.register :redmine_dashboards do
   name 'Redmine Dashboards'
@@ -29,7 +29,7 @@ Redmine::Plugin.register :redmine_dashboards do
   author_url 'https://github.com/liaham'
 
   requires_redmine version_or_higher: '4.2.0'
-  requires_redmine_plugin :advanced_plugin_helper, version_or_higher: '0.1.0'
+  requires_redmine_plugin :advanced_plugin_helper, version_or_higher: '0.2.0'
 
   settings partial: RedmineDashboards.partial,
            default: RedmineDashboards.defaults

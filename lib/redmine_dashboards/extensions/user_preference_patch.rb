@@ -52,10 +52,3 @@ module RedmineDashboards
     end
   end
 end
-
-# Apply patch
-Rails.configuration.to_prepare do
-  unless UserPreference.included_modules.include?(RedmineDashboards::Extensions::UserPreferencePatch)
-    UserPreference.include(RedmineDashboards::Extensions::UserPreferencePatch)
-  end
-end

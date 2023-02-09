@@ -63,10 +63,3 @@ module RedmineDashboards
     end
   end
 end
-
-# Apply patch
-Rails.configuration.to_prepare do
-  unless WelcomeController.included_modules.include?(RedmineDashboards::Extensions::WelcomeControllerPatch)
-    WelcomeController.include(RedmineDashboards::Extensions::WelcomeControllerPatch)
-  end
-end
