@@ -64,10 +64,3 @@ module RedmineDashboards
     end
   end
 end
-
-# Apply patch
-Rails.configuration.to_prepare do
-  unless User.included_modules.include?(RedmineDashboards::Extensions::UserPatch)
-    User.include(RedmineDashboards::Extensions::UserPatch)
-  end
-end
