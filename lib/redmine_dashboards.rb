@@ -95,7 +95,7 @@ module RedmineDashboards
     end
 
     def add_helpers
-      ActionView::Base.include RedmineDashboards::Helpers
+      ActiveSupport.on_load(:action_view) { include RedmineDashboards::Helpers }
     end
 
     def instanciate_blocks

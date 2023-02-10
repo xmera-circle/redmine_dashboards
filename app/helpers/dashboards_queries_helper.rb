@@ -61,7 +61,8 @@ module DashboardsQueriesHelper
                                  group_by: session_data.nil? ? nil : session_data[:group_by],
                                  column_names: session_data.nil? ? nil : session_data[:column_names],
                                  totalable_names: session_data.nil? ? nil : session_data[:totalable_names],
-                                 sort_criteria: params[:sort].presence || (session_data.nil? ? nil : session_data[:sort_criteria]))
+                                 sort_criteria: params[:sort].presence ||
+                                  (session_data.nil? ? nil : session_data[:sort_criteria]))
       @query.project = @project
       if params[:sort].present?
         @query.sort_criteria = params[:sort]

@@ -60,7 +60,9 @@ class CalendarBlock < DashboardBlock
     Issue
       .visible
       .where(project: User.current.projects)
-      .where('(start_date>=? and start_date<=?) or (due_date>=? and due_date<=?)', calendar.startdt, calendar.enddt, calendar.startdt, calendar.enddt)
+      .where('(start_date>=? and start_date<=?) or (due_date>=? and due_date<=?)',
+             calendar.startdt, calendar.enddt,
+             calendar.startdt, calendar.enddt)
       .includes(:project, :tracker, :priority, :assigned_to)
       .references(:project, :tracker, :priority, :assigned_to)
       .to_a
