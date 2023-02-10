@@ -61,7 +61,8 @@ module DashboardsHelper
       begin
         render partial: partial, locals: partial_locals
       rescue ActionView::MissingTemplate
-        Rails.logger.warn "Partial \"#{partial}\" missing for block \"#{block_id}\" found in #{dashboard.name} (id=#{dashboard.id})"
+        Rails.logger.warn "Partial \"#{partial}\" missing for block " \
+                          "\"#{block_id}\" found in #{dashboard.name} (id=#{dashboard.id})"
         nil
       end
     else
