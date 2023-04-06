@@ -29,7 +29,7 @@ Redmine::Plugin.register :redmine_dashboards do
   author_url 'https://github.com/liaham'
 
   requires_redmine version_or_higher: '5'
-  requires_redmine_plugin :advanced_plugin_helper, version_or_higher: '0.2.0'
+  requires_redmine_plugin :advanced_plugin_helper, version_or_higher: '0.4.0'
 
   settings partial: RedmineDashboards.partial,
            default: RedmineDashboards.defaults
