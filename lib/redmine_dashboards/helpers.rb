@@ -5,7 +5,7 @@
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
 # See <https://github.com/AlphaNodes/additionals>.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -34,7 +34,12 @@ module RedmineDashboards
     end
 
     def dashboards_textarea_cols(text, min: 8, max: 20)
-      [[min, text.to_s.length / 50].max, max].min
+      text_rows = text_length(text) / 50
+      text_rows.clamp(min, max)
+    end
+
+    def text_length(text)
+      text.to_s.length
     end
   end
 end

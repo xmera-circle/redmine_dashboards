@@ -17,6 +17,7 @@ en:
   label_enable_sidebar: Enable sidebar
   label_disable_sidebar: Disable_sidebar
   label_new_dashboard: New dashboard
+  label_title: Title
   label_max_entries: Maximum entries
   label_dashboard_user: "Author: %{name}"
   label_only_my_activities: Only my activities
@@ -42,6 +43,7 @@ en:
   label_chart: Diagram
   label_chart_type: Diagram type
   label_chart_legend: Show legend
+  label_chart_stacked: Show stacked
   label_filter: Filter
   label_bar_chart_vertical: Bar chart, vertical
   label_bar_chart_horizontal: Bar chart, horizontal

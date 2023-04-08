@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Dashboards.
 #
-# Copyright (C) 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2022-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -90,12 +90,15 @@ class MySpentTimeBlock < DashboardBlock
 
   def query_time_entries_with_issues(days)
     TimeEntry
-      .where("#{TimeEntry.table_name}.user_id = ? AND #{TimeEntry.table_name}.spent_on BETWEEN ? AND ?", User.current.id, User.current.today - (days - 1), User.current.today)
+      .where("#{TimeEntry.table_name}.user_id = ? AND #{TimeEntry.table_name}.spent_on BETWEEN ? AND ?",
+             User.current.id, User.current.today - (days - 1), User.current.today)
       .joins(:activity, :project)
       .references(issue: %i[tracker status])
       .includes(issue: %i[tracker status])
-      .order("#{TimeEntry.table_name}.spent_on DESC, #{Project.table_name}.name ASC, #{Tracker.table_name}.position ASC, #{Issue.table_name}.id ASC")
-      .to_a
+      .order("#{TimeEntry.table_name}.spent_on DESC," \
+             "#{Project.table_name}.name ASC," \
+             "#{Tracker.table_name}.position ASC," \
+             "#{Issue.table_name}.id ASC").to_a
   end
 
   def query_time_entries_with_issues_by_day(entries)

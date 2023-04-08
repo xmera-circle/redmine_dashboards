@@ -5,7 +5,7 @@
 # Copyright (C) 2020 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
 # See <https://github.com/AlphaNodes/additionals>.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -135,15 +135,16 @@ class Dashboard < ActiveRecord::Base
       scoped = scoped.where(projects: { id: nil }).or(scoped.where(Project.allowed_to_condition(user, :view_project,
                                                                                                 options)))
       if user.memberships.any?
-        scoped.where("#{table_name}.visibility = ?" \
-                     " OR (#{table_name}.visibility = ? AND #{table_name}.id IN (" \
-                     "SELECT DISTINCT d.id FROM #{table_name} d"  \
-                     " INNER JOIN #{table_name_prefix}dashboard_roles#{table_name_suffix} dr ON dr.dashboard_id = d.id" \
-                     " INNER JOIN #{MemberRole.table_name} mr ON mr.role_id = dr.role_id" \
-                     " INNER JOIN #{Member.table_name} m ON m.id = mr.member_id AND m.user_id = ?" \
-                     " INNER JOIN #{Project.table_name} p ON p.id = m.project_id AND p.status <> ?" \
-                     ' WHERE d.project_id IS NULL OR d.project_id = m.project_id))' \
-                     " OR #{table_name}.user_id = ?",
+        scoped.where("#{table_name}.visibility = ? " \
+                     "OR (#{table_name}.visibility = ? AND #{table_name}.id IN (" \
+                     "SELECT DISTINCT d.id FROM #{table_name} d " \
+                     "INNER JOIN #{table_name_prefix}dashboard_roles#{table_name_suffix} dr " \
+                     'ON dr.dashboard_id = d.id ' \
+                     "INNER JOIN #{MemberRole.table_name} mr ON mr.role_id = dr.role_id " \
+                     "INNER JOIN #{Member.table_name} m ON m.id = mr.member_id AND m.user_id = ? " \
+                     "INNER JOIN #{Project.table_name} p ON p.id = m.project_id AND p.status <> ? " \
+                     'WHERE d.project_id IS NULL OR d.project_id = m.project_id))' \
+                     "OR #{table_name}.user_id = ?",
                      VISIBILITY_PUBLIC,
                      VISIBILITY_ROLES,
                      user.id,

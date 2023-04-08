@@ -5,7 +5,7 @@
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
 # See <https://github.com/AlphaNodes/additionals>.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -28,7 +28,7 @@ class DashboardsController < ApplicationController
   before_action :find_optional_project, only: %i[new create index]
   before_action :authorize_global
 
-  accept_rss_auth :index, :show
+  accept_atom_auth :index, :show
   accept_api_auth :index, :show, :create, :update, :destroy
 
   rescue_from Query::StatementInvalid, with: :query_statement_invalid
@@ -85,6 +85,15 @@ class DashboardsController < ApplicationController
     @allowed_projects = @dashboard.allowed_target_projects
   end
 
+  def edit
+    return render_403 unless @dashboard.editable_by? User.current
+
+    respond_to do |format|
+      format.html
+      format.api
+    end
+  end
+
   def create
     @dashboard = Dashboard.new(user: User.current)
     @dashboard.safe_attributes = params[:dashboard]
@@ -107,15 +116,6 @@ class DashboardsController < ApplicationController
         format.html { render action: 'new' }
         format.api  { render_validation_errors @dashboard }
       end
-    end
-  end
-
-  def edit
-    return render_403 unless @dashboard.editable_by? User.current
-
-    respond_to do |format|
-      format.html
-      format.api
     end
   end
 

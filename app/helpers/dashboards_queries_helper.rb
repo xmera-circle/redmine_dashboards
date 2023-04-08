@@ -5,7 +5,7 @@
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
 # See <https://github.com/AlphaNodes/additionals>.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -40,10 +40,7 @@ module DashboardsQueriesHelper
           session[session_key].nil? ||
           session[session_key][:project_id] != (@project ? @project.id : nil)
       # Give it a name, required to be valid
-      @query = query_class.new name: '_'
-      @query.project = @project
-      @query.user_filter = user_filter if user_filter
-      @query.build_from_params params
+      @query = build_new_query_from_params(user_filter)
       session[session_key] = { project_id: @query.project_id }
       # session has a limit to 4k, we have to use a cache for it for larger data
       Rails.cache.write(dashboards_query_cache_key(object_type),
@@ -61,7 +58,8 @@ module DashboardsQueriesHelper
                                  group_by: session_data.nil? ? nil : session_data[:group_by],
                                  column_names: session_data.nil? ? nil : session_data[:column_names],
                                  totalable_names: session_data.nil? ? nil : session_data[:totalable_names],
-                                 sort_criteria: params[:sort].presence || (session_data.nil? ? nil : session_data[:sort_criteria]))
+                                 sort_criteria: params[:sort].presence ||
+                                  (session_data.nil? ? nil : session_data[:sort_criteria]))
       @query.project = @project
       if params[:sort].present?
         @query.sort_criteria = params[:sort]
@@ -76,6 +74,14 @@ module DashboardsQueriesHelper
         @query.sort_criteria = session_data[:sort_criteria]
       end
     end
+  end
+
+  def build_new_query_from_params(user_filter)
+    query = query_class.new name: '_'
+    query.project = @project
+    query.user_filter = user_filter if user_filter
+    query.build_from_params params
+    query
   end
 
   def dashboards_load_query_id(query_class, session_key, query_id, object_type, user_filter: nil)

@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Dashboards.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,50 +18,64 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require 'redmine_dashboards/extensions/user_patch'
-require 'redmine_dashboards/extensions/user_preference_patch'
-require 'redmine_dashboards/extensions/welcome_controller_patch'
-require 'redmine_dashboards/wiki_macros/button_macro'
+require_relative 'redmine_dashboards/extensions/user_patch'
+require_relative 'redmine_dashboards/extensions/user_preference_patch'
+require_relative 'redmine_dashboards/extensions/welcome_controller_patch'
+require_relative 'redmine_dashboards/wiki_macros/button_macro'
 
-require 'redmine_dashboards/hooks/base_view_listener'
+require_relative 'redmine_dashboards/hooks/base_view_listener'
 
 module RedmineDashboards
   SEPARATOR = ' » '
   class << self
     def setup
-      autoload_blocks
-      Rails.configuration.to_prepare do
-        RedmineDashboards.render_async_configuration
-        RedmineDashboards.add_helpers
-        RedmineDashboards.instanciate_blocks
-      end
       register_presenters
       top_menu_settings
+      AdvancedPluginHelper::Patch.apply do
+        { klass: RedmineDashboards,
+          method: :prepare_dashboards }
+      end
+      %w[user_patch user_preference_patch welcome_controller_patch].each do |patch|
+        AdvancedPluginHelper::Patch.register(send(patch))
+      end
     end
 
-    def autoload_blocks
-      plugin = Redmine::Plugin.find(:redmine_dashboards)
-      Rails.application.configure do
-        config.autoload_paths << "#{plugin.directory}/app/blocks"
-        config.autoload_paths << "#{plugin.directory}/app/presenters"
-      end
+    def user_patch
+      { klass: User, patch: RedmineDashboards::Extensions::UserPatch, strategy: :include }
+    end
+
+    def user_preference_patch
+      { klass: UserPreference, patch: RedmineDashboards::Extensions::UserPreferencePatch, strategy: :include }
+    end
+
+    def welcome_controller_patch
+      { klass: WelcomeController, patch: RedmineDashboards::Extensions::WelcomeControllerPatch, strategy: :include }
+    end
+
+    def prepare_dashboards
+      RedmineDashboards.render_async_configuration
+      RedmineDashboards.add_helpers
+      RedmineDashboards.instanciate_blocks
     end
 
     def register_presenters
-      AdvancedPluginHelper::BasePresenter.register RedmineDashboards::DashboardPresenter, Dashboard
-      AdvancedPluginHelper::BasePresenter.register RedmineDashboards::IssueQueryPresenter, IssueQuery
-      AdvancedPluginHelper::BasePresenter.register RedmineDashboards::NewsPresenter, News
+      AdvancedPluginHelper::Presenter.register RedmineDashboards::DashboardPresenter, Dashboard
+      AdvancedPluginHelper::Presenter.register RedmineDashboards::IssueQueryPresenter, IssueQuery
+      AdvancedPluginHelper::Presenter.register RedmineDashboards::NewsPresenter, News
     end
 
     def top_menu_settings
       return if Rails.env.test?
 
-      Redmine::MenuManager.map(:top_menu).delete(:my_page)
-
+      delete_my_page
       Redmine::MenuManager.map(:top_menu) do |menu|
         menu.push :my_page, { controller: 'my', action: 'page' },
                   after: :home, if: proc { User.current.logged? && show_my_page? }
       end
+    end
+
+    def delete_my_page
+      Redmine::MenuManager.map(:top_menu).delete(:my_page)
     end
 
     def show_my_page?
@@ -81,7 +95,7 @@ module RedmineDashboards
     end
 
     def add_helpers
-      ActionView::Base.include RedmineDashboards::Helpers
+      ActiveSupport.on_load(:action_view) { include RedmineDashboards::Helpers }
     end
 
     def instanciate_blocks

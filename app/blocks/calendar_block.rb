@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Dashboards.
 #
-# Copyright (C) 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2022-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -60,7 +60,9 @@ class CalendarBlock < DashboardBlock
     Issue
       .visible
       .where(project: User.current.projects)
-      .where('(start_date>=? and start_date<=?) or (due_date>=? and due_date<=?)', calendar.startdt, calendar.enddt, calendar.startdt, calendar.enddt)
+      .where('(start_date>=? and start_date<=?) or (due_date>=? and due_date<=?)',
+             calendar.startdt, calendar.enddt,
+             calendar.startdt, calendar.enddt)
       .includes(:project, :tracker, :priority, :assigned_to)
       .references(:project, :tracker, :priority, :assigned_to)
       .to_a

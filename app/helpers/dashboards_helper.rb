@@ -5,7 +5,7 @@
 # Copyright (C) 2016 - 2021 Alexander Meindl <https://github.com/alexandermeindl>, alphanodes.
 # See <https://github.com/AlphaNodes/additionals>.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -61,7 +61,8 @@ module DashboardsHelper
       begin
         render partial: partial, locals: partial_locals
       rescue ActionView::MissingTemplate
-        Rails.logger.warn "Partial \"#{partial}\" missing for block \"#{block_id}\" found in #{dashboard.name} (id=#{dashboard.id})"
+        Rails.logger.warn "Partial \"#{partial}\" missing for block " \
+                          "\"#{block_id}\" found in #{dashboard.name} (id=#{dashboard.id})"
         nil
       end
     else

@@ -2,7 +2,7 @@
 
 # This file is part of the Plugin Redmine Dashboards.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,18 +18,18 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-require_dependency 'redmine_dashboards'
+require File.expand_path('lib/redmine_dashboards', __dir__)
 
 Redmine::Plugin.register :redmine_dashboards do
   name 'Redmine Dashboards'
   author 'Liane Hampe, Alexander Meindl'
   description 'Flexible dashboards for Redmine welcome page'
-  version '1.1.1'
+  version '2.0.0'
   url 'https://circle.xmera.de/projects/redmine-dashboards'
   author_url 'https://github.com/liaham'
 
-  requires_redmine version_or_higher: '4.2.0'
-  requires_redmine_plugin :advanced_plugin_helper, version_or_higher: '0.1.0'
+  requires_redmine version_or_higher: '5'
+  requires_redmine_plugin :advanced_plugin_helper, version_or_higher: '0.4.0'
 
   settings partial: RedmineDashboards.partial,
            default: RedmineDashboards.defaults

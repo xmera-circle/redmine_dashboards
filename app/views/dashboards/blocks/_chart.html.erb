@@ -3,7 +3,7 @@
 
 # This file is part of the Plugin Redmine Dashboards.
 #
-# Copyright (C) 2021 - 2022 Liane Hampe <liaham@xmera.de>, xmera.
+# Copyright (C) 2021-2023 Liane Hampe <liaham@xmera.de>, xmera Solutions GmbH.
 #
 # This plugin program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -32,7 +32,8 @@
 
   <%= javascript_tag do %>
     function render<%= block_id.camelize %>(canvas_id, title, chartData){
-      var backgroundColors = ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'];
+    /* https://github.com/nagix/chartjs-plugin-colorschemes/blob/master/src/colorschemes/colorschemes.tableau.js » tableau.ClassicCyclic13 */
+    let backgroundColors = ['#1f83b4', '#12a2a8', '#2ca030', '#78a641', '#bcbd22', '#ffbf50', '#ffaa0e', '#ff7f0e', '#d63a3a', '#c7519c', '#ba43b4', '#8a60b0', '#6f63bb'];
       var borderColors = [];
       for (var i = 0; i < chartData.datasets.length; i++) {
         chartData.datasets[i].backgroundColor = backgroundColors[i % backgroundColors.length];
@@ -40,30 +41,27 @@
         chartData.datasets[i].borderWidth = 1;
       }
       new Chart($(canvas_id), {
-        type: '<%= settings.fetch(:chart_type, 'bar') %>',
+        type: '<%= 'bar' %>',
         data: chartData,
         options: {
-          plugins: {
-              colorschemes: {
-                scheme: 'tableau.ClassicCyclic13',
-                override: true
-              }
-            },
+          indexAxis: '<%= (settings.fetch(:chart_type, 'bar') == 'horizontalBar') ? 'y' : 'x' %>',
           elements: {
-            rectangle: {borderWidth: 2}
+            bar: { borderWidth: 2 }
           },
           responsive: true,
-          legend: { 
-            position: 'bottom',
-            display: <%= RedmineDashboards.true? settings.fetch(:legend, true) %> },
-          title: {
-            display: true,
-            text: title
-          },
           scales: {
-            yAxes: [{ stacked: true }],
-            xAxes: [{ stacked: true }]
-          }}
+            x: { stacked: true },
+            y: { stacked: true }
+          },
+          plugins: {
+            legend: { 
+              position: 'bottom',
+              display: <%= RedmineDashboards.true? settings.fetch(:legend, true) %> },
+            title: {
+              display: true,
+              text: title }
+          }
+        }
       });
     }
     $(document).ready(function(){
