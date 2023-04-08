@@ -34,7 +34,12 @@ module RedmineDashboards
     end
 
     def dashboards_textarea_cols(text, min: 8, max: 20)
-      [[min, text.to_s.length / 50].max, max].min
+      text_rows = text_length(text) / 50
+      text_rows.clamp(min, max)
+    end
+
+    def text_length(text)
+      text.to_s.length
     end
   end
 end
