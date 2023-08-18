@@ -394,10 +394,10 @@ class Dashboard < ActiveRecord::Base
   end
 
   def project_id_can_change?
-    return true if new_record? ||
-                   dashboard_type == DashboardContentWelcome::TYPE_NAME ||
-                   !system_default_was ||
-                   project_id_was.present?
+    true if new_record? ||
+            dashboard_type == DashboardContentWelcome::TYPE_NAME ||
+            !system_default_was ||
+            project_id_was.present?
   end
 
   def allowed_to_manage_system_dashboards?(user, prj = nil)

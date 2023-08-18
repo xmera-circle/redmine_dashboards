@@ -58,6 +58,6 @@ class BlockCounter
   end
 
   def number_of(block_id)
-    block_id.scan(Regexp.new(/#{type}__(\d+)/)).flatten
+    block_id.scan(/#{type}__(\d+)/).flatten
   end
 end
