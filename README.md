@@ -2,7 +2,7 @@
 
 Flexible dashboards on Redmine welcome page
 
-![Redmine Plugin Version](https://img.shields.io/badge/Redmine_Plugin-v2.0.0-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v5.0.z-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important) ![develop](https://github.com/xmera-circle/redmine_dashboards/actions/workflows/5-0-stable.yml/badge.svg)
+![Redmine Plugin Version](https://img.shields.io/badge/Redmine_Plugin-v2.0.1-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v5.0.z-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important) ![develop](https://github.com/xmera-circle/redmine_dashboards/actions/workflows/5-0-stable.yml/badge.svg)
 
 The Redmine Dashboards plugin is a Redmine plugin which allows the user to create serveral different Dashboards on the welcome page by using information blocks.
 
