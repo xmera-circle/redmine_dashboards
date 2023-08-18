@@ -46,7 +46,7 @@ jobs:
                 password: redmine
                 host: localhost
             # SQL commands to create a database for Redmine
-            sql1: CREATE ROLE redmine LOGIN ENCRYPTED PASSWORD 'redmine' NOINHERIT VALID UNTIL 'infinity';
+            sql1: CREATE ROLE redmine LOGIN SUPERUSER ENCRYPTED PASSWORD 'redmine' NOINHERIT VALID UNTIL 'infinity';
             sql2: CREATE DATABASE test WITH ENCODING='UTF8' OWNER=redmine;
             sql3: ALTER USER redmine CREATEDB;
             # SQL client command
